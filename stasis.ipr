@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AntConfiguration">
+    <defaultAnt bundledAnt="true" />
+  </component>
+  <component name="ArtifactManager">
+    <artifact type="exploded-war" name="stasis:war exploded">
+      <output-path>$PROJECT_DIR$/out/artifacts/stasis_war_exploded</output-path>
+      <root id="root">
+        <element id="directory" name="WEB-INF">
+          <element id="directory" name="classes">
+            <element id="module-output" name="stasis" />
+          </element>
+          <element id="directory" name="lib">
+            <element id="library" level="project" name="Kryo 2.20" />
+            <element id="library" level="project" name="ASM 4.0" />
+            <element id="library" level="project" name="Apache Log4J 1.2.15" />
+            <element id="library" level="project" name="Spring Framework 3.1.2" />
+            <element id="library" level="project" name="Spring Security 3.1.2" />
+            <element id="library" level="project" name="Apache Commons Logging 1.1" />
+            <element id="library" level="project" name="AOPalliance" />
+            <element id="library" level="project" name="CGLib 2.1.3" />
+            <element id="library" level="project" name="Apache Commons Pool 1.6" />
+            <element id="library" level="project" name="Reflectasm 1.07" />
+            <element id="library" level="project" name="Minlog 1.2" />
+            <element id="library" level="project" name="Objenesis 1.2" />
+          </element>
+        </element>
+        <element id="javaee-facet-resources" facet="stasis/web/Web" />
+      </root>
+    </artifact>
+  </component>
+  <component name="CompilerConfiguration">
+    <option name="DEFAULT_COMPILER" value="Javac" />
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="DependencyValidationManager">
+    <option name="SKIP_IMPORT_STATEMENTS" value="false" />
+  </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
+  <component name="EntryPointsManager">
+    <entry_points version="2.0" />
+  </component>
+  <component name="Palette2">
+    <group name="Swing">
+      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
+      </item>
+      <item class="com.intellij.uiDesigner.VSpacer" tooltip-text="Vertical Spacer" icon="/com/intellij/uiDesigner/icons/vspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="1" anchor="0" fill="2" />
+      </item>
+      <item class="javax.swing.JPanel" icon="/com/intellij/uiDesigner/icons/panel.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3" />
+      </item>
+      <item class="javax.swing.JScrollPane" icon="/com/intellij/uiDesigner/icons/scrollPane.png" removable="false" auto-create-binding="false" can-attach-label="true">
+        <default-constraints vsize-policy="7" hsize-policy="7" anchor="0" fill="3" />
+      </item>
+      <item class="javax.swing.JButton" icon="/com/intellij/uiDesigner/icons/button.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="3" anchor="0" fill="1" />
+        <initial-values>
+          <property name="text" value="Button" />
+        </initial-values>
+      </item>
+      <item class="javax.swing.JRadioButton" icon="/com/intellij/uiDesigner/icons/radioButton.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
+        <initial-values>
+          <property name="text" value="RadioButton" />
+        </initial-values>
+      </item>
+      <item class="javax.swing.JCheckBox" icon="/com/intellij/uiDesigner/icons/checkBox.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
+        <initial-values>
+          <property name="text" value="CheckBox" />
+        </initial-values>
+      </item>
+      <item class="javax.swing.JLabel" icon="/com/intellij/uiDesigner/icons/label.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
+        <initial-values>
+          <property name="text" value="Label" />
+        </initial-values>
+      </item>
+      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+          <preferred-size width="150" height="-1" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JPasswordField" icon="/com/intellij/uiDesigner/icons/passwordField.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+          <preferred-size width="150" height="-1" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JFormattedTextField" icon="/com/intellij/uiDesigner/icons/formattedTextField.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+          <preferred-size width="150" height="-1" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JTextArea" icon="/com/intellij/uiDesigner/icons/textArea.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JTextPane" icon="/com/intellij/uiDesigner/icons/textPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JEditorPane" icon="/com/intellij/uiDesigner/icons/editorPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JComboBox" icon="/com/intellij/uiDesigner/icons/comboBox.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="2" anchor="8" fill="1" />
+      </item>
+      <item class="javax.swing.JTable" icon="/com/intellij/uiDesigner/icons/table.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JList" icon="/com/intellij/uiDesigner/icons/list.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="2" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JTree" icon="/com/intellij/uiDesigner/icons/tree.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JTabbedPane" icon="/com/intellij/uiDesigner/icons/tabbedPane.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
+          <preferred-size width="200" height="200" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JSplitPane" icon="/com/intellij/uiDesigner/icons/splitPane.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
+          <preferred-size width="200" height="200" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JSpinner" icon="/com/intellij/uiDesigner/icons/spinner.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
+      </item>
+      <item class="javax.swing.JSlider" icon="/com/intellij/uiDesigner/icons/slider.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
+      </item>
+      <item class="javax.swing.JSeparator" icon="/com/intellij/uiDesigner/icons/separator.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3" />
+      </item>
+      <item class="javax.swing.JProgressBar" icon="/com/intellij/uiDesigner/icons/progressbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1" />
+      </item>
+      <item class="javax.swing.JToolBar" icon="/com/intellij/uiDesigner/icons/toolbar.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1">
+          <preferred-size width="-1" height="20" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JToolBar$Separator" icon="/com/intellij/uiDesigner/icons/toolbarSeparator.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="0" anchor="0" fill="1" />
+      </item>
+      <item class="javax.swing.JScrollBar" icon="/com/intellij/uiDesigner/icons/scrollbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
+      </item>
+    </group>
+  </component>
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/stasis.iml" filepath="$PROJECT_DIR$/stasis.iml" />
+    </modules>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="" />
+  </component>
+  <component name="libraryTable">
+    <library name="AOPalliance">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/aop/aopalliance.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Apache Commons Logging 1.1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1/commons-logging.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Apache Commons Pool 1.6">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/commons-pool-1.6/commons-pool-1.6.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/commons-pool-1.6/commons-pool-1.6-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/commons-pool-1.6/commons-pool-1.6-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Apache Log4J 1.2.15">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15/log4j-1.2.15.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15/log4j-1.2.15-doc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.15/log4j-1.2.15-src.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="ASM 4.0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/asm-4.0/asm-4.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/asm-4.0/asm-analysis-4.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/asm-4.0/asm-commons-4.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/asm-4.0/asm-tree-4.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/asm-4.0/asm-util-4.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="CGLib 2.1.3">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/cglib-2.1.3/cglib-nodep-2.1_3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Kryo 2.20">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/kryo-2.20/kryo-debug-2.20.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/kryo-2.20/kryo-doc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/kryo-2.20/kryo-src.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Minlog 1.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/minlog-1.2/minlog-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Objenesis 1.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/objenesis-1.2/objenesis-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Reflectasm 1.07">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/reflectasm-1.07/reflectasm-1.07.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Spring Framework 3.1.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.aop-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.asm-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.aspects-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.beans-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.context-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.context.support-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.core-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.expression-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.instrument-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.instrument.tomcat-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.jdbc-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.jms-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.orm-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.oxm-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.test-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.transaction-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.web-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.web.portlet-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.web.servlet-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.web.struts-3.1.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/apidoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.aop-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.aspects-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.beans-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.context-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.context.support-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.core-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.expression-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.instrument-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.instrument.tomcat-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.jdbc-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.jms-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.orm-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.oxm-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.test-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.transaction-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.web-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.web.portlet-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.web.servlet-sources-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-3.1.2/org.springframework.web.struts-sources-3.1.2.RELEASE.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Spring Security 3.1.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-acl-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-aspects-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-cas-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-config-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-core-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-crypto-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-remoting-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-taglibs-3.1.2.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-web-3.1.2.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-acl-3.1.2.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-cas-3.1.2.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-config-3.1.2.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-core-3.1.2.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-crypto-3.1.2.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-remoting-3.1.2.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-taglibs-3.1.2.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-web-3.1.2.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-acl-3.1.2.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-cas-3.1.2.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-config-3.1.2.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-core-3.1.2.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-crypto-3.1.2.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-remoting-3.1.2.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-taglibs-3.1.2.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.1.2/spring-security-web-3.1.2.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+  </component>
+</project>
+
