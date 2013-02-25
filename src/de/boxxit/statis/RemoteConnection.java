@@ -7,13 +7,13 @@ import java.net.URL;
 /**
  * User: Christian Fruth
  */
-public abstract class Connection
+public abstract class RemoteConnection
 {
 	protected String userName;
 	protected String password;
 	protected ConnectionState state;
 
-	public static Connection createConnection(String url)
+	public static RemoteConnection createConnection(String url)
 	{
 		try
 		{
@@ -25,18 +25,18 @@ public abstract class Connection
 		}
 	}
 
-	public static Connection createConnection(URL url)
+	public static RemoteConnection createConnection(URL url)
 	{
 		String protocol = url.getProtocol();
 
 		if ("http".equals(protocol))
 		{
-			return new HttpConnection(url);
+			return new HttpRemoteConnection(url);
 		}
 
 		if ("https".equals(protocol))
 		{
-			return new HttpConnection(url);
+			return new HttpRemoteConnection(url);
 		}
 
 		return null;
@@ -51,12 +51,20 @@ public abstract class Connection
 		this.state = ConnectionState.Connected;
 	}
 
+	public void login(String userName, String password) throws IOException, AuthenticationException
+	{
+		setCredentials(userName, password);
+		login();
+	}
+
+	public abstract void login() throws IOException, AuthenticationException;
+
 	public ConnectionState getState()
 	{
 		return state;
 	}
 
-	protected Connection()
+	protected RemoteConnection()
 	{
 	}
 }

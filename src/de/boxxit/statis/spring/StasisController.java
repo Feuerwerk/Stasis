@@ -11,10 +11,16 @@ import com.esotericsoftware.kryo.io.Output;
 import de.boxxit.statis.SerializableException;
 import de.boxxit.statis.security.LoginService;
 import de.boxxit.statis.security.LoginStatus;
+import de.boxxit.statis.serializer.LocalDateSerializer;
+import de.boxxit.statis.serializer.LocalDateTimeSerializer;
+import de.boxxit.statis.serializer.LocalTimeSerializer;
 import org.apache.commons.pool.BasePoolableObjectFactory;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.PoolableObjectFactory;
 import org.apache.commons.pool.impl.StackObjectPool;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
@@ -35,6 +41,12 @@ public class StasisController implements Controller
 	private Map<String, Object> services;
 	private LoginService loginService;
 	private ObjectPool<InOut> ioPool;
+
+	{
+		kryo.register(LocalTime.class, new LocalTimeSerializer());
+		kryo.register(LocalDate.class, new LocalDateSerializer());
+		kryo.register(LocalDateTime.class, new LocalDateTimeSerializer());
+	}
 
 	public StasisController()
 	{
@@ -158,7 +170,7 @@ public class StasisController implements Controller
 						Object result = foundMethod.invoke(service, args);
 
 						kryo.writeObjectOrNull(output, null, SerializableException.class);
-						kryo.writeObjectOrNull(output, result, returnType);
+						kryo.writeObject(output, new Object[] { result });
 					}
 				}
 				catch (InvocationTargetException ex)

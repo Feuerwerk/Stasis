@@ -11,7 +11,7 @@ public class TestMich
 
 	public static void main(String[] args) throws Exception
 	{
-		Connection connection = Connection.createConnection("http://localhost:8080/public/stasis");
+		RemoteConnection connection = RemoteConnection.createConnection("http://localhost:8080/public/stasis");
 		connection.setCredentials("christian", "christianPW");
 
 		try

@@ -9,11 +9,17 @@ import java.util.TreeMap;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import de.boxxit.statis.serializer.LocalDateSerializer;
+import de.boxxit.statis.serializer.LocalDateTimeSerializer;
+import de.boxxit.statis.serializer.LocalTimeSerializer;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 
 /**
  * User: Christian Fruth
  */
-public class HttpConnection extends Connection
+public class HttpRemoteConnection extends RemoteConnection
 {
 	private static final String CONTENT_TYPE_KEY = "Content-Type";
 	private static final String CONTENT_TYPE_VALUE = "application/x-stasis";
@@ -29,13 +35,31 @@ public class HttpConnection extends Connection
 	private Input input = new Input(4096);
 	private URL url;
 	private Map<String, String> cookies = new TreeMap<>();
-	private ResourceBundle resourceBundle = ResourceBundle.getBundle(HttpConnection.class.getPackage().getName() + ".errors");
+	private ResourceBundle resourceBundle = ResourceBundle.getBundle(HttpRemoteConnection.class.getPackage().getName() + ".errors");
 
-	public HttpConnection(URL url)
+	{
+		kryo.register(LocalTime.class, new LocalTimeSerializer());
+		kryo.register(LocalDate.class, new LocalDateSerializer());
+		kryo.register(LocalDateTime.class, new LocalDateTimeSerializer());
+	}
+
+	public HttpRemoteConnection(URL url)
 	{
 		this.url = url;
 		this.state = ConnectionState.Unconnected;
 
+	}
+
+	@Override
+	public void login() throws IOException, AuthenticationException
+	{
+		if ((userName != null) && (password != null))
+		{
+			if (!invokeLogin(userName, password))
+			{
+				throw new AuthenticationException();
+			}
+		}
 	}
 
 	public <T> T invoke(Class<T> returnType, String name, Object... args) throws IOException
@@ -178,7 +202,17 @@ public class HttpConnection extends Connection
 				return null;
 			}
 
-			return kryo.readObject(input, returnType);
+			Object[] result = kryo.readObject(input, Object[].class);
+
+			if (result.length != 1)
+			{
+				throw createException("wrongResult");
+			}
+
+			@SuppressWarnings("unchecked")
+			T singleResult = (T)result[0];
+
+			return singleResult;
 		}
 		finally
 		{

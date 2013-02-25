@@ -1,6 +1,7 @@
 package de.boxxit.statis;
 
 import com.esotericsoftware.kryo.DefaultSerializer;
+import de.boxxit.statis.serializer.SerializableExceptionSerializer;
 
 /**
  * User: Christian Fruth
