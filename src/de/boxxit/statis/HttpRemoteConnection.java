@@ -3,15 +3,16 @@ package de.boxxit.statis;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.TreeMap;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import de.boxxit.statis.serializer.LocalDateSerializer;
 import de.boxxit.statis.serializer.LocalDateTimeSerializer;
 import de.boxxit.statis.serializer.LocalTimeSerializer;
+import javafx.application.Platform;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
@@ -26,21 +27,106 @@ public class HttpRemoteConnection extends RemoteConnection
 	private static final String REQUEST_METHOD = "POST";
 	private static final String LOGIN_FUNCTION = "login";
 
-	protected static class MissingAuthenticationException extends Exception
+	protected abstract static class Call<T>
 	{
+		public CallHandler<T> handler;
+
+		public void succeed(final T value)
+		{
+			Platform.runLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					handler.succeeded(value);
+				}
+			});
+		}
+
+		public void fail(final Exception ex)
+		{
+			Platform.runLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					handler.failed(ex);
+				}
+			});
+		}
+
+		public abstract void execute(ConnectionWorker worker);
 	}
 
-	private Kryo kryo = new Kryo();
-	private Output output = new Output(4096);
-	private Input input = new Input(4096);
+	protected static class LoginCall extends Call<Void>
+	{
+		public String userName;
+		public String password;
+
+		@Override
+		public void execute(ConnectionWorker worker)
+		{
+			worker.getConnection().invokeLogin(this);
+		}
+	}
+
+	protected static class FunctionCall extends Call<Object>
+	{
+		public String name;
+		public Object[] args;
+
+		@Override
+		public void execute(ConnectionWorker worker)
+		{
+			worker.getConnection().invokeFunction(this);
+		}
+	}
+
+	private class ConnectionWorker implements Runnable
+	{
+		public HttpRemoteConnection getConnection()
+		{
+			return HttpRemoteConnection.this;
+		}
+
+		@Override
+		public void run()
+		{
+			try
+			{
+				while (true)
+				{
+					Call call = pendingCalls.take();
+					call.execute(this);
+				}
+			}
+			catch (InterruptedException ex)
+			{
+				ex.printStackTrace();
+			}
+
+			System.out.println("ConnectionWorker beendet");
+		}
+	}
+
 	private URL url;
-	private Map<String, String> cookies = new TreeMap<>();
-	private ResourceBundle resourceBundle = ResourceBundle.getBundle(HttpRemoteConnection.class.getPackage().getName() + ".errors");
+	private final Kryo kryo = new Kryo();
+	private final Output output = new Output(4096);
+	private final Input input = new Input(4096);
+	private final BlockingQueue<Call> pendingCalls = new LinkedBlockingQueue<>();
+	private final ResourceBundle resourceBundle = ResourceBundle.getBundle(HttpRemoteConnection.class.getPackage().getName() + ".errors");
+	private CookieManager cookieManager = new CookieManager();
+	private String activeUserName;
+	private String activePassword;
 
 	{
 		kryo.register(LocalTime.class, new LocalTimeSerializer());
 		kryo.register(LocalDate.class, new LocalDateSerializer());
 		kryo.register(LocalDateTime.class, new LocalDateTimeSerializer());
+
+		Thread workerThread = new Thread(new ConnectionWorker(), "Statis:HttpRemoteConnection");
+		workerThread.setDaemon(true);
+		workerThread.start();
 	}
 
 	public HttpRemoteConnection(URL url)
@@ -50,70 +136,72 @@ public class HttpRemoteConnection extends RemoteConnection
 
 	}
 
-	@Override
-	public void login() throws IOException, AuthenticationException
+	public CookieManager getCookieManager()
 	{
-		if ((userName != null) && (password != null))
-		{
-			if (!invokeLogin(userName, password))
-			{
-				throw new AuthenticationException();
-			}
-		}
+		return cookieManager;
 	}
 
-	public <T> T invoke(Class<T> returnType, String name, Object... args) throws IOException
+	public void setCookieManager(CookieManager cookieManager)
 	{
-		boolean loginAttempt = false;
+		this.cookieManager = cookieManager;
+	}
 
-		if ((state != ConnectionState.Authenticated) && (userName != null) && (password != null))
+	@Override
+	public void login(CallHandler<Void> handler)
+	{
+		LoginCall newCall = new LoginCall();
+
+		newCall.userName = userName;
+		newCall.password = password;
+		newCall.handler = handler;
+
+		pendingCalls.add(newCall);
+	}
+
+	@Override
+	public void login(CallHandler<Void> handler, String userName, String password)
+	{
+		LoginCall newCall = new LoginCall();
+
+		newCall.userName = userName;
+		newCall.password = password;
+		newCall.handler = handler;
+
+		pendingCalls.add(newCall);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> void call(CallHandler<T> handler, String name, Object... args)
+	{
+		FunctionCall newCall = new FunctionCall();
+
+		newCall.name = name;
+		newCall.args = args;
+		newCall.handler = (CallHandler)handler;
+
+		pendingCalls.add(newCall);
+	}
+
+	protected void invokeLogin(LoginCall call)
+	{
+	    try
 		{
-			loginAttempt = true;
-			boolean authenticated = invokeLogin(userName, password);
+			boolean authenticated = invokeLogin(call.userName, call.password);
 
 			if (!authenticated)
 			{
 				throw createException("loginFailed");
 			}
+
+			call.succeed(null);
 		}
-
-	    try
+		catch (Exception ex)
 		{
-			return invokeInternal(returnType, name, args);
-		}
-		catch (MissingAuthenticationException ex)
-		{
-			if (loginAttempt)
-			{
-				throw createException("loginRepeated");
-			}
-
-			if ((userName == null) || (password == null))
-			{
-				throw createException("corruptedCredentials");
-			}
-
-			boolean authenticated = invokeLogin(userName, password);
-
-			if (authenticated)
-			{
-				try
-				{
-					return invokeInternal(returnType, name, args);
-				}
-				catch (MissingAuthenticationException ex2)
-				{
-					throw createException("loginRepeated");
-				}
-			}
-			else
-			{
-				throw createException("loginFailed");
-			}
+			call.fail(ex);
 		}
 	}
 
-	protected boolean invokeLogin(String userName, String password) throws IOException
+	protected boolean invokeLogin(String userName, String password) throws Exception
 	{
 	    HttpURLConnection connection = null;
 
@@ -132,12 +220,18 @@ public class HttpRemoteConnection extends RemoteConnection
 			output.setOutputStream(null);
 
 			// Rückgabewert in Empfang nehmen
-			readCookies(connection);
+			cookieManager.storeCookies(connection);
 
 			input.setInputStream(connection.getInputStream());
 
 			boolean authenticated = kryo.readObject(input, boolean.class);
-			state = authenticated ? ConnectionState.Authenticated : ConnectionState.Connected;
+
+			if (authenticated)
+			{
+				this.activeUserName = userName;
+				this.activePassword = password;
+				this.state = ConnectionState.Authenticated;
+			}
 
 			return authenticated;
 		}
@@ -156,7 +250,49 @@ public class HttpRemoteConnection extends RemoteConnection
 		}
 	}
 
-	protected <T> T invokeInternal(Class<T> returnType, String name, Object... args) throws IOException, MissingAuthenticationException
+	protected void invokeFunction(FunctionCall call)
+	{
+		try
+		{
+			if ((state != ConnectionState.Authenticated) && (userName != null) && (password != null))
+			{
+				boolean authenticated = invokeLogin(userName, password);
+
+				if (!authenticated)
+				{
+					throw createException("loginFailed");
+				}
+			}
+
+			try
+			{
+				Object returnValue = internalCall(call.name, call.args);
+				call.succeed(returnValue);
+			}
+			catch (AuthenticationMissmatchException ex)
+			{
+				assert activeUserName != null : "activeUserName is null";
+				assert activePassword != null : "activePassword is null";
+
+				boolean authenticated = invokeLogin(activeUserName, activePassword);
+
+				if (!authenticated)
+				{
+					throw createException("loginRepeated");
+				}
+
+				Object returnValue = internalCall(call.name, call.args);
+				call.succeed(returnValue);
+			}
+		}
+		catch (Exception ex)
+		{
+			call.fail(ex);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <T> T internalCall(String name, Object... args) throws Exception
 	{
 	    HttpURLConnection connection = null;
 
@@ -168,51 +304,31 @@ public class HttpRemoteConnection extends RemoteConnection
 			output.setOutputStream(connection.getOutputStream());
 
 			kryo.writeObject(output, name);
+			kryo.writeObject(output, state == ConnectionState.Authenticated); // Dem Server mitteilen ob wir davon ausgehen, dass wir bereits authentifiziert sind
 			kryo.writeObject(output, args);
 
+			// Ausgabe schließen
 			output.close();
 			output.setOutputStream(null);
 
 			// Rückgabewert in Empfang nehmen
-			readCookies(connection);
+			cookieManager.storeCookies(connection);
 
 			input.setInputStream(connection.getInputStream());
 
-			boolean authenticated = kryo.readObject(input, boolean.class);
+			Object[] result = kryo.readObject(input, Object[].class);
 
-			if (state == ConnectionState.Unconnected)
-			{
-				state = ConnectionState.Connected;
-			}
-
-			if ((state == ConnectionState.Authenticated) && !authenticated)
-			{
-				throw new MissingAuthenticationException();
-			}
-
-			SerializableException exception = kryo.readObjectOrNull(input, SerializableException.class);
-
-			if (exception != null)
-			{
-				throw exception;
-			}
-
-			if (void.class.equals(returnType))
+			if (result.length == 0)
 			{
 				return null;
 			}
 
-			Object[] result = kryo.readObject(input, Object[].class);
-
-			if (result.length != 1)
+			if (result[0] instanceof Exception)
 			{
-				throw createException("wrongResult");
+				throw (Exception)result[0];
 			}
 
-			@SuppressWarnings("unchecked")
-			T singleResult = (T)result[0];
-
-			return singleResult;
+			return (T)result[0];
 		}
 		finally
 		{
@@ -229,38 +345,17 @@ public class HttpRemoteConnection extends RemoteConnection
 		}
 	}
 
-	protected void readCookies(HttpURLConnection connection)
-	{
-		String headerName;
-
-		for (int i = 1; (headerName = connection.getHeaderFieldKey(i)) != null; ++i)
-		{
-			if (headerName.equals("Set-Cookie"))
-			{
-				String cookie = connection.getHeaderField(i);
-				cookie = cookie.substring(0, cookie.indexOf(";"));
-				int index = cookie.indexOf('=');
-				String cookieName = cookie.substring(0, index);
-				String cookieValue = cookie.substring(index + 1);
-
-				cookies.put(cookieName, cookieValue);
-			}
-		}
-	}
-
 	protected HttpURLConnection prepareConnection() throws IOException
 	{
 		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+
 		connection.setRequestMethod(REQUEST_METHOD);
 		connection.setRequestProperty(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 		connection.setUseCaches(false);
 		connection.setDoInput(true);
 		connection.setDoOutput(true);
 
-		for (Map.Entry<String, String> cookieEntry : cookies.entrySet())
-		{
-			connection.setRequestProperty("Cookie", cookieEntry.getKey() + "=" + cookieEntry.getValue());
-		}
+		cookieManager.setCookies(connection);
 
 		return connection;
 	}

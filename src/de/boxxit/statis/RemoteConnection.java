@@ -1,6 +1,5 @@
 package de.boxxit.statis;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -42,7 +41,7 @@ public abstract class RemoteConnection
 		return null;
 	}
 
-	public abstract <T> T invoke(Class<T> returnType, String serviceName, Object... args) throws IOException;
+	public abstract <T> void call(CallHandler<T> handler, String name, Object... args);
 
 	public void setCredentials(String userName, String password)
 	{
@@ -51,13 +50,13 @@ public abstract class RemoteConnection
 		this.state = ConnectionState.Connected;
 	}
 
-	public void login(String userName, String password) throws IOException, AuthenticationException
+	public void login(CallHandler<Void> handler, String userName, String password)
 	{
 		setCredentials(userName, password);
-		login();
+		login(handler);
 	}
 
-	public abstract void login() throws IOException, AuthenticationException;
+	public abstract void login(CallHandler<Void> handler);
 
 	public ConnectionState getState()
 	{

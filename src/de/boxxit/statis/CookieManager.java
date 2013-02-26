@@ -83,8 +83,16 @@ public class CookieManager
 				if (tokenizer.hasMoreTokens())
 				{
 					String token = tokenizer.nextToken();
-					String name = token.substring(0, token.indexOf(NAME_VALUE_SEPARATOR));
-					String value = token.substring(token.indexOf(NAME_VALUE_SEPARATOR) + 1, token.length());
+					int index = token.indexOf(NAME_VALUE_SEPARATOR);
+
+					if (index == -1)
+					{
+						continue;
+					}
+
+					String name = token.substring(0, index);
+					String value = token.substring(index + 1);
+
 					domainStore.put(name, cookie);
 					cookie.put(name, value);
 				}
@@ -92,7 +100,17 @@ public class CookieManager
 				while (tokenizer.hasMoreTokens())
 				{
 					String token = tokenizer.nextToken();
-					cookie.put(token.substring(0, token.indexOf(NAME_VALUE_SEPARATOR)).toLowerCase(), token.substring(token.indexOf(NAME_VALUE_SEPARATOR) + 1, token.length()));
+					int index = token.indexOf(NAME_VALUE_SEPARATOR);
+
+					if (index == -1)
+					{
+						continue;
+					}
+
+					String name = token.substring(0, index);
+					String value = token.substring(index + 1);
+
+					cookie.put(name.toLowerCase(), value);
 				}
 			}
 		}

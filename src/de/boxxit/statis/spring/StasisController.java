@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import de.boxxit.statis.AuthenticationMissmatchException;
 import de.boxxit.statis.SerializableException;
 import de.boxxit.statis.security.LoginService;
 import de.boxxit.statis.security.LoginStatus;
@@ -120,12 +121,18 @@ public class StasisController implements Controller
 		}
 		else
 		{
-			LoginStatus loginStatus = loginService.getStatus();
-
-			kryo.writeObject(output, loginStatus.isAuthenticated());
+			Object[] result;
 
 			try
 			{
+				LoginStatus loginStatus = loginService.getStatus();
+				boolean assumeAuthenticated = kryo.readObject(input, boolean.class);
+
+				if (loginStatus.isAuthenticated() != assumeAuthenticated)
+				{
+					throw new AuthenticationMissmatchException(loginStatus.isAuthenticated());
+				}
+
 				int index = name.indexOf('.');
 				String serviceName = name.substring(0, index);
 				Object service = services.get(serviceName);
@@ -163,14 +170,13 @@ public class StasisController implements Controller
 					{
 						foundMethod.invoke(service, args);
 
-						kryo.writeObjectOrNull(output, null, SerializableException.class);
+						result = new Object[0];
 					}
 					else
 					{
-						Object result = foundMethod.invoke(service, args);
+						Object returnValue = foundMethod.invoke(service, args);
 
-						kryo.writeObjectOrNull(output, null, SerializableException.class);
-						kryo.writeObject(output, new Object[] { result });
+						result = new Object[] { returnValue };
 					}
 				}
 				catch (InvocationTargetException ex)
@@ -179,14 +185,16 @@ public class StasisController implements Controller
 					throw ex.getCause();
 				}
 			}
-			catch (SerializableException ex)
+			catch (AuthenticationMissmatchException | SerializableException ex)
 			{
-				kryo.writeObject(output, ex);
+				result = new Object[] { ex };
 			}
 			catch (Throwable ex)
 			{
-				kryo.writeObject(output, new SerializableException(ex));
+				result = new Object[] { new SerializableException(ex) };
 			}
+
+			kryo.writeObject(output, result);
 
 			output.flush();
 		}

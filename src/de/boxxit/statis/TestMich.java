@@ -11,6 +11,7 @@ public class TestMich
 
 	public static void main(String[] args) throws Exception
 	{
+		/*
 		RemoteConnection connection = RemoteConnection.createConnection("http://localhost:8080/public/stasis");
 		connection.setCredentials("christian", "christianPW");
 
@@ -27,5 +28,6 @@ public class TestMich
 			System.err.println(ex.getId() + ": " + ex.getMessage());
 			ex.printStackTrace();
 		}
+		*/
 	}
 }
