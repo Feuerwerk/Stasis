@@ -182,7 +182,8 @@ public class StasisController implements Controller
 				catch (InvocationTargetException ex)
 				{
 					// Exception entpacken um ursächliche Exception näher auszuwerten
-					throw ex.getCause();
+					ex.printStackTrace();
+					throw ex.getTargetException();
 				}
 			}
 			catch (AuthenticationMissmatchException | SerializableException ex)
