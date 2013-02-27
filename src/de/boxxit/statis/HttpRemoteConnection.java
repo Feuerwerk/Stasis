@@ -182,7 +182,12 @@ public class HttpRemoteConnection extends RemoteConnection
 		pendingCalls.add(newCall);
 	}
 
-	protected void invokeLogin(LoginCall call)
+    @Override
+    public <T> T callSync(String name, Object... args) throws Exception{
+        return invokeFunction(name, args);
+    }
+
+    protected void invokeLogin(LoginCall call)
 	{
 	    try
 		{
@@ -291,8 +296,41 @@ public class HttpRemoteConnection extends RemoteConnection
 		}
 	}
 
+    protected <T> T invokeFunction(String name, Object[] args) throws Exception
+    {
+        if ((state != ConnectionState.Authenticated) && (userName != null) && (password != null))
+        {
+            boolean authenticated = invokeLogin(userName, password);
+
+            if (!authenticated)
+            {
+                throw createException("loginFailed");
+            }
+        }
+
+        try
+        {
+           return (T)internalCall(name, args);
+
+        }
+        catch (AuthenticationMissmatchException ex)
+        {
+            assert activeUserName != null : "activeUserName is null";
+            assert activePassword != null : "activePassword is null";
+
+            boolean authenticated = invokeLogin(activeUserName, activePassword);
+
+            if (!authenticated)
+            {
+                throw createException("loginRepeated");
+            }
+
+            return (T)internalCall(name, args);
+        }
+    }
+
 	@SuppressWarnings("unchecked")
-	protected <T> T internalCall(String name, Object... args) throws Exception
+	protected <T> T internalCall(String name, Object[] args) throws Exception
 	{
 	    HttpURLConnection connection = null;
 
@@ -305,7 +343,7 @@ public class HttpRemoteConnection extends RemoteConnection
 
 			kryo.writeObject(output, name);
 			kryo.writeObject(output, state == ConnectionState.Authenticated); // Dem Server mitteilen ob wir davon ausgehen, dass wir bereits authentifiziert sind
-			kryo.writeObject(output, args);
+            kryo.writeObject(output, args!=null ? args : new Object[0]);
 
 			// Ausgabe schließen
 			output.close();

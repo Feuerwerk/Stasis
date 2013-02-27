@@ -42,6 +42,7 @@ public abstract class RemoteConnection
 	}
 
 	public abstract <T> void call(CallHandler<T> handler, String name, Object... args);
+    public abstract <T> T callSync(String name, Object... args) throws Exception;
 
 	public void setCredentials(String userName, String password)
 	{
