@@ -112,6 +112,7 @@ public class StasisController implements Controller
 
 	protected void handleIO(Kryo kryo, Input input, Output output) throws Exception
 	{
+		// Funktionsnamen lesen
 		String name = kryo.readObject(input, String.class);
 
 		if (LOGIN_FUNCTION.equals(name))
