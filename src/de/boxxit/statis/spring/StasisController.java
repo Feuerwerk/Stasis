@@ -39,6 +39,7 @@ public class StasisController implements Controller
 	private LoginService loginService;
 	private ObjectPool<InOut> ioPool;
 
+    // Ich bin noch ein Kommentar
 	public StasisController()
 	{
 		final PoolableObjectFactory<InOut> poolableObjectFactory = new BasePoolableObjectFactory<InOut>()
