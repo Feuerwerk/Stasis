@@ -6,22 +6,17 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import de.boxxit.statis.AuthenticationMissmatchException;
 import de.boxxit.statis.SerializableException;
 import de.boxxit.statis.security.LoginService;
 import de.boxxit.statis.security.LoginStatus;
-import de.boxxit.statis.serializer.LocalDateSerializer;
-import de.boxxit.statis.serializer.LocalDateTimeSerializer;
-import de.boxxit.statis.serializer.LocalTimeSerializer;
 import org.apache.commons.pool.BasePoolableObjectFactory;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.PoolableObjectFactory;
 import org.apache.commons.pool.impl.StackObjectPool;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
@@ -36,18 +31,13 @@ public class StasisController implements Controller
 	{
 		public Input input;
 		public Output output;
+		public Kryo kryo;
 	}
 
-	private Kryo kryo = new Kryo();
 	private Map<String, Object> services;
+	private Map<Class<?>, Serializer<?>> registeredSerializers;
 	private LoginService loginService;
 	private ObjectPool<InOut> ioPool;
-
-	{
-		kryo.register(LocalTime.class, new LocalTimeSerializer());
-		kryo.register(LocalDate.class, new LocalDateSerializer());
-		kryo.register(LocalDateTime.class, new LocalDateTimeSerializer());
-	}
 
 	public StasisController()
 	{
@@ -57,8 +47,19 @@ public class StasisController implements Controller
 			public InOut makeObject() throws Exception
 			{
 				InOut io = new InOut();
+
 				io.input = new Input(4096);
 				io.output = new Output(4096);
+				io.kryo = new Kryo();
+
+				if (registeredSerializers != null)
+				{
+					for (Map.Entry<Class<?>, Serializer<?>> serializerEntry : registeredSerializers.entrySet())
+					{
+						io.kryo.register(serializerEntry.getKey(), serializerEntry.getValue());
+					}
+				}
+
 				return io;
 			}
 
@@ -84,6 +85,11 @@ public class StasisController implements Controller
 		this.services = services;
 	}
 
+	public void setRegisteredSerializers(Map<Class<?>, Serializer<?>> registeredSerializers)
+	{
+		this.registeredSerializers = registeredSerializers;
+	}
+
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
@@ -94,7 +100,7 @@ public class StasisController implements Controller
 			io.input.setInputStream(request.getInputStream());
 			io.output.setOutputStream(response.getOutputStream());
 
-			handleIO(io.input, io.output);
+			handleIO(io.kryo, io.input, io.output);
 		}
 		finally
 		{
@@ -104,7 +110,7 @@ public class StasisController implements Controller
 		return null;
 	}
 
-	protected void handleIO(Input input, Output output) throws Exception
+	protected void handleIO(Kryo kryo, Input input, Output output) throws Exception
 	{
 		String name = kryo.readObject(input, String.class);
 

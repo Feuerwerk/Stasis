@@ -17,6 +17,13 @@
 				<entry key="test"><bean class="de.boxxit.statis.TestService"/></entry>
 			</map>
 		</property>
+		<property name="registeredSerializers">
+			<map>
+				<entry key="org.joda.time.LocalTime"><bean class="de.boxxit.statis.serializer.LocalTimeSerializer"/></entry>
+				<entry key="org.joda.time.LocalDate"><bean class="de.boxxit.statis.serializer.LocalDateSerializer"/></entry>
+				<entry key="org.joda.time.LocalDateTime"><bean class="de.boxxit.statis.serializer.LocalDateTimeSerializer"/></entry>
+			</map>
+		</property>
 	</bean>
 
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
