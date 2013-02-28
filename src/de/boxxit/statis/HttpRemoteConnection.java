@@ -310,8 +310,9 @@ public class HttpRemoteConnection extends RemoteConnection
 
         try
         {
-           return (T)internalCall(name, args);
-
+            @SuppressWarnings("unchecked")
+            T result = (T)internalCall(name, args);
+           return result;
         }
         catch (AuthenticationMissmatchException ex)
         {
@@ -325,7 +326,9 @@ public class HttpRemoteConnection extends RemoteConnection
                 throw createException("loginRepeated");
             }
 
-            return (T)internalCall(name, args);
+            @SuppressWarnings("unchecked")
+            T result = (T)internalCall(name, args);
+            return result;
         }
     }
 
