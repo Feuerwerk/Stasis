@@ -2,6 +2,7 @@ package de.boxxit.statis.spring;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +36,7 @@ public class StasisController implements Controller
 	}
 
 	private Map<String, Object> services;
-	private Map<Class<?>, Serializer<?>> registeredSerializers;
+	private List<Registration> registeredSerializers;
 	private LoginService loginService;
 	private ObjectPool<InOut> ioPool;
 
@@ -55,9 +56,28 @@ public class StasisController implements Controller
 
 				if (registeredSerializers != null)
 				{
-					for (Map.Entry<Class<?>, Serializer<?>> serializerEntry : registeredSerializers.entrySet())
+					for (Registration registration : registeredSerializers)
 					{
-						io.kryo.register(serializerEntry.getKey(), serializerEntry.getValue());
+						Serializer<?> serializer = registration.getSerializer();
+
+						if ((serializer == null) && (registration.getSerializerClass() != null))
+						{
+							serializer = registration.getSerializerClass().newInstance();
+						}
+
+						if (registration.getId() == null)
+						{
+							assert (serializer != null);
+							io.kryo.register(registration.getType(), serializer);
+						}
+						else if (serializer == null)
+						{
+							io.kryo.register(registration.getType(), registration.getId());
+						}
+						else
+						{
+							io.kryo.register(registration.getType(), serializer, registration.getId());
+						}
 					}
 				}
 
@@ -86,7 +106,7 @@ public class StasisController implements Controller
 		this.services = services;
 	}
 
-	public void setRegisteredSerializers(Map<Class<?>, Serializer<?>> registeredSerializers)
+	public void setRegisteredSerializers(List<Registration> registeredSerializers)
 	{
 		this.registeredSerializers = registeredSerializers;
 	}
