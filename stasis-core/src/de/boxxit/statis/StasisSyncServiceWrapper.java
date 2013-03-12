@@ -3,70 +3,37 @@ package de.boxxit.statis;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
 
 /**
- * Created with IntelliJ IDEA.
- * User: sseibel
- * Date: 27.02.13
- * Time: 19:41
- * To change this template use File | Settings | File Templates.
+ * User: Christian Fruth
  */
-public class StasisSyncServiceWrapper implements FactoryBean<Object>, InitializingBean
+public class StasisSyncServiceWrapper
 {
-
-	private class InvocationHandlerImpl implements InvocationHandler
+	private static class InvocationHandlerImpl implements InvocationHandler
 	{
+		private RemoteConnection connection;
+		private String serviceName;
+
+		private InvocationHandlerImpl(RemoteConnection connection, String serviceName)
+		{
+			this.connection = connection;
+			this.serviceName = serviceName;
+		}
+
 		@Override
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
 		{
-
-			return remoteConnection.callSync(serviceName + "." + method.getName(), args);
+			return connection.callSync(serviceName + "." + method.getName(), args);
 		}
 	}
 
-	private Class<?> serviceInterface;
-	private Object serviceProxy;
-	private String serviceName;
-	private RemoteConnection remoteConnection;
-
-	public void setServiceName(String serviceName)
+	private StasisSyncServiceWrapper()
 	{
-		this.serviceName = serviceName;
 	}
 
-	public void setServiceInterface(Class<?> serviceInterface)
+	@SuppressWarnings("unchecked")
+	public static <T> T create(Class<T> serviceInterface, RemoteConnection connection, String serviceName)
 	{
-		this.serviceInterface = serviceInterface;
-	}
-
-	public void setRemoteConnection(RemoteConnection remoteConnection)
-	{
-		this.remoteConnection = remoteConnection;
-	}
-
-	@Override
-	public Object getObject() throws Exception
-	{
-		return serviceProxy;
-	}
-
-	@Override
-	public Class<?> getObjectType()
-	{
-		return serviceInterface;
-	}
-
-	@Override
-	public boolean isSingleton()
-	{
-		return true;
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception
-	{
-		serviceProxy = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { serviceInterface }, new InvocationHandlerImpl());
+		return (T)Proxy.newProxyInstance(StasisAsyncServiceWrapper.class.getClassLoader(), new Class[] { serviceInterface }, new InvocationHandlerImpl(connection, serviceName));
 	}
 }
