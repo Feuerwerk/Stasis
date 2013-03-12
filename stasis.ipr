@@ -52,6 +52,10 @@
   </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
+    <excludeFromCompile>
+      <directory url="file://$PROJECT_DIR$/stasis-core/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/stasis-android/gen" includeSubdirectories="true" />
+    </excludeFromCompile>
     <resourceExtensions />
     <wildcardResourcePatterns>
       <entry name="!?*.java" />
@@ -199,7 +203,9 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/stasis.iml" filepath="$PROJECT_DIR$/stasis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/stasis-android/stasis-android.iml" filepath="$PROJECT_DIR$/stasis-android/stasis-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/stasis-core/stasis-core.iml" filepath="$PROJECT_DIR$/stasis-core/stasis-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/stasis-javafx/stasis-javafx.iml" filepath="$PROJECT_DIR$/stasis-javafx/stasis-javafx.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" project-jdk-type="JavaSDK">
@@ -263,6 +269,17 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+    </library>
+    <library name="Joda-Time 1.6">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/jodatime-1.6/joda-time-1.6.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/jodatime-1.6/joda-time-1.6-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/jodatime-1.6/joda-time-1.6-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Kryo 2.20">
       <CLASSES>
