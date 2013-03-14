@@ -9,14 +9,9 @@ import java.util.ServiceLoader;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import de.boxxit.statis.serializer.LocalDateSerializer;
-import de.boxxit.statis.serializer.LocalDateTimeSerializer;
-import de.boxxit.statis.serializer.LocalTimeSerializer;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
 
 /**
  * User: Christian Fruth
@@ -133,10 +128,6 @@ public class HttpRemoteConnection extends RemoteConnection
 	private String activePassword;
 
 	{
-		kryo.register(LocalTime.class, new LocalTimeSerializer());
-		kryo.register(LocalDate.class, new LocalDateSerializer());
-		kryo.register(LocalDateTime.class, new LocalDateTimeSerializer());
-
 		// passenden Synchronizer finden
 		Iterator<Synchronizer> serviceIter = ServiceLoader.load(Synchronizer.class).iterator();
 
@@ -166,6 +157,24 @@ public class HttpRemoteConnection extends RemoteConnection
 	public void setCookieManager(CookieManager cookieManager)
 	{
 		this.cookieManager = cookieManager;
+	}
+
+	@Override
+	public <T> void register(Class<T> type, int id)
+	{
+		kryo.register(type, id);
+	}
+
+	@Override
+	public <T> void register(Class<T> type, Serializer<T> serializer)
+	{
+		kryo.register(type, serializer);
+	}
+
+	@Override
+	public <T> void register(Class<T> type, Serializer<T> serializer, int id)
+	{
+		kryo.register(type, serializer, id);
 	}
 
 	@Override

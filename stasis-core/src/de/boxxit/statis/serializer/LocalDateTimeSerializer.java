@@ -4,6 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
 /**
@@ -18,13 +19,13 @@ public class LocalDateTimeSerializer extends Serializer<LocalDateTime>
 	@Override
 	public void write(Kryo kryo, Output output, LocalDateTime date)
 	{
-		output.writeLong(date.toDateTime().getMillis(), true);
+		output.writeLong(date.toDateTime(DateTimeZone.UTC).getMillis(), true);
 	}
 
 	@Override
 	public LocalDateTime read(Kryo kryo, Input input, Class<LocalDateTime> type)
 	{
 		long millis = input.readLong(true);
-		return new LocalDateTime(millis);
+		return new LocalDateTime(millis, DateTimeZone.UTC);
 	}
 }

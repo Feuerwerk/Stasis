@@ -26,6 +26,6 @@ public class LocalTimeSerializer extends Serializer<LocalTime>
 	public LocalTime read(Kryo kryo, Input input, Class<LocalTime> type)
 	{
 		long millis = input.readLong(true);
-		return new LocalTime();
+		return new LocalTime(millis);
 	}
 }

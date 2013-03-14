@@ -2,6 +2,7 @@ package de.boxxit.statis;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import com.esotericsoftware.kryo.Serializer;
 
 /**
  * User: Christian Fruth
@@ -73,6 +74,12 @@ public abstract class RemoteConnection
 	{
 		return state;
 	}
+
+	public abstract <T> void register(Class<T> type, int id);
+
+	public abstract <T> void register(Class<T> type, Serializer<T> serializer);
+
+	public abstract <T> void register(Class<T> type, Serializer<T> serializer, int id);
 
 	protected RemoteConnection()
 	{

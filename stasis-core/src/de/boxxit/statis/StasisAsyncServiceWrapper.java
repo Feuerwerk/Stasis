@@ -14,11 +14,13 @@ public class StasisAsyncServiceWrapper
 	{
 		private RemoteConnection connection;
 		private String serviceName;
+		private ResultHandler<Exception> defaultErrorHandler;
 
-		private InvocationHandlerImpl(RemoteConnection connection, String serviceName)
+		private InvocationHandlerImpl(RemoteConnection connection, String serviceName, ResultHandler<Exception> defaultErrorHandler)
 		{
 			this.connection = connection;
 			this.serviceName = serviceName;
+			this.defaultErrorHandler = defaultErrorHandler;
 		}
 
 		@Override
@@ -52,15 +54,15 @@ public class StasisAsyncServiceWrapper
 				@Override
 				public void failed(Exception ex)
 				{
-					showError(ex);
+					ex.printStackTrace();
+
+					if (defaultErrorHandler != null)
+					{
+						defaultErrorHandler.handle(ex);
+					}
 				}
 			}, name, argsSync);
 			return null;
-		}
-
-		protected void showError(Exception ex)
-		{
-			ex.printStackTrace();
 		}
 	}
 
@@ -69,8 +71,8 @@ public class StasisAsyncServiceWrapper
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T create(Class<T> serviceInterface, RemoteConnection connection, String serviceName)
+	public static <T> T create(Class<T> serviceInterface, RemoteConnection connection, String serviceName, ResultHandler<Exception> defaultErrorHandler)
 	{
-		return (T)Proxy.newProxyInstance(StasisAsyncServiceWrapper.class.getClassLoader(), new Class[] { serviceInterface }, new InvocationHandlerImpl(connection, serviceName));
+		return (T)Proxy.newProxyInstance(StasisAsyncServiceWrapper.class.getClassLoader(), new Class[] { serviceInterface }, new InvocationHandlerImpl(connection, serviceName, defaultErrorHandler));
 	}
 }

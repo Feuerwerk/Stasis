@@ -40,7 +40,7 @@
     <orderEntry type="library" scope="RUNTIME" name="Objenesis 1.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Minlog 1.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Reflectasm 1.07" level="project" />
-    <orderEntry type="library" name="Joda-Time 1.6" level="project" />
+    <orderEntry type="library" name="Joda-Time 2.2" level="project" />
   </component>
 </module>
 
