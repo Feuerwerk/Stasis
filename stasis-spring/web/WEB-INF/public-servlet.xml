@@ -10,14 +10,14 @@
 
 	<security:global-method-security secured-annotations="enabled" jsr250-annotations="enabled"/>
 
-	<bean id="stasisController" class="de.boxxit.statis.spring.StasisController">
+	<bean id="stasisController" class="de.boxxit.stasis.spring.StasisController">
 		<property name="loginService">
-			<bean class="de.boxxit.statis.security.SpringSecurityLoginService" autowire="byName"/>
+			<bean class="de.boxxit.stasis.security.SpringSecurityLoginService" autowire="byName"/>
 		</property>
 		<property name="services">
 			<map>
 				<entry key="test">
-					<bean class="de.boxxit.statis.TestService"/>
+					<bean class="de.boxxit.stasis.spring.TestService"/>
 				</entry>
 			</map>
 		</property>

@@ -1,4 +1,4 @@
-package de.boxxit.statis.spring;
+package de.boxxit.stasis.spring;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

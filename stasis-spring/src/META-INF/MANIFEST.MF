@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Class-Path: commons-pool-1.6.jar kryo-2.20.jar cglib-nodep-2.1_3.jar l
+ og4j-1.2.15.jar aopalliance.jar minlog-none-1.2.jar objenesis-1.2.jar
+  org.springframework.aop-3.1.2.RELEASE.jar org.springframework.asm-3.
+ 1.2.RELEASE.jar org.springframework.aspects-3.1.2.RELEASE.jar org.spr
+ ingframework.beans-3.1.2.RELEASE.jar org.springframework.context-3.1.
+ 2.RELEASE.jar org.springframework.context.support-3.1.2.RELEASE.jar o
+ rg.springframework.core-3.1.2.RELEASE.jar org.springframework.express
+ ion-3.1.2.RELEASE.jar org.springframework.instrument-3.1.2.RELEASE.ja
+ r org.springframework.instrument.tomcat-3.1.2.RELEASE.jar org.springf
+ ramework.jdbc-3.1.2.RELEASE.jar org.springframework.jms-3.1.2.RELEASE
+ .jar org.springframework.orm-3.1.2.RELEASE.jar org.springframework.ox
+ m-3.1.2.RELEASE.jar org.springframework.test-3.1.2.RELEASE.jar org.sp
+ ringframework.transaction-3.1.2.RELEASE.jar org.springframework.web-3
+ .1.2.RELEASE.jar org.springframework.web.portlet-3.1.2.RELEASE.jar or
+ g.springframework.web.servlet-3.1.2.RELEASE.jar org.springframework.w
+ eb.struts-3.1.2.RELEASE.jar asm-4.0.jar asm-analysis-4.0.jar asm-comm
+ ons-4.0.jar asm-tree-4.0.jar asm-util-4.0.jar joda-time-2.2.jar sprin
+ g-security-acl-3.1.2.RELEASE.jar spring-security-aspects-3.1.2.RELEAS
+ E.jar spring-security-cas-3.1.2.RELEASE.jar spring-security-config-3.
+ 1.2.RELEASE.jar spring-security-core-3.1.2.RELEASE.jar spring-securit
+ y-crypto-3.1.2.RELEASE.jar spring-security-remoting-3.1.2.RELEASE.jar
+  spring-security-taglibs-3.1.2.RELEASE.jar spring-security-web-3.1.2.
+ RELEASE.jar reflectasm-1.07.jar
+Main-Class: 
+

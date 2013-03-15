@@ -1,7 +1,9 @@
-package de.boxxit.statis.security;
+package de.boxxit.stasis.security;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import de.boxxit.statis.security.LoginService;
+import de.boxxit.statis.security.LoginStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

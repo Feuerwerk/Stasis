@@ -1,4 +1,4 @@
-package de.boxxit.statis;
+package de.boxxit.stasis.spring;
 
 import org.springframework.security.access.annotation.Secured;
 

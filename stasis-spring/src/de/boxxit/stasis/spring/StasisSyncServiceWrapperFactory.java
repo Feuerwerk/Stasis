@@ -1,4 +1,4 @@
-package de.boxxit.statis.spring;
+package de.boxxit.stasis.spring;
 
 import de.boxxit.statis.RemoteConnection;
 import de.boxxit.statis.StasisSyncServiceWrapper;

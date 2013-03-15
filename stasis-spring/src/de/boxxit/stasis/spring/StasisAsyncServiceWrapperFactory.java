@@ -1,4 +1,4 @@
-package de.boxxit.statis.spring;
+package de.boxxit.stasis.spring;
 
 import java.net.MalformedURLException;
 import de.boxxit.statis.RemoteConnection;

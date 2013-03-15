@@ -1,4 +1,4 @@
-package de.boxxit.statis.spring;
+package de.boxxit.stasis.spring;
 
 import com.esotericsoftware.kryo.Serializer;
 
