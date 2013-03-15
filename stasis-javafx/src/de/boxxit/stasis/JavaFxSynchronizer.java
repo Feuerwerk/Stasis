@@ -1,6 +1,5 @@
 package de.boxxit.stasis;
 
-import de.boxxit.statis.Synchronizer;
 import javafx.application.Platform;
 
 /**
