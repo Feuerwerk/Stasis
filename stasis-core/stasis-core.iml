@@ -32,7 +32,7 @@
     <orderEntry type="library" exported="" scope="RUNTIME" name="Objenesis 1.2" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="Reflectasm 1.07" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="Minlog 1.2" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="ASM 4.0" level="project" />
+    <orderEntry type="library" exported="" scope="RUNTIME" name="ASM 4.0" level="project" />
   </component>
 </module>
 
