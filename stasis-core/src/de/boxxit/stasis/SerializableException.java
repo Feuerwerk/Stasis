@@ -1,7 +1,7 @@
-package de.boxxit.statis;
+package de.boxxit.stasis;
 
 import com.esotericsoftware.kryo.DefaultSerializer;
-import de.boxxit.statis.serializer.SerializableExceptionSerializer;
+import de.boxxit.stasis.serializer.SerializableExceptionSerializer;
 
 /**
  * User: Christian Fruth

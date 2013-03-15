@@ -1,4 +1,4 @@
-package de.boxxit.statis;
+package de.boxxit.stasis;
 
 /**
  * User: Christian Fruth

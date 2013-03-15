@@ -1,4 +1,4 @@
-package de.boxxit.statis.security;
+package de.boxxit.stasis.security;
 
 /**
  * User: Christian Fruth

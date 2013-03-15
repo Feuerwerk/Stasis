@@ -1,7 +1,7 @@
 package de.boxxit.stasis.spring;
 
-import de.boxxit.statis.RemoteConnection;
-import de.boxxit.statis.StasisSyncServiceWrapper;
+import de.boxxit.stasis.RemoteConnection;
+import de.boxxit.stasis.StasisSyncServiceWrapper;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 

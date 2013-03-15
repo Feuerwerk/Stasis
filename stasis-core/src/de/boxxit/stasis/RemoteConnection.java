@@ -1,4 +1,4 @@
-package de.boxxit.statis;
+package de.boxxit.stasis;
 
 import java.net.MalformedURLException;
 import java.net.URL;

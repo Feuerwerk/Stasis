@@ -1,7 +1,6 @@
 package de.boxxit.stasis;
 
 import android.app.Activity;
-import de.boxxit.statis.Synchronizer;
 
 /**
  * User: Christian Fruth

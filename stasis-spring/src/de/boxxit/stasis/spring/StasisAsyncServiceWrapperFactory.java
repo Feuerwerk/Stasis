@@ -1,9 +1,9 @@
 package de.boxxit.stasis.spring;
 
 import java.net.MalformedURLException;
-import de.boxxit.statis.RemoteConnection;
-import de.boxxit.statis.ResultHandler;
-import de.boxxit.statis.StasisAsyncServiceWrapper;
+import de.boxxit.stasis.RemoteConnection;
+import de.boxxit.stasis.ResultHandler;
+import de.boxxit.stasis.StasisAsyncServiceWrapper;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 

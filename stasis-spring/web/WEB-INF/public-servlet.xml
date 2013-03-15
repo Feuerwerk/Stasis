@@ -24,13 +24,13 @@
 		<property name="registeredSerializers">
 			<map>
 				<entry key="org.joda.time.LocalTime">
-					<bean class="de.boxxit.statis.serializer.LocalTimeSerializer"/>
+					<bean class="de.boxxit.stasis.serializer.LocalTimeSerializer"/>
 				</entry>
 				<entry key="org.joda.time.LocalDate">
-					<bean class="de.boxxit.statis.serializer.LocalDateSerializer"/>
+					<bean class="de.boxxit.stasis.serializer.LocalDateSerializer"/>
 				</entry>
 				<entry key="org.joda.time.LocalDateTime">
-					<bean class="de.boxxit.statis.serializer.LocalDateTimeSerializer"/>
+					<bean class="de.boxxit.stasis.serializer.LocalDateTimeSerializer"/>
 				</entry>
 			</map>
 		</property>

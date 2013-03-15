@@ -1,4 +1,4 @@
-package de.boxxit.statis;
+package de.boxxit.stasis;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
