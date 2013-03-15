@@ -22,5 +22,4 @@ Class-Path: commons-pool-1.6.jar kryo-2.20.jar cglib-nodep-2.1_3.jar l
  y-crypto-3.1.2.RELEASE.jar spring-security-remoting-3.1.2.RELEASE.jar
   spring-security-taglibs-3.1.2.RELEASE.jar spring-security-web-3.1.2.
  RELEASE.jar reflectasm-1.07.jar
-Main-Class: 
 
