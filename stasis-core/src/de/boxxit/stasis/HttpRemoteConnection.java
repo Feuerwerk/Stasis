@@ -160,6 +160,12 @@ public class HttpRemoteConnection extends RemoteConnection
 	}
 
 	@Override
+	public void setDefaultSerializer(Class<? extends Serializer> defaultSerializer)
+	{
+		kryo.setDefaultSerializer(defaultSerializer);
+	}
+
+	@Override
 	public <T> void register(Class<T> type, int id)
 	{
 		kryo.register(type, id);
