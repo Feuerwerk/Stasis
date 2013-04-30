@@ -53,6 +53,8 @@ public abstract class RemoteConnection
 		this.synchronizer = synchronizer;
 	}
 
+	public abstract void setDefaultSerializer(Class<? extends Serializer> defaultSerializer);
+
 	public abstract <T> void callAsync(CallHandler<T> handler, String name, Object... args);
 
 	public abstract <T> T callSync(String name, Object... args) throws Exception;

@@ -39,6 +39,7 @@ public class StasisController implements Controller
 	private List<Registration> registeredSerializers;
 	private LoginService loginService;
 	private ObjectPool<InOut> ioPool;
+	private Class<? extends Serializer> defaultSerializer = null;
 
 	// Ich bin noch ein Kommentar
 	public StasisController()
@@ -53,6 +54,11 @@ public class StasisController implements Controller
 				io.input = new Input(4096);
 				io.output = new Output(4096);
 				io.kryo = new Kryo();
+
+				if (defaultSerializer != null)
+				{
+					io.kryo.setDefaultSerializer(defaultSerializer);
+				}
 
 				if (registeredSerializers != null)
 				{
@@ -109,6 +115,11 @@ public class StasisController implements Controller
 	public void setRegisteredSerializers(List<Registration> registeredSerializers)
 	{
 		this.registeredSerializers = registeredSerializers;
+	}
+
+	public void setDefaultSerializer(Class<? extends Serializer> defaultSerializer)
+	{
+		this.defaultSerializer = defaultSerializer;
 	}
 
 	@Override
