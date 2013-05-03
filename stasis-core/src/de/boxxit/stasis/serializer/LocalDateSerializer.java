@@ -27,6 +27,6 @@ public class LocalDateSerializer extends Serializer<LocalDate>
 	public LocalDate read(Kryo kryo, Input input, Class<LocalDate> type)
 	{
 		long millis = input.readLong(true);
-		return new LocalDate(millis, DateTimeZone.UTC);
+		return new LocalDate(millis);
 	}
 }
