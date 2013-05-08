@@ -2,6 +2,7 @@ package de.boxxit.stasis.spring;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import de.boxxit.stasis.AuthenticationMissmatchException;
 import de.boxxit.stasis.SerializableException;
 import de.boxxit.stasis.security.LoginService;
 import de.boxxit.stasis.security.LoginStatus;
+import de.boxxit.stasis.serializer.ArraysListSerializer;
 import org.apache.commons.pool.BasePoolableObjectFactory;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.PoolableObjectFactory;
@@ -54,6 +56,8 @@ public class StasisController implements Controller
 				io.input = new Input(4096);
 				io.output = new Output(4096);
 				io.kryo = new Kryo();
+
+				io.kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
 
 				if (defaultSerializer != null)
 				{
@@ -235,6 +239,7 @@ public class StasisController implements Controller
 			}
 			catch (Throwable ex)
 			{
+				ex.printStackTrace();
 				result = new Object[] { new SerializableException(ex) };
 			}
 

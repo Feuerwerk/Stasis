@@ -3,6 +3,7 @@ package de.boxxit.stasis;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.ServiceLoader;
@@ -12,6 +13,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import de.boxxit.stasis.serializer.ArraysListSerializer;
 
 /**
  * User: Christian Fruth
@@ -128,6 +130,8 @@ public class HttpRemoteConnection extends RemoteConnection
 	private String activePassword;
 
 	{
+		kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
+
 		// passenden Synchronizer finden
 		Iterator<Synchronizer> serviceIter = ServiceLoader.load(Synchronizer.class).iterator();
 
