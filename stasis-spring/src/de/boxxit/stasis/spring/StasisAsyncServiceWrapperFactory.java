@@ -1,8 +1,8 @@
 package de.boxxit.stasis.spring;
 
 import java.net.MalformedURLException;
+import de.boxxit.stasis.ErrorHandler;
 import de.boxxit.stasis.RemoteConnection;
-import de.boxxit.stasis.ResultHandler;
 import de.boxxit.stasis.StasisAsyncServiceWrapper;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -16,7 +16,7 @@ public class StasisAsyncServiceWrapperFactory implements FactoryBean<Object>, In
 	private RemoteConnection connection;
 	private Object serviceProxy;
 	private String serviceName;
-	private ResultHandler<Exception> defaultErrorHandler;
+	private ErrorHandler defaultErrorHandler;
 
 	public StasisAsyncServiceWrapperFactory()
 	{
@@ -42,7 +42,7 @@ public class StasisAsyncServiceWrapperFactory implements FactoryBean<Object>, In
 		this.serviceName = serviceName;
 	}
 
-	public void setDefaultErrorHandler(ResultHandler<Exception> defaultErrorHandler)
+	public void setDefaultErrorHandler(ErrorHandler defaultErrorHandler)
 	{
 		this.defaultErrorHandler = defaultErrorHandler;
 	}

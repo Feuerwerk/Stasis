@@ -10,13 +10,59 @@ import java.util.Arrays;
  */
 public class StasisAsyncServiceWrapper
 {
+	private static class CallHandlerImpl implements CallHandler<Object>, ErrorChain
+	{
+		private ResultHandler<? super Object> eventHandler;
+		private ErrorHandler defaultErrorHandler;
+
+		private CallHandlerImpl(ResultHandler<? super Object> eventHandler, ErrorHandler defaultErrorHandler)
+		{
+			this.eventHandler = eventHandler;
+			this.defaultErrorHandler = defaultErrorHandler;
+		}
+
+		@Override
+		public void succeeded(Object value)
+		{
+			eventHandler.handle(value);
+		}
+
+		@Override
+		public void failed(Exception ex)
+		{
+			ex.printStackTrace();
+
+			if (eventHandler instanceof ErrorHandler)
+			{
+				((ErrorHandler)eventHandler).failed(ex, this);
+			}
+			else if (defaultErrorHandler != null)
+			{
+				ErrorHandler errorHandler = defaultErrorHandler;
+				defaultErrorHandler = null;
+				errorHandler.failed(ex, this);
+			}
+		}
+
+		@Override
+		public void handleError(Exception ex)
+		{
+			if (defaultErrorHandler != null)
+			{
+				ErrorHandler errorHandler = defaultErrorHandler;
+				defaultErrorHandler = null;
+				errorHandler.failed(ex, this);
+			}
+		}
+	}
+
 	private static class InvocationHandlerImpl implements InvocationHandler
 	{
 		private RemoteConnection connection;
 		private String serviceName;
-		private ResultHandler<Exception> defaultErrorHandler;
+		private ErrorHandler defaultErrorHandler;
 
-		private InvocationHandlerImpl(RemoteConnection connection, String serviceName, ResultHandler<Exception> defaultErrorHandler)
+		private InvocationHandlerImpl(RemoteConnection connection, String serviceName, ErrorHandler defaultErrorHandler)
 		{
 			this.connection = connection;
 			this.serviceName = serviceName;
@@ -40,28 +86,10 @@ public class StasisAsyncServiceWrapper
 
 			Object[] argsSync = Arrays.copyOf(args, args.length - 1);
 			@SuppressWarnings("unchecked")
-			final ResultHandler<? super Object> eventHandler = (ResultHandler)lastArg;
+			ResultHandler<? super Object> eventHandler = (ResultHandler)lastArg;
 			String name = serviceName + "." + method.getName();
 
-			connection.callAsync(new CallHandler<Object>()
-			{
-				@Override
-				public void succeeded(Object value)
-				{
-					eventHandler.handle(value);
-				}
-
-				@Override
-				public void failed(Exception ex)
-				{
-					ex.printStackTrace();
-
-					if (defaultErrorHandler != null)
-					{
-						defaultErrorHandler.handle(ex);
-					}
-				}
-			}, name, argsSync);
+			connection.callAsync(new CallHandlerImpl(eventHandler, defaultErrorHandler), name, argsSync);
 			return null;
 		}
 	}
@@ -71,7 +99,7 @@ public class StasisAsyncServiceWrapper
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T create(Class<T> serviceInterface, RemoteConnection connection, String serviceName, ResultHandler<Exception> defaultErrorHandler)
+	public static <T> T create(Class<T> serviceInterface, RemoteConnection connection, String serviceName, ErrorHandler defaultErrorHandler)
 	{
 		return (T)Proxy.newProxyInstance(StasisAsyncServiceWrapper.class.getClassLoader(), new Class[] { serviceInterface }, new InvocationHandlerImpl(connection, serviceName, defaultErrorHandler));
 	}
