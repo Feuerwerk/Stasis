@@ -1,0 +1,289 @@
+//
+//  HttpRemoteConnection.m
+//  Stasis
+//
+//  Created by Christian Fruth on 05.03.13.
+//  Copyright (c) 2013 Boxx IT Solutions e.K. All rights reserved.
+//
+
+#import "HttpRemoteConnection.h"
+#import "Stasis.h"
+#import "SerializableException.h"
+#import "AuthenticationMissmatchException.h"
+#import "ExceptionError.h"
+#import "LocalDate.h"
+#import "LocalDateSerializer.h"
+
+@interface HttpRemoteConnection ()
+
+- (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)invokeLoginForUser:(NSString *)userName andPassword:(NSString *)password returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)invokeLoginForUser:(NSString *)userName andPassword:(NSString *)password followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
+
+@end
+
+@implementation HttpRemoteConnection
+
+static NSString * const CONTENT_TYPE_KEY = @"Content-Type";
+static NSString * const CONTENT_TYPE_VALUE = @"application/x-stasis";
+static NSString * const REQUEST_METHOD = @"POST";
+static NSString * const LOGIN_FUNCTION = @"login";
+static NSString * const CONNECTION_ERROR_DOMAIN = @"httpRemoteConnectionError";
+static const NSInteger ERROR_AUTHENTICATION_MISSMATCH = 100;
+static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
+
+- (id)initWithUrl:(NSURL *)url
+{
+	self = [super init];
+	
+	if (self != nil)
+	{
+		_url = url;
+		_kryo = [Kryo new];
+		_output = [[KryoOutput alloc] initWithBufferSize:256 untilMaximum:-1];
+		_input = [[KryoInput alloc] init];
+		_state = Unconnected;
+	}
+	
+	return self;
+}
+
+- (void)callAsync:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
+{
+	if ((_state != Authenticated) && (_userName != nil) && (_password != nil))
+	{
+		// Die Verbindung noch nicht authentifiziert ist, aber Credentials vorliegen zuerst einloggen
+		[self invokeLoginForUser:_userName andPassword:_password followingFunction:name withArguments:args returning:resultHandler error:errorHandler];
+	}
+	else
+	{
+		// Die Service-Funktion ausführen
+		[self invokeServiceFunction:name withArguments:args returning:resultHandler error:^(NSError *error)
+		{
+			// Ausführung der Service-Funktion ist fehlgeschlagen
+			if ([error.domain isEqualToString:CONNECTION_ERROR_DOMAIN] && (error.code == ERROR_AUTHENTICATION_MISSMATCH))
+			{
+				assert(_activeUserName != nil);
+				assert(_activePassword != nil);
+				
+				[self invokeLoginForUser:_activeUserName andPassword:_activePassword followingFunction:name withArguments:args returning:resultHandler error:errorHandler];
+			}
+			else
+			{
+				errorHandler(error);
+			}
+		}];
+	}
+}
+
+- (void)loginUser:(NSString *)userName andPassword:(NSString *)password returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler
+{
+	[self invokeLoginForUser:userName andPassword:password returning:resultHandler error:errorHandler];
+}
+
+- (void)setCredentialsForUser:(NSString *)userName andPassword:(NSString *)password
+{
+	_userName = userName;
+	_password = password;
+	_state = Connected;
+}
+
+- (void)setDefaultSerializer:(Class)defaultSerializer
+{
+    [_kryo setDefaultSerializer:defaultSerializer];
+}
+
+- (void)registerDefaultSerializerClass:(Class)serializerClass forClass:(Class)type
+{
+	[_kryo registerDefaultSerializerClass:serializerClass forClass:type];
+}
+
+- (void)registerDefaultSerializer:(id<Serializer>)serializer forClass:(Class)type
+{
+	[_kryo registerDefaultSerializer:serializer forClass:type];
+}
+
+- (void)registerAlias:(NSString *)alias forClass:(Class)type
+{
+	[_kryo registerAlias:alias forClass:type];
+}
+
+- (void)registerClass:(Class)type usingSerializer:(id<Serializer>)serializer
+{
+	[_kryo registerClass:type usingSerializer:serializer];
+}
+
+- (void)registerClass:(Class)type andIdent:(NSInteger)ident
+{
+	[_kryo registerClass:type andIdent:ident];
+}
+
+- (void)registerClass:(Class)type usingSerializer:(id<Serializer>)serializer andIdent:(NSInteger)ident
+{
+	[_kryo registerClass:type usingSerializer:serializer andIdent:ident];
+}
+
+- (void)invokeLoginForUser:(NSString *)userName andPassword:(NSString *)password followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
+{
+	// Die Verbindung noch nicht authentifiziert ist, aber Credentials vorliegen zuerst einloggen
+	[self invokeLoginForUser:userName andPassword:password returning:^(BOOL authenticated)
+	 {
+		 if (!authenticated)
+		 {
+			 // Die Authentifizierung ist fehlgeschlagen
+			 errorHandler([NSError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_AUTHENTICATION_FAILED userInfo:nil]);
+			 return;
+		 }
+		 
+		 // Die Service-Funktion ausführen
+		 [self invokeServiceFunction:name withArguments:args returning:resultHandler error:errorHandler];
+	 } error:errorHandler];
+}
+
+- (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
+{
+	[_output clear];
+	[_kryo writeObject:name to:_output];
+	[_kryo writeObject:[JBoolean boolWithValue:self.state == Authenticated] to:_output]; // Dem Server mitteilen ob wir davon ausgehen, dass wir bereits authentifiziert sind
+	[_kryo writeObject:args to:_output];
+	
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:_url];
+	
+	[request addValue:CONTENT_TYPE_VALUE forHTTPHeaderField:CONTENT_TYPE_KEY];
+	request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	request.HTTPShouldHandleCookies = YES;
+	request.HTTPMethod = REQUEST_METHOD;
+	request.HTTPBody = [_output toData];
+	
+	NSLog(@"Send request to %@", name);
+	
+	[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
+	 {
+		if (error == nil)
+		{
+			if (data.length == 0)
+			{
+				return;
+			}
+			 
+			@try
+			{
+				_input.buffer = data;
+				JObjectArray *result = [_kryo readObject:_input ofClass:[JObjectArray class]];
+				id resultValue = nil;
+				 
+				if (result.count != 0)
+				{
+					resultValue = [result objectAtIndex:0];
+					NSLog(@"Request %@ returned with: %@", name, resultValue);
+				 
+					if ([resultValue isKindOfClass:[NSException class]])
+					{
+						NSError *transformedError;
+
+						if ([resultValue isKindOfClass:[AuthenticationMissmatchException class]])
+						{
+							transformedError = [NSError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_AUTHENTICATION_MISSMATCH userInfo:nil];
+						}
+						else
+						{
+							transformedError = [ExceptionError errorWithException:resultValue];
+						}
+					
+						errorHandler(transformedError);
+						return;
+					}
+				}
+				
+				if (_state == Unconnected)
+				{
+					_state = Connected;
+				}
+				
+				@try
+				{
+					resultHandler(resultValue);
+				}
+				@catch (NSException *ex)
+				{
+					NSLog(@"ResultHandler for %@ threw exception: %@", name, ex.description);
+				}
+			}
+			@catch (NSException *ex)
+			{
+				NSLog(@"Request %@ returned, but throw exception: %@", name, ex.description);
+				errorHandler([ExceptionError errorWithException:ex]);
+			}
+			@finally
+			{
+				_input.buffer = nil;
+			}
+		 }
+		 else
+		 {
+			 NSLog(@"Request %@ returned with error: %@", name, error.localizedDescription);
+			 errorHandler(error);
+		 }
+	 }];
+}
+
+- (void)invokeLoginForUser:(NSString *)userName andPassword:(NSString *)password returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler
+{
+	[_output clear];
+	[_kryo writeObject:LOGIN_FUNCTION to:_output];
+	[_kryo writeObject:userName to:_output];
+	[_kryo writeObject:password to:_output];
+	
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:_url];
+	
+	[request addValue:CONTENT_TYPE_VALUE forHTTPHeaderField:CONTENT_TYPE_KEY];
+	request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+	request.HTTPShouldHandleCookies = YES;
+	request.HTTPMethod = REQUEST_METHOD;
+	request.HTTPBody = [_output toData];
+	
+	NSLog(@"Send login-request");
+	
+	[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
+	 {
+		 if (error == nil)
+		 {
+			 if (data.length == 0)
+			 {
+				 return;
+			 }
+			 
+			 @try
+			 {
+				 _input.buffer = data;
+				 JBoolean *authenticated = [_kryo readObject:_input ofClass:[JBoolean class]];
+				 
+				 if (authenticated.boolValue)
+				 {
+					 _activeUserName = userName;
+					 _activePassword = password;
+					 _state = Authenticated;
+				 }
+
+				 NSLog(@"LoginRequest returned with %@", authenticated);
+				 resultHandler(authenticated.boolValue);
+			 }
+			 @catch (NSException *ex)
+			 {
+				 NSLog(@"Login-Request returned, but throw exception: %@", ex.description);
+				 errorHandler([ExceptionError errorWithException:ex]);
+			 }
+			 @finally
+			 {
+				 _input.buffer = nil;
+			 }
+		 }
+		 else
+		 {
+			 NSLog(@"Login-Request returned with error: %@", error.localizedDescription);
+			 errorHandler(error);
+		 }
+	 }];
+}
+
+@end
