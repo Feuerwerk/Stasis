@@ -25,6 +25,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		AA364442176349C800C5D31C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AAA7C5A91763432000E9DA70 /* Kryo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D3EDD18F16E65FD8005339C3;
+			remoteInfo = Kryo;
+		};
 		D30BC9F816EA0C58003FD3F6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D30BC9F416EA0C57003FD3F6 /* JodaTime.xcodeproj */;
@@ -54,7 +61,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		AAA7C5A91763432000E9DA70 /* Kryo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = file; name = Kryo.xcodeproj; path = ../../kryococoa/Kryo.xcodeproj; sourceTree = "<group>"; };
+		AAA7C5A91763432000E9DA70 /* Kryo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Kryo.xcodeproj; path = ../../kryococoa/Kryo.xcodeproj; sourceTree = "<group>"; };
 		AAA7C5AD1763456800E9DA70 /* CTBlockDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTBlockDescription.h; sourceTree = "<group>"; };
 		AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTBlockDescription.m; sourceTree = "<group>"; };
 		AAA7C5AF1763456800E9DA70 /* CTObjectiveCRuntimeAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTObjectiveCRuntimeAdditions.h; sourceTree = "<group>"; };
@@ -101,6 +108,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AA36443F176349C800C5D31C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA364443176349C800C5D31C /* libKryo.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		D30BC9F516EA0C57003FD3F6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,6 +238,10 @@
 					ProductGroup = D30BC9F516EA0C57003FD3F6 /* Products */;
 					ProjectRef = D30BC9F416EA0C57003FD3F6 /* JodaTime.xcodeproj */;
 				},
+				{
+					ProductGroup = AA36443F176349C800C5D31C /* Products */;
+					ProjectRef = AAA7C5A91763432000E9DA70 /* Kryo.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -232,6 +251,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		AA364443176349C800C5D31C /* libKryo.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libKryo.a;
+			remoteRef = AA364442176349C800C5D31C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D30BC9F916EA0C58003FD3F6 /* libJodaTime.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
