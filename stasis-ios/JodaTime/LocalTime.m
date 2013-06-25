@@ -27,6 +27,20 @@ static NSDateFormatter *descriptionFormatter = nil;
 	return [[LocalTime alloc] init];
 }
 
++ (instancetype)timeFromMillisOfDay:(UInt64)millisOfDay
+{
+	NSDateComponents *components = [NSDateComponents new];
+	UInt32 seconds = millisOfDay / 1000;
+	UInt32 minutes = seconds / 60;
+	components.year = 1970;
+	components.month = 1;
+	components.day = 1;
+	components.hour = minutes / 60;
+	components.minute = minutes % 60;
+	components.second = seconds % 60;
+	return [[LocalTime alloc] initFromComponents:components];
+}
+
 + (instancetype)timeFromDate:(NSDate *)date
 {
 	return [[LocalTime alloc] initFromDate:date];
@@ -35,21 +49,33 @@ static NSDateFormatter *descriptionFormatter = nil;
 + (instancetype)timeFromHour:(NSInteger)hourOfDay
 {
 	NSDateComponents *components = [NSDateComponents new];
+	components.year = 1970;
+	components.month = 1;
+	components.day = 1;
 	components.hour = hourOfDay;
+	components.minute = 0;
+	components.second = 0;
 	return [[LocalTime alloc] initFromComponents:components];
 }
 
 + (instancetype)timeFromHour:(NSInteger)hourOfDay minute:(NSInteger)minuteOfHour
 {
 	NSDateComponents *components = [NSDateComponents new];
+	components.year = 1970;
+	components.month = 1;
+	components.day = 1;
 	components.hour = hourOfDay;
 	components.minute = minuteOfHour;
+	components.second = 0;
 	return [[LocalTime alloc] initFromComponents:components];
 }
 
 + (instancetype)timeFromHour:(NSInteger)hourOfDay minute:(NSInteger)minuteOfHour second:(NSInteger)secondOfMinute
 {
 	NSDateComponents *components = [NSDateComponents new];
+	components.year = 1970;
+	components.month = 1;
+	components.day = 1;
 	components.hour = hourOfDay;
 	components.minute = minuteOfHour;
 	components.second = secondOfMinute;
@@ -147,9 +173,13 @@ static NSDateFormatter *descriptionFormatter = nil;
 }
 
 
-- (UInt64)millis
+- (UInt64)millisOfDay
 {
-	return _date.timeIntervalSince1970 * 1000;
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit fromDate:_date];
+	UInt64 millisOfDay = components.hour;
+	millisOfDay = millisOfDay * 60 + components.minute;
+	millisOfDay = millisOfDay * 60 + components.second;
+	return millisOfDay * 1000;
 }
 
 - (NSDate *)date

@@ -11,6 +11,7 @@
 @interface LocalTime : NSObject
 
 + (instancetype)time;
++ (instancetype)timeFromMillisOfDay:(UInt64)millisOfDay;
 + (instancetype)timeFromDate:(NSDate *)date;
 + (instancetype)timeFromHour:(NSInteger)hourOfDay;
 + (instancetype)timeFromHour:(NSInteger)hourOfDay minute:(NSInteger)minuteOfHour;
@@ -31,7 +32,7 @@
 - (LocalTime *)withMinuteOfHour:(NSInteger)minuteOfHour;
 - (LocalTime *)withSecondOfMinute:(NSInteger)secondOfMinute;
 
-- (UInt64)millis;
+- (UInt64)millisOfDay;
 - (NSDate *)date;
 - (NSInteger)hourOfDay;
 - (NSInteger)minuteOfHour;

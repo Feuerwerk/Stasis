@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA4C177C1779C1E8009F6BD0 /* LocalTimeSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4C177B1779C1E8009F6BD0 /* LocalTimeSerializer.m */; };
 		AAA7C5B11763456800E9DA70 /* CTBlockDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */; };
 		AAA7C5B21763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */; };
 		AAA7C5B41763460B00E9DA70 /* libKryo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7C5B31763460B00E9DA70 /* libKryo.a */; };
@@ -61,6 +62,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AA4C177A1779C1E8009F6BD0 /* LocalTimeSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalTimeSerializer.h; sourceTree = "<group>"; };
+		AA4C177B1779C1E8009F6BD0 /* LocalTimeSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalTimeSerializer.m; sourceTree = "<group>"; };
 		AAA7C5A91763432000E9DA70 /* Kryo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Kryo.xcodeproj; path = ../../kryococoa/Kryo.xcodeproj; sourceTree = "<group>"; };
 		AAA7C5AD1763456800E9DA70 /* CTBlockDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTBlockDescription.h; sourceTree = "<group>"; };
 		AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTBlockDescription.m; sourceTree = "<group>"; };
@@ -155,15 +158,14 @@
 		D3EDD22316E661E6005339C3 /* Stasis */ = {
 			isa = PBXGroup;
 			children = (
-				AAA7C5AD1763456800E9DA70 /* CTBlockDescription.h */,
-				AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */,
-				AAA7C5AF1763456800E9DA70 /* CTObjectiveCRuntimeAdditions.h */,
-				AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */,
-				D3EDD22416E661E6005339C3 /* Supporting Files */,
 				D308C60816E768A000FEBEE9 /* AuthenticationMissmatchException.h */,
 				D308C60916E768A000FEBEE9 /* AuthenticationMissmatchException.m */,
 				D308C60B16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.h */,
 				D308C60C16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.m */,
+				AAA7C5AD1763456800E9DA70 /* CTBlockDescription.h */,
+				AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */,
+				AAA7C5AF1763456800E9DA70 /* CTObjectiveCRuntimeAdditions.h */,
+				AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */,
 				D39ED1C316E8C13E001AA271 /* ExceptionError.h */,
 				D39ED1C416E8C13E001AA271 /* ExceptionError.m */,
 				D3EDD23116E6635B005339C3 /* HttpRemoteConnection.h */,
@@ -172,6 +174,8 @@
 				D30BC9EE16EA0B90003FD3F6 /* LocalDateSerializer.m */,
 				AAC7B99B171584810045EF72 /* LocalDateTimeSerializer.h */,
 				AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */,
+				AA4C177A1779C1E8009F6BD0 /* LocalTimeSerializer.h */,
+				AA4C177B1779C1E8009F6BD0 /* LocalTimeSerializer.m */,
 				D3EDD22F16E6634B005339C3 /* RemoteConnection.h */,
 				D3EDD23016E6634B005339C3 /* RemoteConnection.m */,
 				D3EDD23416E751F6005339C3 /* SerializableException.h */,
@@ -181,6 +185,7 @@
 				D390965C16E79CCA0012B221 /* Stasis.h */,
 				D39ED1AE16E7A36D001AA271 /* StasisAsyncServiceWrapper.h */,
 				D39ED1AF16E7A36D001AA271 /* StasisAsyncServiceWrapper.m */,
+				D3EDD22416E661E6005339C3 /* Supporting Files */,
 			);
 			path = Stasis;
 			sourceTree = "<group>";
@@ -284,6 +289,7 @@
 				AAC7B99D171584810045EF72 /* LocalDateTimeSerializer.m in Sources */,
 				AAA7C5B11763456800E9DA70 /* CTBlockDescription.m in Sources */,
 				AAA7C5B21763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m in Sources */,
+				AA4C177C1779C1E8009F6BD0 /* LocalTimeSerializer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

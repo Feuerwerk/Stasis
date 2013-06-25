@@ -18,14 +18,14 @@ public class LocalTimeSerializer extends Serializer<LocalTime>
 	@Override
 	public void write(Kryo kryo, Output output, LocalTime time)
 	{
-		long millis = time.getMillisOfDay();
-		output.writeLong(millis, true);
+		long millisOfDay = time.getMillisOfDay();
+		output.writeLong(millisOfDay, true);
 	}
 
 	@Override
 	public LocalTime read(Kryo kryo, Input input, Class<LocalTime> type)
 	{
-		long millis = input.readLong(true);
-		return new LocalTime(millis);
+		long millisOfDay = input.readLong(true);
+		return LocalTime.fromMillisOfDay(millisOfDay);
 	}
 }
