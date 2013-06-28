@@ -26,6 +26,10 @@ static NSDateFormatter *descriptionFormatter = nil;
 
 + (instancetype)dateFromDate:(NSDate *)date
 {
+    if(date == nil)
+    {
+        return nil;
+    }
 	return [[LocalDateTime alloc] initFromDate:date];
 }
 

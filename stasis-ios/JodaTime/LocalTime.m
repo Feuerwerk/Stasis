@@ -43,7 +43,11 @@ static NSDateFormatter *descriptionFormatter = nil;
 
 + (instancetype)timeFromDate:(NSDate *)date
 {
-	return [[LocalTime alloc] initFromDate:date];
+	if(date == nil)
+    {
+        return nil;
+    }
+    return [[LocalTime alloc] initFromDate:date];
 }
 
 + (instancetype)timeFromHour:(NSInteger)hourOfDay
