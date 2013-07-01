@@ -20,12 +20,15 @@
 - (void)write:(Kryo *)kryo value:(id)value to:(KryoOutput *)output
 {
 	LocalDate *date = value;
-	[output writeULong:date.millis];
+	UInt64 millis = date.millis + NSTimeZone.defaultTimeZone.secondsFromGMT * 1000;
+
+	[output writeULong:millis];
 }
 
 - (id)read:(Kryo *)kryo withClass:(Class)type from:(KryoInput *)input
 {
-	UInt64 millis = [input readULong];
+	UInt64 millis = [input readULong] - NSTimeZone.defaultTimeZone.secondsFromGMT * 1000;
+	
 	return [LocalDate dateFromMillis:millis];
 }
 
