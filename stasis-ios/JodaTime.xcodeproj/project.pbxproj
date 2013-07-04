@@ -1,0 +1,260 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA1BB40A1739A6C000FE4944 /* LocalTime.m in Sources */ = {isa = PBXBuildFile; fileRef = AA1BB4091739A6C000FE4944 /* LocalTime.m */; };
+		AAC7B99A171583E20045EF72 /* LocalDateTime.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC7B999171583E20045EF72 /* LocalDateTime.m */; };
+		D3898A2E16EA082A00CC7AD6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3898A2D16EA082A00CC7AD6 /* Foundation.framework */; };
+		D3898A3E16EA085800CC7AD6 /* LocalDate.m in Sources */ = {isa = PBXBuildFile; fileRef = D3898A3D16EA085800CC7AD6 /* LocalDate.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D3898A2816EA082A00CC7AD6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		AA1BB4081739A6C000FE4944 /* LocalTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalTime.h; sourceTree = "<group>"; };
+		AA1BB4091739A6C000FE4944 /* LocalTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalTime.m; sourceTree = "<group>"; };
+		AAC7B998171583E20045EF72 /* LocalDateTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalDateTime.h; sourceTree = "<group>"; };
+		AAC7B999171583E20045EF72 /* LocalDateTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalDateTime.m; sourceTree = "<group>"; };
+		D3898A2A16EA082A00CC7AD6 /* libJodaTime.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJodaTime.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3898A2D16EA082A00CC7AD6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D3898A3116EA082A00CC7AD6 /* JodaTime-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JodaTime-Prefix.pch"; sourceTree = "<group>"; };
+		D3898A3C16EA085800CC7AD6 /* LocalDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalDate.h; sourceTree = "<group>"; };
+		D3898A3D16EA085800CC7AD6 /* LocalDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalDate.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D3898A2716EA082A00CC7AD6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3898A2E16EA082A00CC7AD6 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D3898A2116EA082A00CC7AD6 = {
+			isa = PBXGroup;
+			children = (
+				D3898A2C16EA082A00CC7AD6 /* Frameworks */,
+				D3898A2F16EA082A00CC7AD6 /* JodaTime */,
+				D3898A2B16EA082A00CC7AD6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D3898A2B16EA082A00CC7AD6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D3898A2A16EA082A00CC7AD6 /* libJodaTime.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D3898A2C16EA082A00CC7AD6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D3898A2D16EA082A00CC7AD6 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D3898A2F16EA082A00CC7AD6 /* JodaTime */ = {
+			isa = PBXGroup;
+			children = (
+				D3898A3016EA082A00CC7AD6 /* Supporting Files */,
+				D3898A3C16EA085800CC7AD6 /* LocalDate.h */,
+				D3898A3D16EA085800CC7AD6 /* LocalDate.m */,
+				AAC7B998171583E20045EF72 /* LocalDateTime.h */,
+				AAC7B999171583E20045EF72 /* LocalDateTime.m */,
+				AA1BB4081739A6C000FE4944 /* LocalTime.h */,
+				AA1BB4091739A6C000FE4944 /* LocalTime.m */,
+			);
+			path = JodaTime;
+			sourceTree = "<group>";
+		};
+		D3898A3016EA082A00CC7AD6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D3898A3116EA082A00CC7AD6 /* JodaTime-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D3898A2916EA082A00CC7AD6 /* JodaTime */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3898A3816EA082A00CC7AD6 /* Build configuration list for PBXNativeTarget "JodaTime" */;
+			buildPhases = (
+				D3898A2616EA082A00CC7AD6 /* Sources */,
+				D3898A2716EA082A00CC7AD6 /* Frameworks */,
+				D3898A2816EA082A00CC7AD6 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JodaTime;
+			productName = JodaTime;
+			productReference = D3898A2A16EA082A00CC7AD6 /* libJodaTime.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D3898A2216EA082A00CC7AD6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Boxx IT Solutions e.K.";
+			};
+			buildConfigurationList = D3898A2516EA082A00CC7AD6 /* Build configuration list for PBXProject "JodaTime" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D3898A2116EA082A00CC7AD6;
+			productRefGroup = D3898A2B16EA082A00CC7AD6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D3898A2916EA082A00CC7AD6 /* JodaTime */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D3898A2616EA082A00CC7AD6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3898A3E16EA085800CC7AD6 /* LocalDate.m in Sources */,
+				AAC7B99A171583E20045EF72 /* LocalDateTime.m in Sources */,
+				AA1BB40A1739A6C000FE4944 /* LocalTime.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		D3898A3616EA082A00CC7AD6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		D3898A3716EA082A00CC7AD6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D3898A3916EA082A00CC7AD6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/JodaTime.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "JodaTime/JodaTime-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D3898A3A16EA082A00CC7AD6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/JodaTime.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "JodaTime/JodaTime-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D3898A2516EA082A00CC7AD6 /* Build configuration list for PBXProject "JodaTime" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3898A3616EA082A00CC7AD6 /* Debug */,
+				D3898A3716EA082A00CC7AD6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3898A3816EA082A00CC7AD6 /* Build configuration list for PBXNativeTarget "JodaTime" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3898A3916EA082A00CC7AD6 /* Debug */,
+				D3898A3A16EA082A00CC7AD6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D3898A2216EA082A00CC7AD6 /* Project object */;
+}
