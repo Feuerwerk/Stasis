@@ -20,6 +20,8 @@ import org.apache.commons.pool.BasePoolableObjectFactory;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.PoolableObjectFactory;
 import org.apache.commons.pool.impl.StackObjectPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
@@ -29,6 +31,7 @@ import org.springframework.web.servlet.mvc.Controller;
 public class StasisController implements Controller
 {
 	private static final String LOGIN_FUNCTION = "login";
+	private static final Logger LOGGER = LoggerFactory.getLogger(StasisController.class);
 
 	private static class InOut
 	{
@@ -146,64 +149,136 @@ public class StasisController implements Controller
 		return null;
 	}
 
-	protected void handleIO(Kryo kryo, Input input, Output output) throws Exception
+	protected void handleIO(Kryo kryo, Input input, Output output) throws AuthenticationMissmatchException
 	{
 		// Funktionsnamen lesen
-		String name = kryo.readObject(input, String.class);
+		long startTimeMillis = System.currentTimeMillis();
+		String name;
+
+		try
+		{
+			name = kryo.readObject(input, String.class);
+		}
+		catch (Exception ex)
+		{
+			LOGGER.error("Call failed because function name can't be read");
+			throw ex;
+		}
 
 		if (LOGIN_FUNCTION.equals(name))
 		{
-			String userName = kryo.readObject(input, String.class);
-			String password = kryo.readObject(input, String.class);
-
-			LoginStatus loginStatus = loginService.login(userName, password);
-
-			kryo.writeObject(output, loginStatus.isAuthenticated());
-
-			output.flush();
-		}
-		else
-		{
-			Object[] result;
+			String userName;
+			String password;
 
 			try
 			{
-				LoginStatus loginStatus = loginService.getStatus();
-				boolean assumeAuthenticated = kryo.readObject(input, boolean.class);
-
-				if (loginStatus.isAuthenticated() != assumeAuthenticated)
+				userName = kryo.readObject(input, String.class);
+				password = kryo.readObject(input, String.class);
+			}
+			catch (Exception ex)
+			{
+				if (LOGGER.isErrorEnabled())
 				{
-					throw new AuthenticationMissmatchException(loginStatus.isAuthenticated());
+					LOGGER.error(String.format("Call failed because arguments can't be read (name = %s)", name));
 				}
 
-				int index = name.indexOf('.');
-				String serviceName = name.substring(0, index);
-				Object service = services.get(serviceName);
+				throw ex;
+			}
 
-				if (service == null)
+			LoginStatus loginStatus;
+
+			try
+			{
+				loginStatus = loginService.login(userName, password);
+			}
+			catch (Exception ex)
+			{
+				if (LOGGER.isErrorEnabled())
 				{
-					throw new SerializableException("serviceMissing", "Can't find matching service");
+					long stopTimeMillis = System.currentTimeMillis();
+					LOGGER.error(String.format("Call failed because arguments can't be read (name = %s, arguments = %s, duration = %dms)", name, userName, stopTimeMillis - startTimeMillis), ex);
 				}
 
-				Class<?> serviceClass = service.getClass();
-				String serviceMethod = name.substring(index + 1);
-				Method foundMethod = null;
+				throw ex;
+			}
 
-				for (Method method : serviceClass.getMethods())
+			try
+			{
+				kryo.writeObject(output, loginStatus.isAuthenticated());
+
+				output.flush();
+			}
+			catch (Exception ex)
+			{
+				if (LOGGER.isErrorEnabled())
 				{
-					if (method.getName().equals(serviceMethod))
+					long stopTimeMillis = System.currentTimeMillis();
+					LOGGER.error(String.format("Call failed because result can't be written back to client (name = %s, arguments = %s, result = %s, duration = %dms)", name, userName, loginStatus.isAuthenticated(), stopTimeMillis - startTimeMillis), ex);
+				}
+
+				throw ex;
+			}
+		}
+		else
+		{
+			Object[] args = null;
+			Object[] result = null;
+			Object service = null;
+			Method foundMethod = null;
+
+			try
+			{
+				try
+				{
+					LoginStatus loginStatus = loginService.getStatus();
+					boolean assumeAuthenticated = kryo.readObject(input, boolean.class);
+
+					if (loginStatus.isAuthenticated() != assumeAuthenticated)
 					{
-						foundMethod = method;
-						break;
+						throw new AuthenticationMissmatchException(loginStatus.isAuthenticated());
 					}
-				}
 
-				if (foundMethod == null)
+					int index = name.indexOf('.');
+					String serviceName = name.substring(0, index);
+					service = services.get(serviceName);
+
+					if (service == null)
+					{
+						throw new SerializableException("serviceMissing", "Can't find matching service");
+					}
+
+					Class<?> serviceClass = service.getClass();
+					String serviceMethod = name.substring(index + 1);
+
+					for (Method method : serviceClass.getMethods())
+					{
+						if (method.getName().equals(serviceMethod))
+						{
+							foundMethod = method;
+							break;
+						}
+					}
+
+					if (foundMethod == null)
+					{
+						throw new SerializableException("serviceFunctionMissing", "Can't find matching service function");
+					}
+
+					args = kryo.readObject(input, Object[].class);
+				}
+				catch (SerializableException | AuthenticationMissmatchException ex)
 				{
-					throw new SerializableException("serviceFunctionMissing", "Can't find matching service function");
+					throw ex;
 				}
+				catch (Exception ex)
+				{
+					if (LOGGER.isErrorEnabled())
+					{
+						LOGGER.error(String.format("Call failed because arguments can't be read (name = %s)", name));
+					}
 
-				Object[] args = kryo.readObject(input, Object[].class);
+					throw ex;
+				}
 
 				try
 				{
@@ -212,40 +287,91 @@ public class StasisController implements Controller
 					if (void.class.equals(returnType))
 					{
 						foundMethod.invoke(service, args);
-
 						result = new Object[0];
 					}
 					else
 					{
 						Object returnValue = foundMethod.invoke(service, args);
-
 						result = new Object[] { returnValue };
 					}
+				}
+				catch (IllegalAccessException ex)
+				{
+					if (LOGGER.isErrorEnabled())
+					{
+						long stopTimeMillis = System.currentTimeMillis();
+						LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", name, formatArray(args), stopTimeMillis - startTimeMillis), ex);
+					}
+
+					throw ex;
 				}
 				catch (InvocationTargetException ex)
 				{
 					// Exception entpacken um ursächliche Exception näher auszuwerten
-					ex.printStackTrace();
-					throw ex.getTargetException();
+					Throwable targetException = ex.getTargetException();
+
+					if (LOGGER.isErrorEnabled())
+					{
+						long stopTimeMillis = System.currentTimeMillis();
+						LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", name, formatArray(args), stopTimeMillis - startTimeMillis), targetException);
+					}
+
+					throw targetException;
 				}
 			}
-			catch (AuthenticationMissmatchException ex)
-			{
-				result = new Object[] { ex };
-			}
-			catch (SerializableException ex)
+			catch (AuthenticationMissmatchException | SerializableException ex)
 			{
 				result = new Object[] { ex };
 			}
 			catch (Throwable ex)
 			{
-				ex.printStackTrace();
 				result = new Object[] { new SerializableException(ex) };
 			}
 
-			kryo.writeObject(output, result);
+			try
+			{
+				kryo.writeObject(output, result);
 
-			output.flush();
+				output.flush();
+			}
+			catch (Exception ex)
+			{
+				if (LOGGER.isErrorEnabled())
+				{
+					long stopTimeMillis = System.currentTimeMillis();
+					LOGGER.error(String.format("Call failed because result can't be written back to client (name = %s, arguments = %s, result = %s, duration = %dms)", name, formatArray(args), formatArray(result), stopTimeMillis - startTimeMillis), ex);
+				}
+			}
+
+			if (LOGGER.isDebugEnabled())
+			{
+				long stopTimeMillis = System.currentTimeMillis();
+				LOGGER.debug(String.format("Call succeeded (name = %s, arguments = %s, result = %s, duration = %dms)", name, formatArray(args), formatArray(result), stopTimeMillis - startTimeMillis));
+			}
 		}
+	}
+
+	private CharSequence formatArray(Object[] array)
+	{
+		if (array == null)
+		{
+			return "null";
+		}
+
+		StringBuilder str = new StringBuilder("{ ");
+
+		for (int i = 0, length = array.length; i < length; ++i)
+		{
+			if (i != 0)
+			{
+				str.append(", ");
+			}
+
+			str.append(array[i]);
+		}
+
+		str.append(" }");
+
+		return str;
 	}
 }
