@@ -129,7 +129,7 @@ public class HttpRemoteConnection extends RemoteConnection
 	private CookieManager cookieManager = new CookieManager();
 	private String activeUserName;
 	private String activePassword;
-	private int clientVersion;
+
 
 	{
 		kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
