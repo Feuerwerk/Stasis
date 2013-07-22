@@ -60,6 +60,7 @@ public class HttpRemoteConnection extends RemoteConnection
 	{
 		public String userName;
 		public String password;
+		public int clientVersion;
 
 		public LoginCall()
 		{
@@ -128,6 +129,7 @@ public class HttpRemoteConnection extends RemoteConnection
 	private CookieManager cookieManager = new CookieManager();
 	private String activeUserName;
 	private String activePassword;
+	private int clientVersion;
 
 	{
 		kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
@@ -188,18 +190,20 @@ public class HttpRemoteConnection extends RemoteConnection
 	}
 
 	@Override
-	public void login(CallHandler<Void> handler, String userName, String password)
+	public void login(CallHandler<Void> handler, String userName, String password, int clientVersion)
 	{
 		LoginCall newCall = new LoginCall();
 
 		newCall.userName = userName;
 		newCall.password = password;
+		newCall.clientVersion = clientVersion;
 		newCall.handler = handler;
 
 		pendingCalls.add(newCall);
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public <T> void callAsync(CallHandler<T> handler, String name, Object... args)
 	{
 		FunctionCall newCall = new FunctionCall();
@@ -221,11 +225,11 @@ public class HttpRemoteConnection extends RemoteConnection
 	{
 		try
 		{
-			boolean authenticated = invokeLogin(call.userName, call.password);
+			AuthenticationResult authenticationResult = invokeLogin(call.userName, call.password, call.clientVersion);
 
-			if (!authenticated)
+			if (authenticationResult != AuthenticationResult.Authenticated)
 			{
-				throw createException("loginFailed");
+				throw createAuthenticationException(authenticationResult, "loginFailed");
 			}
 
 			call.succeed(null, synchronizer);
@@ -236,7 +240,7 @@ public class HttpRemoteConnection extends RemoteConnection
 		}
 	}
 
-	protected boolean invokeLogin(String userName, String password) throws Exception
+	protected AuthenticationResult invokeLogin(String userName, String password, int clientVersion) throws Exception
 	{
 		HttpURLConnection connection = null;
 
@@ -250,6 +254,7 @@ public class HttpRemoteConnection extends RemoteConnection
 			kryo.writeObject(output, LOGIN_FUNCTION);
 			kryo.writeObject(output, userName);
 			kryo.writeObject(output, password);
+			kryo.writeObject(output, clientVersion);
 
 			output.close();
 			output.setOutputStream(null);
@@ -259,16 +264,16 @@ public class HttpRemoteConnection extends RemoteConnection
 
 			input.setInputStream(connection.getInputStream());
 
-			boolean authenticated = kryo.readObject(input, boolean.class);
+			AuthenticationResult authenticationResult = kryo.readObject(input, AuthenticationResult.class);
 
-			if (authenticated)
+			if (authenticationResult == AuthenticationResult.Authenticated)
 			{
 				this.activeUserName = userName;
 				this.activePassword = password;
 				this.state = ConnectionState.Authenticated;
 			}
 
-			return authenticated;
+			return authenticationResult;
 		}
 		finally
 		{
@@ -291,11 +296,11 @@ public class HttpRemoteConnection extends RemoteConnection
 		{
 			if ((state != ConnectionState.Authenticated) && (userName != null) && (password != null))
 			{
-				boolean authenticated = invokeLogin(userName, password);
+				AuthenticationResult authenticationResult = invokeLogin(userName, password, clientVersion);
 
-				if (!authenticated)
+				if (authenticationResult != AuthenticationResult.Authenticated)
 				{
-					throw createException("loginFailed");
+					throw createAuthenticationException(authenticationResult, "loginFailed");
 				}
 			}
 
@@ -309,11 +314,11 @@ public class HttpRemoteConnection extends RemoteConnection
 				assert activeUserName != null : "activeUserName is null";
 				assert activePassword != null : "activePassword is null";
 
-				boolean authenticated = invokeLogin(activeUserName, activePassword);
+				AuthenticationResult authenticationResult = invokeLogin(activeUserName, activePassword, clientVersion);
 
-				if (!authenticated)
+				if (authenticationResult != AuthenticationResult.Authenticated)
 				{
-					throw createException("loginRepeated");
+					throw createAuthenticationException(authenticationResult, "loginRepeated");
 				}
 
 				Object returnValue = internalCall(call.name, call.args);
@@ -330,17 +335,18 @@ public class HttpRemoteConnection extends RemoteConnection
 	{
 		if ((state != ConnectionState.Authenticated) && (userName != null) && (password != null))
 		{
-			boolean authenticated = invokeLogin(userName, password);
+			AuthenticationResult authenticationResult = invokeLogin(userName, password, clientVersion);
 
-			if (!authenticated)
+			if (authenticationResult != AuthenticationResult.Authenticated)
 			{
-				throw createException("loginFailed");
+				throw createAuthenticationException(authenticationResult, "loginFailed");
 			}
 		}
 
 		try
 		{
-			@SuppressWarnings("unchecked") T result = (T)internalCall(name, args);
+			@SuppressWarnings("unchecked")
+			T result = internalCall(name, args);
 			return result;
 		}
 		catch (AuthenticationMissmatchException ex)
@@ -348,14 +354,15 @@ public class HttpRemoteConnection extends RemoteConnection
 			assert activeUserName != null : "activeUserName is null";
 			assert activePassword != null : "activePassword is null";
 
-			boolean authenticated = invokeLogin(activeUserName, activePassword);
+			AuthenticationResult authenticationResult = invokeLogin(activeUserName, activePassword, clientVersion);
 
-			if (!authenticated)
+			if (authenticationResult != AuthenticationResult.Authenticated)
 			{
-				throw createException("loginRepeated");
+				throw createAuthenticationException(authenticationResult, "loginRepeated");
 			}
 
-			@SuppressWarnings("unchecked") T result = (T)internalCall(name, args);
+			@SuppressWarnings("unchecked")
+			T result = internalCall(name, args);
 			return result;
 		}
 	}
@@ -431,6 +438,17 @@ public class HttpRemoteConnection extends RemoteConnection
 
 	protected StasisException createException(String id)
 	{
+		String message = resourceBundle.getString(id);
+		return new StasisException(id, message);
+	}
+
+	protected StasisException createAuthenticationException(AuthenticationResult authenticationResult, String id)
+	{
+		if (authenticationResult == AuthenticationResult.VersionMissmatch)
+		{
+			id = "versionMissmatch";
+		}
+
 		String message = resourceBundle.getString(id);
 		return new StasisException(id, message);
 	}
