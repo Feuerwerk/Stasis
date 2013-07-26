@@ -64,6 +64,7 @@
 /* Begin PBXFileReference section */
 		AA4C177A1779C1E8009F6BD0 /* LocalTimeSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalTimeSerializer.h; sourceTree = "<group>"; };
 		AA4C177B1779C1E8009F6BD0 /* LocalTimeSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalTimeSerializer.m; sourceTree = "<group>"; };
+		AA6F20AE17A29F900087C3AC /* HandshakeHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HandshakeHandler.h; sourceTree = "<group>"; };
 		AAA7C5A91763432000E9DA70 /* Kryo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Kryo.xcodeproj; path = ../../kryococoa/Kryo.xcodeproj; sourceTree = "<group>"; };
 		AAA7C5AD1763456800E9DA70 /* CTBlockDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTBlockDescription.h; sourceTree = "<group>"; };
 		AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTBlockDescription.m; sourceTree = "<group>"; };
@@ -168,6 +169,7 @@
 				AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */,
 				D39ED1C316E8C13E001AA271 /* ExceptionError.h */,
 				D39ED1C416E8C13E001AA271 /* ExceptionError.m */,
+				AA6F20AE17A29F900087C3AC /* HandshakeHandler.h */,
 				D3EDD23116E6635B005339C3 /* HttpRemoteConnection.h */,
 				D3EDD23216E6635B005339C3 /* HttpRemoteConnection.m */,
 				D30BC9ED16EA0B90003FD3F6 /* LocalDateSerializer.h */,

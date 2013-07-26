@@ -13,6 +13,7 @@
 typedef enum { Unconnected, Connected, Authenticated } ConnectionState;
 
 @class JObjectArray;
+@protocol HandshakeHandler;
 
 @interface RemoteConnection : NSObject
 {
@@ -25,9 +26,10 @@ typedef enum { Unconnected, Connected, Authenticated } ConnectionState;
 - (ConnectionState)state;
 
 - (void)callAsync:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
-- (void)setCredentialsForUser:(NSString *)userName andPassword:(NSString *)password;
-- (void)loginUser:(NSString *)userName andPassword:(NSString *)password returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)setCredentialsForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion;
+- (void)loginUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler;
 
+- (void)setHandshakeHandler:(id<HandshakeHandler>)handshakeHandler;
 - (void)setDefaultSerializer:(Class)defaultSerializer;
 - (void)registerDefaultSerializerClass:(Class)serializerClass forClass:(Class)type;
 - (void)registerDefaultSerializer:(id<Serializer>)serializer forClass:(Class)type;

@@ -14,6 +14,7 @@ import com.esotericsoftware.kryo.io.Output;
 import de.boxxit.stasis.AuthenticationMissmatchException;
 import de.boxxit.stasis.AuthenticationResult;
 import de.boxxit.stasis.SerializableException;
+import de.boxxit.stasis.StasisConstants;
 import de.boxxit.stasis.security.LoginService;
 import de.boxxit.stasis.security.LoginStatus;
 import de.boxxit.stasis.serializer.ArraysListSerializer;
@@ -143,6 +144,8 @@ public class StasisController implements Controller
 
 		try
 		{
+			response.setContentType(StasisConstants.CONTENT_TYPE);
+
 			io.input.setInputStream(request.getInputStream());
 			io.output.setOutputStream(response.getOutputStream());
 

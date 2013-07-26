@@ -21,7 +21,6 @@ import de.boxxit.stasis.serializer.ArraysListSerializer;
 public class HttpRemoteConnection extends RemoteConnection
 {
 	private static final String CONTENT_TYPE_KEY = "Content-Type";
-	private static final String CONTENT_TYPE_VALUE = "application/x-stasis";
 	private static final String REQUEST_METHOD = "POST";
 	private static final String LOGIN_FUNCTION = "login";
 
@@ -260,6 +259,13 @@ public class HttpRemoteConnection extends RemoteConnection
 			output.setOutputStream(null);
 
 			// Rückgabewert in Empfang nehmen
+			String contentType = connection.getContentType();
+
+			if (!StasisConstants.CONTENT_TYPE.equals(contentType))
+			{
+				// Error Handling
+			}
+
 			cookieManager.storeCookies(connection);
 
 			input.setInputStream(connection.getInputStream());
@@ -388,6 +394,13 @@ public class HttpRemoteConnection extends RemoteConnection
 			output.setOutputStream(null);
 
 			// Rückgabewert in Empfang nehmen
+			String contentType = connection.getContentType();
+
+			if (!StasisConstants.CONTENT_TYPE.equals(contentType))
+			{
+				// Error Handling
+			}
+
 			cookieManager.storeCookies(connection);
 
 			input.setInputStream(connection.getInputStream());
@@ -426,7 +439,7 @@ public class HttpRemoteConnection extends RemoteConnection
 		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
 		connection.setRequestMethod(REQUEST_METHOD);
-		connection.setRequestProperty(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+		connection.setRequestProperty(CONTENT_TYPE_KEY, StasisConstants.CONTENT_TYPE);
 		connection.setUseCaches(false);
 		connection.setDoInput(true);
 		connection.setDoOutput(true);
