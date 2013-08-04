@@ -11,6 +11,7 @@ public abstract class RemoteConnection
 {
 	protected String userName;
 	protected String password;
+	protected int clientVersion;
 	protected ConnectionState state;
 	protected Synchronizer synchronizer;
 
@@ -59,10 +60,11 @@ public abstract class RemoteConnection
 
 	public abstract <T> T callSync(String name, Object... args) throws Exception;
 
-	public void setCredentials(String userName, String password)
+	public void setCredentials(String userName, String password, int clientVersion)
 	{
 		this.userName = userName;
 		this.password = password;
+		this.clientVersion = clientVersion;
 
 		if (state == ConnectionState.Authenticated)
 		{
@@ -70,7 +72,7 @@ public abstract class RemoteConnection
 		}
 	}
 
-	public abstract void login(CallHandler<Void> handler, String userName, String password);
+	public abstract void login(CallHandler<Void> handler, String userName, String password, int clientVersion);
 
 	public ConnectionState getState()
 	{

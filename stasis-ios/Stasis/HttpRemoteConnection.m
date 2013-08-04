@@ -13,12 +13,13 @@
 #import "ExceptionError.h"
 #import "LocalDate.h"
 #import "LocalDateSerializer.h"
+#import "HandshakeHandler.h"
 
 @interface HttpRemoteConnection ()
 
-- (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
-- (void)invokeLoginForUser:(NSString *)userName andPassword:(NSString *)password returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler;
-- (void)invokeLoginForUser:(NSString *)userName andPassword:(NSString *)password followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
 
 @end
 
@@ -31,6 +32,7 @@ static NSString * const LOGIN_FUNCTION = @"login";
 static NSString * const CONNECTION_ERROR_DOMAIN = @"httpRemoteConnectionError";
 static const NSInteger ERROR_AUTHENTICATION_MISSMATCH = 100;
 static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
+static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 
 - (id)initWithUrl:(NSURL *)url
 {
@@ -43,6 +45,9 @@ static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
 		_output = [[KryoOutput alloc] initWithBufferSize:256 untilMaximum:-1];
 		_input = [[KryoInput alloc] init];
 		_state = Unconnected;
+		_userName = nil;
+		_password = nil;
+		_clientVersion = -1;
 	}
 	
 	return self;
@@ -53,12 +58,12 @@ static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
 	if ((_state != Authenticated) && (_userName != nil) && (_password != nil))
 	{
 		// Die Verbindung noch nicht authentifiziert ist, aber Credentials vorliegen zuerst einloggen
-		[self invokeLoginForUser:_userName andPassword:_password followingFunction:name withArguments:args returning:resultHandler error:errorHandler];
+		[self invokeLoginForUser:_userName password:_password andClientVersion:_clientVersion followingFunction:name withArguments:args returning:resultHandler error:errorHandler];
 	}
 	else
 	{
 		// Die Service-Funktion ausführen
-		[self invokeServiceFunction:name withArguments:args returning:resultHandler error:^(NSError *error)
+		[self invokeServiceFunction:name withArguments:args handshakeHandler:_handshakeHandler returning:resultHandler error:^(NSError *error)
 		{
 			// Ausführung der Service-Funktion ist fehlgeschlagen
 			if ([error.domain isEqualToString:CONNECTION_ERROR_DOMAIN] && (error.code == ERROR_AUTHENTICATION_MISSMATCH))
@@ -66,7 +71,7 @@ static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
 				assert(_activeUserName != nil);
 				assert(_activePassword != nil);
 				
-				[self invokeLoginForUser:_activeUserName andPassword:_activePassword followingFunction:name withArguments:args returning:resultHandler error:errorHandler];
+				[self invokeLoginForUser:_activeUserName password:_activePassword andClientVersion:_activeClientVersion followingFunction:name withArguments:args returning:resultHandler error:errorHandler];
 			}
 			else
 			{
@@ -76,16 +81,22 @@ static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
 	}
 }
 
-- (void)loginUser:(NSString *)userName andPassword:(NSString *)password returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)loginUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler
 {
-	[self invokeLoginForUser:userName andPassword:password returning:resultHandler error:errorHandler];
+	[self invokeLoginForUser:userName password:password andClientVersion:clientVersion handshakeHandler:_handshakeHandler returning:resultHandler error:errorHandler];
 }
 
-- (void)setCredentialsForUser:(NSString *)userName andPassword:(NSString *)password
+- (void)setCredentialsForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion
 {
 	_userName = userName;
 	_password = password;
+	_clientVersion = clientVersion;
 	_state = Connected;
+}
+
+- (void)setHandshakeHandler:(id<HandshakeHandler>)handshakeHandler
+{
+	_handshakeHandler = handshakeHandler;
 }
 
 - (void)setDefaultSerializer:(Class)defaultSerializer
@@ -123,10 +134,10 @@ static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
 	[_kryo registerClass:type usingSerializer:serializer andIdent:ident];
 }
 
-- (void)invokeLoginForUser:(NSString *)userName andPassword:(NSString *)password followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	// Die Verbindung noch nicht authentifiziert ist, aber Credentials vorliegen zuerst einloggen
-	[self invokeLoginForUser:userName andPassword:password returning:^(BOOL authenticated)
+	[self invokeLoginForUser:userName password:password andClientVersion:clientVersion handshakeHandler:_handshakeHandler returning:^(BOOL authenticated)
 	 {
 		 if (!authenticated)
 		 {
@@ -136,17 +147,18 @@ static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
 		 }
 		 
 		 // Die Service-Funktion ausführen
-		 [self invokeServiceFunction:name withArguments:args returning:resultHandler error:errorHandler];
+		 [self invokeServiceFunction:name withArguments:args handshakeHandler:_handshakeHandler returning:resultHandler error:errorHandler];
 	 } error:errorHandler];
 }
 
-- (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	[_output clear];
 	[_kryo writeObject:name to:_output];
 	[_kryo writeObject:[JBoolean boolWithValue:self.state == Authenticated] to:_output]; // Dem Server mitteilen ob wir davon ausgehen, dass wir bereits authentifiziert sind
 	[_kryo writeObject:args to:_output];
 	
+	__weak HttpRemoteConnection *weakSelf = self;
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:_url];
 	
 	[request addValue:CONTENT_TYPE_VALUE forHTTPHeaderField:CONTENT_TYPE_KEY];
@@ -163,6 +175,33 @@ static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
 		{
 			if (data.length == 0)
 			{
+				return;
+			}
+			
+			if (![CONTENT_TYPE_VALUE isEqualToString:response.MIMEType])
+			{
+				BOOL handled = NO;
+				
+				if (handshakeHandler != nil)
+				{
+					handled = [handshakeHandler handleResponse:response withData:data forConnection:weakSelf returning:^(NSError *error) {
+						if (error == nil)
+						{
+							[weakSelf invokeServiceFunction:name withArguments:args handshakeHandler:nil returning:resultHandler error:errorHandler];
+						}
+						else
+						{
+							errorHandler(error);
+						}
+					}];
+				}
+				
+				if (!handled)
+				{
+					NSLog(@"Response with MimeType %@ can't be handled", response.MIMEType);
+					errorHandler([NSError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_UNKNOWN_CONTENT_TYPE userInfo:nil]);
+				}
+				
 				return;
 			}
 			 
@@ -227,13 +266,15 @@ static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
 	 }];
 }
 
-- (void)invokeLoginForUser:(NSString *)userName andPassword:(NSString *)password returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	[_output clear];
 	[_kryo writeObject:LOGIN_FUNCTION to:_output];
 	[_kryo writeObject:userName to:_output];
 	[_kryo writeObject:password to:_output];
+	[_kryo writeObject:[JInteger intWithValue:clientVersion] to:_output];
 	
+	__weak HttpRemoteConnection *weakSelf = self;
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:_url];
 	
 	[request addValue:CONTENT_TYPE_VALUE forHTTPHeaderField:CONTENT_TYPE_KEY];
@@ -253,6 +294,37 @@ static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
 				 return;
 			 }
 			 
+			 if (![CONTENT_TYPE_VALUE isEqualToString:response.MIMEType])
+			 {
+				 NSLog(@"MimeType: %@ length=%i", response.MIMEType, data.length);
+				 BOOL handled = NO;
+				 NSString *strData = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+				 NSLog(@"%@", strData);
+
+				 if (handshakeHandler != nil)
+				 {
+					 handled = [handshakeHandler handleResponse:response withData:data forConnection:weakSelf returning:^(NSError *error) {
+						 if (error == nil)
+						 {
+							 [weakSelf invokeLoginForUser:userName password:password andClientVersion:clientVersion handshakeHandler:nil returning:resultHandler error:errorHandler];
+						 }
+						 else
+						 {
+							 errorHandler(error);
+						 }
+					 }];
+				 }
+				 
+				 if (!handled)
+				 {
+					 
+					 NSLog(@"Response with MimeType %@ can't be handled", response.MIMEType);
+					 errorHandler([NSError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_UNKNOWN_CONTENT_TYPE userInfo:nil]);
+				 }
+				 
+				 return;
+			 }
+			 
 			 @try
 			 {
 				 _input.buffer = data;
@@ -262,6 +334,7 @@ static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
 				 {
 					 _activeUserName = userName;
 					 _activePassword = password;
+					 _activeClientVersion = clientVersion;
 					 _state = Authenticated;
 				 }
 

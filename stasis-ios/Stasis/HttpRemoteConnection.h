@@ -21,8 +21,11 @@
 	KryoInput *_input;
 	NSString *_userName;
 	NSString *_password;
+	SInt32 _clientVersion;
 	NSString *_activeUserName;
 	NSString *_activePassword;
+	SInt32 _activeClientVersion;
+	id<HandshakeHandler> _handshakeHandler;
 }
 
 - (id)initWithUrl:(NSURL *)url;

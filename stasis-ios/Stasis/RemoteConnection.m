@@ -38,14 +38,19 @@
 	[NSException raise:NSInternalInconsistencyException format:@"%@ must be overwritten in subclass", NSStringFromSelector(_cmd)];
 }
 
-- (void)setCredentialsForUser:(NSString *)userName andPassword:(NSString *)password
+- (void)setCredentialsForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion
 {
 	[NSException raise:NSInternalInconsistencyException format:@"%@ must be overwritten in subclass", NSStringFromSelector(_cmd)];
 }
 
-- (void)loginUser:(NSString *)userName andPassword:(NSString *)password returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)loginUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion returning:(void (^)(BOOL))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	[NSException raise:NSInternalInconsistencyException format:@"%@ must be overwritten in subclass", NSStringFromSelector(_cmd)];
+}
+
+- (void)setHandshakeHandler:(id<HandshakeHandler>)handshakeHandler
+{
+   [NSException raise:NSInternalInconsistencyException format:@"%@ must be overwritten in subclass", NSStringFromSelector(_cmd)];
 }
 
 - (void)setDefaultSerializer:(Class)defaultSerializer

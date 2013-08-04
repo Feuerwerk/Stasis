@@ -12,7 +12,9 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import de.boxxit.stasis.AuthenticationMissmatchException;
+import de.boxxit.stasis.AuthenticationResult;
 import de.boxxit.stasis.SerializableException;
+import de.boxxit.stasis.StasisConstants;
 import de.boxxit.stasis.security.LoginService;
 import de.boxxit.stasis.security.LoginStatus;
 import de.boxxit.stasis.serializer.ArraysListSerializer;
@@ -45,6 +47,7 @@ public class StasisController implements Controller
 	private LoginService loginService;
 	private ObjectPool<InOut> ioPool;
 	private Class<? extends Serializer> defaultSerializer = null;
+	private int serverVersion;
 
 	// Ich bin noch ein Kommentar
 	public StasisController()
@@ -109,6 +112,11 @@ public class StasisController implements Controller
 		ioPool = new StackObjectPool<InOut>(poolableObjectFactory);
 	}
 
+	public void setServerVersion(int serverVersion)
+	{
+		this.serverVersion = serverVersion;
+	}
+
 	public void setLoginService(LoginService loginService)
 	{
 		this.loginService = loginService;
@@ -136,6 +144,8 @@ public class StasisController implements Controller
 
 		try
 		{
+			response.setContentType(StasisConstants.CONTENT_TYPE);
+
 			io.input.setInputStream(request.getInputStream());
 			io.output.setOutputStream(response.getOutputStream());
 
@@ -167,13 +177,16 @@ public class StasisController implements Controller
 
 		if (LOGIN_FUNCTION.equals(name))
 		{
+			AuthenticationResult authenticationResult;
 			String userName;
 			String password;
+			int clientVersion;
 
 			try
 			{
 				userName = kryo.readObject(input, String.class);
 				password = kryo.readObject(input, String.class);
+				clientVersion = kryo.readObject(input, int.class);
 			}
 			catch (Exception ex)
 			{
@@ -185,26 +198,32 @@ public class StasisController implements Controller
 				throw ex;
 			}
 
-			LoginStatus loginStatus;
-
-			try
+			if (clientVersion != serverVersion)
 			{
-				loginStatus = loginService.login(userName, password);
+				authenticationResult = AuthenticationResult.VersionMissmatch;
 			}
-			catch (Exception ex)
+			else
 			{
-				if (LOGGER.isErrorEnabled())
+				try
 				{
-					long stopTimeMillis = System.currentTimeMillis();
-					LOGGER.error(String.format("Call failed because arguments can't be read (name = %s, arguments = %s, duration = %dms)", name, userName, stopTimeMillis - startTimeMillis), ex);
+					LoginStatus loginStatus = loginService.login(userName, password);
+					authenticationResult = loginStatus.isAuthenticated() ? AuthenticationResult.Authenticated : AuthenticationResult.Unauthenticated;
 				}
+				catch (Exception ex)
+				{
+					if (LOGGER.isErrorEnabled())
+					{
+						long stopTimeMillis = System.currentTimeMillis();
+						LOGGER.error(String.format("Call failed because arguments can't be read (name = %s, arguments = %s, duration = %dms)", name, userName, stopTimeMillis - startTimeMillis), ex);
+					}
 
-				throw ex;
+					throw ex;
+				}
 			}
 
 			try
 			{
-				kryo.writeObject(output, loginStatus.isAuthenticated());
+				kryo.writeObject(output, authenticationResult);
 
 				output.flush();
 			}
@@ -213,7 +232,7 @@ public class StasisController implements Controller
 				if (LOGGER.isErrorEnabled())
 				{
 					long stopTimeMillis = System.currentTimeMillis();
-					LOGGER.error(String.format("Call failed because result can't be written back to client (name = %s, arguments = %s, result = %s, duration = %dms)", name, userName, loginStatus.isAuthenticated(), stopTimeMillis - startTimeMillis), ex);
+					LOGGER.error(String.format("Call failed because result can't be written back to client (name = %s, arguments = %s, result = %s, duration = %dms)", name, userName, authenticationResult, stopTimeMillis - startTimeMillis), ex);
 				}
 
 				throw ex;
