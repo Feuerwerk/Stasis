@@ -393,7 +393,10 @@ public class HttpRemoteConnection extends RemoteConnection
 					throw (Exception)result[0];
 				}
 
-				return (T)result[0];
+				@SuppressWarnings("unchecked")
+				T returnValue = (T)result[0];
+
+				return returnValue;
 			}
 			finally
 			{
