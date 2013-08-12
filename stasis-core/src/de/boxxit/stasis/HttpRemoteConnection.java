@@ -128,7 +128,7 @@ public class HttpRemoteConnection extends RemoteConnection
 	private CookieManager cookieManager = new CookieManager();
 	private String activeUserName;
 	private String activePassword;
-
+	private int activeClientVersion;
 
 	{
 		kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
@@ -241,59 +241,18 @@ public class HttpRemoteConnection extends RemoteConnection
 
 	protected AuthenticationResult invokeLogin(String userName, String password, int clientVersion) throws Exception
 	{
-		HttpURLConnection connection = null;
+		AuthenticationResult authenticationResult = internalCall(LOGIN_FUNCTION, new Object[] {  userName, password, clientVersion });
 
-		try
+		if (authenticationResult == AuthenticationResult.Authenticated)
 		{
-			connection = prepareConnection();
+			this.activeUserName = userName;
+			this.activePassword = password;
+			this.activeClientVersion = clientVersion;
 
-			// Service-Namen und Parameter an den Server schreiben
-			output.setOutputStream(connection.getOutputStream());
-
-			kryo.writeObject(output, LOGIN_FUNCTION);
-			kryo.writeObject(output, userName);
-			kryo.writeObject(output, password);
-			kryo.writeObject(output, clientVersion);
-
-			output.close();
-			output.setOutputStream(null);
-
-			// Rückgabewert in Empfang nehmen
-			String contentType = connection.getContentType();
-
-			if (!StasisConstants.CONTENT_TYPE.equals(contentType))
-			{
-				// Error Handling
-			}
-
-			cookieManager.storeCookies(connection);
-
-			input.setInputStream(connection.getInputStream());
-
-			AuthenticationResult authenticationResult = kryo.readObject(input, AuthenticationResult.class);
-
-			if (authenticationResult == AuthenticationResult.Authenticated)
-			{
-				this.activeUserName = userName;
-				this.activePassword = password;
-				this.state = ConnectionState.Authenticated;
-			}
-
-			return authenticationResult;
+			this.state = ConnectionState.Authenticated;
 		}
-		finally
-		{
-			output.close();
-			output.setOutputStream(null);
 
-			input.close();
-			input.setInputStream(null);
-
-			if (connection != null)
-			{
-				connection.disconnect();
-			}
-		}
+		return authenticationResult;
 	}
 
 	protected void invokeFunction(FunctionCall call)
@@ -320,7 +279,7 @@ public class HttpRemoteConnection extends RemoteConnection
 				assert activeUserName != null : "activeUserName is null";
 				assert activePassword != null : "activePassword is null";
 
-				AuthenticationResult authenticationResult = invokeLogin(activeUserName, activePassword, clientVersion);
+				AuthenticationResult authenticationResult = invokeLogin(activeUserName, activePassword, activeClientVersion);
 
 				if (authenticationResult != AuthenticationResult.Authenticated)
 				{
@@ -376,60 +335,78 @@ public class HttpRemoteConnection extends RemoteConnection
 	@SuppressWarnings("unchecked")
 	protected <T> T internalCall(String name, Object[] args) throws Exception
 	{
-		HttpURLConnection connection = null;
+		boolean alreadyHandshaked = false;
 
-		try
+		while (true)
 		{
-			connection = prepareConnection();
+			HttpURLConnection connection = null;
 
-			// Service-Namen und Parameter an den Server schreiben
-			output.setOutputStream(connection.getOutputStream());
-
-			kryo.writeObject(output, name);
-			kryo.writeObject(output, state == ConnectionState.Authenticated); // Dem Server mitteilen ob wir davon ausgehen, dass wir bereits authentifiziert sind
-			kryo.writeObject(output, args != null ? args : new Object[0]);
-
-			// Ausgabe schließen
-			output.close();
-			output.setOutputStream(null);
-
-			// Rückgabewert in Empfang nehmen
-			String contentType = connection.getContentType();
-
-			if (!StasisConstants.CONTENT_TYPE.equals(contentType))
+			try
 			{
-				// Error Handling
+				connection = prepareConnection();
+
+				// Service-Namen und Parameter an den Server schreiben
+				output.setOutputStream(connection.getOutputStream());
+
+				kryo.writeObject(output, name);
+				kryo.writeObject(output, state == ConnectionState.Authenticated); // Dem Server mitteilen ob wir davon ausgehen, dass wir bereits authentifiziert sind
+				kryo.writeObject(output, args != null ? args : new Object[0]);
+
+				// Ausgabe schließen
+				output.close();
+				output.setOutputStream(null);
+
+				// Rückgabewert in Empfang nehmen
+				String contentType = connection.getContentType();
+
+				if (!StasisConstants.CONTENT_TYPE.equals(contentType))
+				{
+					boolean handled = false;
+
+					if (!alreadyHandshaked && (handshakeHandler != null))
+					{
+						handled = handshakeHandler.handleResponse(connection, this);
+					}
+
+					if (!handled)
+					{
+						throw createException("wrongMimeType");
+					}
+
+					alreadyHandshaked = true;
+					continue;
+				}
+
+				cookieManager.storeCookies(connection);
+
+				input.setInputStream(connection.getInputStream());
+
+				Object[] result = kryo.readObject(input, Object[].class);
+
+				if (result.length == 0)
+				{
+					return null;
+				}
+
+				if (result[0] instanceof Exception)
+				{
+					throw (Exception)result[0];
+				}
+
+				return (T)result[0];
 			}
-
-			cookieManager.storeCookies(connection);
-
-			input.setInputStream(connection.getInputStream());
-
-			Object[] result = kryo.readObject(input, Object[].class);
-
-			if (result.length == 0)
+			finally
 			{
-				return null;
-			}
+				output.close();
+				output.setOutputStream(null);
 
-			if (result[0] instanceof Exception)
-			{
-				throw (Exception)result[0];
-			}
+				input.close();
+				input.setInputStream(null);
 
-			return (T)result[0];
-		}
-		finally
-		{
-			output.close();
-			output.setOutputStream(null);
-
-			input.close();
-			input.setInputStream(null);
-
-			if (connection != null)
-			{
-				connection.disconnect();
+				if (connection != null)
+				{
+					connection.disconnect();
+				}
 			}
 		}
 	}

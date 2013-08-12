@@ -14,6 +14,7 @@ public abstract class RemoteConnection
 	protected int clientVersion;
 	protected ConnectionState state;
 	protected Synchronizer synchronizer;
+	protected HandshakeHandler handshakeHandler;
 
 	public static RemoteConnection createConnection(String url)
 	{
@@ -52,6 +53,16 @@ public abstract class RemoteConnection
 	public void setSynchronizer(Synchronizer synchronizer)
 	{
 		this.synchronizer = synchronizer;
+	}
+
+	public HandshakeHandler getHandshakeHandler()
+	{
+		return handshakeHandler;
+	}
+
+	public void setHandshakeHandler(HandshakeHandler handshakeHandler)
+	{
+		this.handshakeHandler = handshakeHandler;
 	}
 
 	public abstract void setDefaultSerializer(Class<? extends Serializer> defaultSerializer);
