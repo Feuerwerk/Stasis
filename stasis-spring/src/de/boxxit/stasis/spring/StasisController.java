@@ -191,7 +191,17 @@ public class StasisController implements Controller
 				result = handleServiceFunction(functionName, assumeAuthenticated, args);
 			}
 		}
-		catch (AuthenticationMissmatchException | SerializableException ex)
+		catch (AuthenticationMissmatchException ex)
+		{
+			if (LOGGER.isErrorEnabled())
+			{
+				long stopTimeMillis = System.currentTimeMillis();
+				LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", functionName, formatArray(args), stopTimeMillis - startTimeMillis));
+			}
+
+			result = new Object[] { ex };
+		}
+		catch (SerializableException ex)
 		{
 			if (LOGGER.isErrorEnabled())
 			{
