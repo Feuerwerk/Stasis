@@ -187,210 +187,166 @@ public class StasisController implements Controller
 	{
 		// Funktionsnamen lesen
 		long startTimeMillis = System.currentTimeMillis();
-		String name;
+		String functionName;
+		boolean assumeAuthenticated;
+		Object[] args;
+		Object[] result = null;
 
 		try
 		{
-			name = kryo.readObject(input, String.class);
+			functionName = kryo.readObject(input, String.class);
+			assumeAuthenticated = kryo.readObject(input, boolean.class);
+			args = kryo.readObject(input, Object[].class);
 		}
 		catch (Exception ex)
 		{
-			LOGGER.error("Call failed because function name can't be read");
+			LOGGER.error("Call failed because function name or arguments can't be read");
 			throw ex;
 		}
 
-		if (LOGIN_FUNCTION.equals(name))
+		try
 		{
-			AuthenticationResult authenticationResult;
-			String userName;
-			String password;
-			int clientVersion;
-
-			try
+			if (LOGIN_FUNCTION.equals(functionName))
 			{
-				userName = kryo.readObject(input, String.class);
-				password = kryo.readObject(input, String.class);
-				clientVersion = kryo.readObject(input, int.class);
-			}
-			catch (Exception ex)
-			{
-				if (LOGGER.isErrorEnabled())
-				{
-					LOGGER.error(String.format("Call failed because arguments can't be read (name = %s)", name));
-				}
-
-				throw ex;
-			}
-
-			if (clientVersion != serverVersion)
-			{
-				authenticationResult = AuthenticationResult.VersionMissmatch;
+				result = handleLogin(args);
 			}
 			else
 			{
-				try
-				{
-					LoginStatus loginStatus = loginService.login(userName, password);
-					authenticationResult = loginStatus.isAuthenticated() ? AuthenticationResult.Authenticated : AuthenticationResult.Unauthenticated;
-				}
-				catch (Exception ex)
-				{
-					if (LOGGER.isErrorEnabled())
-					{
-						long stopTimeMillis = System.currentTimeMillis();
-						LOGGER.error(String.format("Call failed because arguments can't be read (name = %s, arguments = %s, duration = %dms)", name, userName, stopTimeMillis - startTimeMillis), ex);
-					}
-
-					throw ex;
-				}
-			}
-
-			try
-			{
-				kryo.writeObject(output, authenticationResult);
-
-				output.flush();
-			}
-			catch (Exception ex)
-			{
-				if (LOGGER.isErrorEnabled())
-				{
-					long stopTimeMillis = System.currentTimeMillis();
-					LOGGER.error(String.format("Call failed because result can't be written back to client (name = %s, arguments = %s, result = %s, duration = %dms)", name, userName, authenticationResult, stopTimeMillis - startTimeMillis), ex);
-				}
-
-				throw ex;
+				result = handleServiceFunction(functionName, assumeAuthenticated, args);
 			}
 		}
-		else
+		catch (AuthenticationMissmatchException ex)
 		{
-			Object[] args = null;
-			Object[] result = null;
-			Object service = null;
-			Method foundMethod = null;
-
-			try
+			if (LOGGER.isErrorEnabled())
 			{
-				try
-				{
-					LoginStatus loginStatus = loginService.getStatus();
-					boolean assumeAuthenticated = kryo.readObject(input, boolean.class);
-
-					if (loginStatus.isAuthenticated() != assumeAuthenticated)
-					{
-						throw new AuthenticationMissmatchException(loginStatus.isAuthenticated());
-					}
-
-					int index = name.indexOf('.');
-					String serviceName = name.substring(0, index);
-					service = services.get(serviceName);
-
-					if (service == null)
-					{
-						throw new SerializableException("serviceMissing", "Can't find matching service");
-					}
-
-					Class<?> serviceClass = service.getClass();
-					String serviceMethod = name.substring(index + 1);
-
-					for (Method method : serviceClass.getMethods())
-					{
-						if (method.getName().equals(serviceMethod))
-						{
-							foundMethod = method;
-							break;
-						}
-					}
-
-					if (foundMethod == null)
-					{
-						throw new SerializableException("serviceFunctionMissing", "Can't find matching service function");
-					}
-
-					args = kryo.readObject(input, Object[].class);
-				}
-				catch (SerializableException | AuthenticationMissmatchException ex)
-				{
-					throw ex;
-				}
-				catch (Exception ex)
-				{
-					if (LOGGER.isErrorEnabled())
-					{
-						LOGGER.error(String.format("Call failed because arguments can't be read (name = %s)", name));
-					}
-
-					throw ex;
-				}
-
-				try
-				{
-					Class<?> returnType = foundMethod.getReturnType();
-
-					if (void.class.equals(returnType))
-					{
-						foundMethod.invoke(service, args);
-						result = new Object[0];
-					}
-					else
-					{
-						Object returnValue = foundMethod.invoke(service, args);
-						result = new Object[] { returnValue };
-					}
-				}
-				catch (IllegalAccessException ex)
-				{
-					if (LOGGER.isErrorEnabled())
-					{
-						long stopTimeMillis = System.currentTimeMillis();
-						LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", name, formatArray(args), stopTimeMillis - startTimeMillis), ex);
-					}
-
-					throw ex;
-				}
-				catch (InvocationTargetException ex)
-				{
-					// Exception entpacken um ursächliche Exception näher auszuwerten
-					Throwable targetException = ex.getTargetException();
-
-					if (LOGGER.isErrorEnabled())
-					{
-						long stopTimeMillis = System.currentTimeMillis();
-						LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", name, formatArray(args), stopTimeMillis - startTimeMillis), targetException);
-					}
-
-					throw targetException;
-				}
-			}
-			catch (AuthenticationMissmatchException | SerializableException ex)
-			{
-				result = new Object[] { ex };
-			}
-			catch (Throwable ex)
-			{
-				result = new Object[] { new SerializableException(ex) };
+				long stopTimeMillis = System.currentTimeMillis();
+				LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", functionName, formatArray(args), stopTimeMillis - startTimeMillis));
 			}
 
-			try
+			result = new Object[] { ex };
+		}
+		catch (SerializableException ex)
+		{
+			if (LOGGER.isErrorEnabled())
 			{
-				kryo.writeObject(output, result);
+				long stopTimeMillis = System.currentTimeMillis();
+				LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", functionName, formatArray(args), stopTimeMillis - startTimeMillis), ex);
+			}
 
-				output.flush();
-			}
-			catch (Exception ex)
+			result = new Object[] { ex };
+		}
+		catch (Throwable ex)
+		{
+			if (LOGGER.isErrorEnabled())
 			{
-				if (LOGGER.isErrorEnabled())
-				{
-					long stopTimeMillis = System.currentTimeMillis();
-					LOGGER.error(String.format("Call failed because result can't be written back to client (name = %s, arguments = %s, result = %s, duration = %dms)", name, formatArray(args), formatArray(result), stopTimeMillis - startTimeMillis), ex);
-				}
+				long stopTimeMillis = System.currentTimeMillis();
+				LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", functionName, formatArray(args), stopTimeMillis - startTimeMillis), ex);
 			}
+
+			result = new Object[] { new SerializableException(ex) };
+		}
+
+		try
+		{
+			kryo.writeObject(output, result);
+
+			output.flush();
 
 			if (LOGGER.isDebugEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.debug(String.format("Call succeeded (name = %s, arguments = %s, result = %s, duration = %dms)", name, formatArray(args), formatArray(result), stopTimeMillis - startTimeMillis));
+				LOGGER.debug(String.format("Call succeeded (name = %s, arguments = %s, result = %s, duration = %dms)", functionName, formatArray(args), formatArray(result), stopTimeMillis - startTimeMillis));
 			}
+		}
+		catch (Exception ex)
+		{
+			if (LOGGER.isErrorEnabled())
+			{
+				long stopTimeMillis = System.currentTimeMillis();
+				LOGGER.error(String.format("Call failed because result can't be written back to client (name = %s, arguments = %s, result = %s, duration = %dms)", functionName, formatArray(args), formatArray(result), stopTimeMillis - startTimeMillis), ex);
+			}
+		}
+	}
+
+	private Object[] handleLogin(Object[] args)
+	{
+		AuthenticationResult authenticationResult;
+
+		if (args.length != 3)
+		{
+			throw new IllegalArgumentException("3 Arguments expected");
+		}
+
+		String userName = (String)args[0];
+		String password = (String)args[1];
+		int clientVersion = (Integer)args[2];
+
+		if (clientVersion != serverVersion)
+		{
+			authenticationResult = AuthenticationResult.VersionMissmatch;
+		}
+		else
+		{
+			LoginStatus loginStatus = loginService.login(userName, password);
+			authenticationResult = loginStatus.isAuthenticated() ? AuthenticationResult.Authenticated : AuthenticationResult.Unauthenticated;
+		}
+
+		return new Object[] { authenticationResult };
+	}
+
+	private Object[] handleServiceFunction(String functionName, boolean assumeAuthenticated, Object[] args) throws Throwable
+	{
+		Method foundMethod = null;
+		LoginStatus loginStatus = loginService.getStatus();
+
+		if (loginStatus.isAuthenticated() != assumeAuthenticated)
+		{
+			throw new AuthenticationMissmatchException(loginStatus.isAuthenticated());
+		}
+
+		int index = functionName.indexOf('.');
+		String serviceName = functionName.substring(0, index);
+		Object service = services.get(serviceName);
+
+		if (service == null)
+		{
+			throw new SerializableException("serviceMissing", "Can't find matching service");
+		}
+
+		Class<?> serviceClass = service.getClass();
+		String serviceMethod = functionName.substring(index + 1);
+
+		for (Method method : serviceClass.getMethods())
+		{
+			if (method.getName().equals(serviceMethod))
+			{
+				foundMethod = method;
+				break;
+			}
+		}
+
+		if (foundMethod == null)
+		{
+			throw new SerializableException("serviceFunctionMissing", "Can't find matching service function");
+		}
+
+		try
+		{
+			Class<?> returnType = foundMethod.getReturnType();
+
+			if (void.class.equals(returnType))
+			{
+				foundMethod.invoke(service, args);
+				return new Object[0];
+			}
+
+			Object returnValue = foundMethod.invoke(service, args);
+			return new Object[] { returnValue };
+		}
+		catch (InvocationTargetException ex)
+		{
+			// Exception entpacken um ursächliche Exception näher auszuwerten
+			throw ex.getTargetException();
 		}
 	}
 
