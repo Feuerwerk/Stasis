@@ -1,10 +1,14 @@
 package de.boxxit.stasis.spring;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.esotericsoftware.kryo.Kryo;
@@ -15,6 +19,7 @@ import de.boxxit.stasis.AuthenticationMissmatchException;
 import de.boxxit.stasis.AuthenticationResult;
 import de.boxxit.stasis.SerializableException;
 import de.boxxit.stasis.StasisConstants;
+import de.boxxit.stasis.StasisUtils;
 import de.boxxit.stasis.security.LoginService;
 import de.boxxit.stasis.security.LoginStatus;
 import de.boxxit.stasis.serializer.ArraysListSerializer;
@@ -144,12 +149,31 @@ public class StasisController implements Controller
 
 		try
 		{
+			boolean gzipRequested = StasisUtils.isUsingGzipEncoding(request.getHeaders(StasisUtils.ACCEPT_ENCODING_KEY));
+			boolean gzipUsed = StasisUtils.isUsingGzipEncoding(request.getHeaders(StasisUtils.CONTENT_ENCODING_KEY));
+			InputStream inputStream = request.getInputStream();
+			OutputStream outputStream = response.getOutputStream();
+
+			if (gzipUsed)
+			{
+				inputStream = new GZIPInputStream(inputStream);
+			}
+
+			if (gzipRequested)
+			{
+				response.setHeader(StasisUtils.CONTENT_ENCODING_KEY, StasisUtils.GZIP_ENCODING);
+				outputStream = new GZIPOutputStream(outputStream);
+			}
+
 			response.setContentType(StasisConstants.CONTENT_TYPE);
 
-			io.input.setInputStream(request.getInputStream());
-			io.output.setOutputStream(response.getOutputStream());
+			io.input.setInputStream(inputStream);
+			io.output.setOutputStream(outputStream);
 
 			handleIO(io.kryo, io.input, io.output);
+
+			//io.output.close();
+			outputStream.close();
 		}
 		finally
 		{
@@ -378,8 +402,9 @@ public class StasisController implements Controller
 		}
 
 		StringBuilder str = new StringBuilder("{ ");
+		int length = Math.min(10, array.length);
 
-		for (int i = 0, length = array.length; i < length; ++i)
+		for (int i = 0; i < length; ++i)
 		{
 			if (i != 0)
 			{
@@ -387,6 +412,13 @@ public class StasisController implements Controller
 			}
 
 			str.append(array[i]);
+		}
+
+		if (length < array.length)
+		{
+			str.append(", and ");
+			str.append(array.length - length);
+			str.append("more");
 		}
 
 		str.append(" }");

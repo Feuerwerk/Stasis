@@ -1,6 +1,8 @@
 package de.boxxit.stasis;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
@@ -9,6 +11,8 @@ import java.util.ResourceBundle;
 import java.util.ServiceLoader;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
@@ -27,6 +31,10 @@ public class HttpRemoteConnection extends RemoteConnection
 	protected abstract static class Call<T>
 	{
 		public CallHandler<T> handler;
+
+		protected Call()
+		{
+		}
 
 		public void succeed(final T value, Synchronizer synchronizer)
 		{
@@ -128,7 +136,7 @@ public class HttpRemoteConnection extends RemoteConnection
 	private CookieManager cookieManager = new CookieManager();
 	private String activeUserName;
 	private String activePassword;
-
+	private boolean gzipAvailable = false;
 
 	{
 		kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
@@ -248,7 +256,19 @@ public class HttpRemoteConnection extends RemoteConnection
 			connection = prepareConnection();
 
 			// Service-Namen und Parameter an den Server schreiben
-			output.setOutputStream(connection.getOutputStream());
+			OutputStream outputStream;
+
+			if (gzipAvailable)
+			{
+				connection.setRequestProperty(StasisUtils.CONTENT_ENCODING_KEY, StasisUtils.GZIP_ENCODING);
+				outputStream = new GZIPOutputStream(connection.getOutputStream());
+			}
+			else
+			{
+				outputStream = connection.getOutputStream();
+			}
+
+			output.setOutputStream(outputStream);
 
 			kryo.writeObject(output, LOGIN_FUNCTION);
 			kryo.writeObject(output, userName);
@@ -268,7 +288,16 @@ public class HttpRemoteConnection extends RemoteConnection
 
 			cookieManager.storeCookies(connection);
 
-			input.setInputStream(connection.getInputStream());
+			boolean gzipUsed = StasisUtils.isUsingGzipEncoding(connection.getHeaderField(StasisUtils.CONTENT_ENCODING_KEY));
+			InputStream inputStream = connection.getInputStream();
+
+			if (gzipUsed)
+			{
+				gzipAvailable = true;
+				inputStream = new GZIPInputStream(inputStream);
+			}
+
+			input.setInputStream(inputStream);
 
 			AuthenticationResult authenticationResult = kryo.readObject(input, AuthenticationResult.class);
 
@@ -383,7 +412,19 @@ public class HttpRemoteConnection extends RemoteConnection
 			connection = prepareConnection();
 
 			// Service-Namen und Parameter an den Server schreiben
-			output.setOutputStream(connection.getOutputStream());
+			OutputStream outputStream;
+
+			if (gzipAvailable)
+			{
+				connection.setRequestProperty(StasisUtils.CONTENT_ENCODING_KEY, StasisUtils.GZIP_ENCODING);
+				outputStream = new GZIPOutputStream(connection.getOutputStream());
+			}
+			else
+			{
+				outputStream = connection.getOutputStream();
+			}
+
+			output.setOutputStream(outputStream);
 
 			kryo.writeObject(output, name);
 			kryo.writeObject(output, state == ConnectionState.Authenticated); // Dem Server mitteilen ob wir davon ausgehen, dass wir bereits authentifiziert sind
@@ -401,9 +442,20 @@ public class HttpRemoteConnection extends RemoteConnection
 				// Error Handling
 			}
 
+			boolean gzipUsed = StasisUtils.isUsingGzipEncoding(connection.getHeaderField(StasisUtils.CONTENT_ENCODING_KEY));
+
 			cookieManager.storeCookies(connection);
 
-			input.setInputStream(connection.getInputStream());
+			// Antwort lesen
+			InputStream inputStream = connection.getInputStream();
+
+			if (gzipUsed)
+			{
+				gzipAvailable = true;
+				inputStream = new GZIPInputStream(inputStream);
+			}
+
+			input.setInputStream(inputStream);
 
 			Object[] result = kryo.readObject(input, Object[].class);
 
@@ -440,6 +492,7 @@ public class HttpRemoteConnection extends RemoteConnection
 
 		connection.setRequestMethod(REQUEST_METHOD);
 		connection.setRequestProperty(CONTENT_TYPE_KEY, StasisConstants.CONTENT_TYPE);
+		connection.setRequestProperty(StasisUtils.ACCEPT_ENCODING_KEY, StasisUtils.GZIP_ENCODING);
 		connection.setUseCaches(false);
 		connection.setDoInput(true);
 		connection.setDoOutput(true);
