@@ -12,6 +12,6 @@
 
 @protocol HandshakeHandler <NSObject>
 
-- (BOOL)handleResponse:(NSURLResponse *)response withData:(NSData *)data forConnection:(RemoteConnection *)connection returning:(void (^)(NSError *))resultHandler;
+- (BOOL)handleResponse:(NSURLResponse *)response withData:(NSData *)data forConnection:(RemoteConnection *)connection tryCount:(int)tryCount returning:(void (^)(NSError *))resultHandler;
 
 @end

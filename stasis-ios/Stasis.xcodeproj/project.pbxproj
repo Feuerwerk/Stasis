@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AA4C177C1779C1E8009F6BD0 /* LocalTimeSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4C177B1779C1E8009F6BD0 /* LocalTimeSerializer.m */; };
+		AA922E0E17BF884C009B71F2 /* AuthenticationResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AA922E0D17BF884C009B71F2 /* AuthenticationResult.m */; };
 		AAA7C5B11763456800E9DA70 /* CTBlockDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */; };
 		AAA7C5B21763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */; };
 		AAA7C5B41763460B00E9DA70 /* libKryo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7C5B31763460B00E9DA70 /* libKryo.a */; };
@@ -65,6 +66,8 @@
 		AA4C177A1779C1E8009F6BD0 /* LocalTimeSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalTimeSerializer.h; sourceTree = "<group>"; };
 		AA4C177B1779C1E8009F6BD0 /* LocalTimeSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalTimeSerializer.m; sourceTree = "<group>"; };
 		AA6F20AE17A29F900087C3AC /* HandshakeHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HandshakeHandler.h; sourceTree = "<group>"; };
+		AA922E0C17BF884C009B71F2 /* AuthenticationResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationResult.h; sourceTree = "<group>"; };
+		AA922E0D17BF884C009B71F2 /* AuthenticationResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthenticationResult.m; sourceTree = "<group>"; };
 		AAA7C5A91763432000E9DA70 /* Kryo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Kryo.xcodeproj; path = ../../kryococoa/Kryo.xcodeproj; sourceTree = "<group>"; };
 		AAA7C5AD1763456800E9DA70 /* CTBlockDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTBlockDescription.h; sourceTree = "<group>"; };
 		AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTBlockDescription.m; sourceTree = "<group>"; };
@@ -163,6 +166,8 @@
 				D308C60916E768A000FEBEE9 /* AuthenticationMissmatchException.m */,
 				D308C60B16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.h */,
 				D308C60C16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.m */,
+				AA922E0C17BF884C009B71F2 /* AuthenticationResult.h */,
+				AA922E0D17BF884C009B71F2 /* AuthenticationResult.m */,
 				AAA7C5AD1763456800E9DA70 /* CTBlockDescription.h */,
 				AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */,
 				AAA7C5AF1763456800E9DA70 /* CTObjectiveCRuntimeAdditions.h */,
@@ -292,6 +297,7 @@
 				AAA7C5B11763456800E9DA70 /* CTBlockDescription.m in Sources */,
 				AAA7C5B21763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m in Sources */,
 				AA4C177C1779C1E8009F6BD0 /* LocalTimeSerializer.m in Sources */,
+				AA922E0E17BF884C009B71F2 /* AuthenticationResult.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
