@@ -368,6 +368,15 @@ static NSMethodSignature *getMethodSignatureRecursively(Protocol *protocol, SEL 
 				objectDelegate(result);
 			};
 		}
+        
+        if (type[0] == '@')
+        {
+            return ^(id result)
+			{
+				void (^objectDelegate)(id) = (void (^)(id))delegate;
+				objectDelegate(result);
+			};
+        }
 		
 		[NSException raise:NSInvalidArchiveOperationException format:@"Unsupported type %s", type];
 	}
