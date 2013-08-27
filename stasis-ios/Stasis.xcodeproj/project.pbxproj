@@ -34,6 +34,13 @@
 			remoteGlobalIDString = D3EDD18F16E65FD8005339C3;
 			remoteInfo = Kryo;
 		};
+		AA572C5717CCEB8F00955DB1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AAA7C5A91763432000E9DA70 /* Kryo.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D3EDD18E16E65FD8005339C3;
+			remoteInfo = Kryo;
+		};
 		D30BC9F816EA0C58003FD3F6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D30BC9F416EA0C57003FD3F6 /* JodaTime.xcodeproj */;
@@ -219,6 +226,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				AA572C5817CCEB8F00955DB1 /* PBXTargetDependency */,
 				D30BC9FB16EA0C67003FD3F6 /* PBXTargetDependency */,
 			);
 			name = Stasis;
@@ -304,6 +312,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		AA572C5817CCEB8F00955DB1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Kryo;
+			targetProxy = AA572C5717CCEB8F00955DB1 /* PBXContainerItemProxy */;
+		};
 		D30BC9FB16EA0C67003FD3F6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = JodaTime;
