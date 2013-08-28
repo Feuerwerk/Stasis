@@ -51,10 +51,15 @@ typedef enum
 - (NSInteger)year;
 - (NSInteger)monthOfYear;
 - (NSInteger)dayOfMonth;
+- (WeekDays)dayOfWeek;
 - (NSInteger)weekOfWeekyear;
 
 - (NSComparisonResult)compare:(LocalDate *)aDate;
 - (BOOL)isBefore:(LocalDate *)aDate;
 - (BOOL)isAfter:(LocalDate *)aDate;
+- (BOOL)isBeforeOrEqual:(LocalDate *)aDate;
+- (BOOL)isAfterOrEqual:(LocalDate *)aDate;
+- (BOOL)isEqual:(id)object;
+- (BOOL)isEqualToDate:(LocalDate *)aDate;
 
 @end

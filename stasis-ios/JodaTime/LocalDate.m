@@ -164,7 +164,7 @@ static NSDateFormatter *descriptionFormatter = nil;
 	return [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:_date].day;
 }
 
-- (NSInteger)dayOfWeek
+- (WeekDays)dayOfWeek
 {
 	return [[NSCalendar currentCalendar] components:NSWeekdayCalendarUnit fromDate:_date].weekday;
 }
@@ -200,9 +200,46 @@ static NSDateFormatter *descriptionFormatter = nil;
 	return [_date compare:aDate.date] == NSOrderedAscending;
 }
 
+- (BOOL)isBeforeOrEqual:(LocalDate *)aDate
+{
+	return [_date compare:aDate.date] != NSOrderedDescending;
+}
+
 - (BOOL)isAfter:(LocalDate *)aDate
 {
 	return [_date compare:aDate.date] == NSOrderedDescending;
+}
+
+- (BOOL)isAfterOrEqual:(LocalDate *)aDate
+{
+	return [_date compare:aDate.date] != NSOrderedAscending;
+}
+
+- (BOOL)isEqual:(id)object
+{
+	if (object == nil)
+	{
+		return NO;
+	}
+	
+	if (object == self)
+	{
+		return YES;
+	}
+	
+	if (![object isKindOfClass:[LocalDate class]])
+	{
+		return NO;
+	}
+	
+	LocalDate *aDate = (LocalDate *)object;
+	
+	return [_date isEqualToDate:aDate.date];
+}
+
+- (BOOL)isEqualToDate:(LocalDate *)aDate
+{
+	return [_date isEqualToDate:aDate.date];
 }
 
 @end

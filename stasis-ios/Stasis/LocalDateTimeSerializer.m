@@ -12,6 +12,13 @@
 
 @implementation LocalDateTimeSerializer
 
+static NSTimeZone *gmtTimeZone;
+
+__attribute__((constructor)) static void initialize()
+{
+	gmtTimeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+}
+
 - (BOOL)acceptsNull
 {
 	return YES;
@@ -20,16 +27,28 @@
 - (void)write:(Kryo *)kryo value:(id)value to:(KryoOutput *)output
 {
 	LocalDateTime *date = value;
-	UInt64 millis = date.millis + NSTimeZone.defaultTimeZone.secondsFromGMT * 1000;
-
+	NSInteger gmtSec = [gmtTimeZone secondsFromGMTForDate:date.date];
+	NSInteger locSec = [[NSTimeZone localTimeZone] secondsFromGMTForDate:date.date];
+	NSTimeInterval secDelta = locSec - gmtSec;
+	UInt64 millis = date.date.timeIntervalSince1970 * 1000 + secDelta;
+	
 	[output writeULong:millis];
 }
 
 - (id)read:(Kryo *)kryo withClass:(Class)type from:(KryoInput *)input
 {
-	UInt64 millis = [input readULong] - NSTimeZone.defaultTimeZone.secondsFromGMT * 1000;
-
-	return [LocalDateTime dateFromMillis:millis];
+	// Zeit in GMT in lokale Zeitzone wandeln
+	UInt64 millis = [input readULong];
+	NSTimeInterval secondsSince1970 = millis / 1000;
+	NSDate *aDate = [NSDate dateWithTimeIntervalSince1970:secondsSince1970];
+	
+	NSInteger gmtSec = [gmtTimeZone secondsFromGMTForDate:aDate];
+	NSInteger locSec = [[NSTimeZone localTimeZone] secondsFromGMTForDate:aDate];
+	NSTimeInterval secDelta = gmtSec - locSec;
+	
+	NSDate *bDate = [[NSDate alloc] initWithTimeInterval:secDelta sinceDate:aDate];
+	
+	return [LocalDateTime dateFromDate:bDate];
 }
 
 - (NSString *)getClassName:(Class)type

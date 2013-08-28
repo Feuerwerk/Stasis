@@ -215,7 +215,8 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 				if (result.count != 0)
 				{
 					resultValue = [result objectAtIndex:0];
-					NSLog(@"Request %@ returned with: %@", name, resultValue);
+					//NSLog(@"Request %@ returned with: %@", name, resultValue);
+					NSLog(@"Request %@ returned", name);
 				 
 					if ([resultValue isKindOfClass:[NSException class]])
 					{
