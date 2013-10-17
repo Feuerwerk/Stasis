@@ -10,6 +10,7 @@
 		AA1BB40A1739A6C000FE4944 /* LocalTime.m in Sources */ = {isa = PBXBuildFile; fileRef = AA1BB4091739A6C000FE4944 /* LocalTime.m */; };
 		AAC59D8217D09D0000F7C274 /* Days.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC59D8117D09D0000F7C274 /* Days.m */; };
 		AAC7B99A171583E20045EF72 /* LocalDateTime.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC7B999171583E20045EF72 /* LocalDateTime.m */; };
+		AAF655F7180FE96A00B32A05 /* Minutes.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF655F6180FE96A00B32A05 /* Minutes.m */; };
 		D3898A2E16EA082A00CC7AD6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3898A2D16EA082A00CC7AD6 /* Foundation.framework */; };
 		D3898A3E16EA085800CC7AD6 /* LocalDate.m in Sources */ = {isa = PBXBuildFile; fileRef = D3898A3D16EA085800CC7AD6 /* LocalDate.m */; };
 /* End PBXBuildFile section */
@@ -33,6 +34,8 @@
 		AAC59D8117D09D0000F7C274 /* Days.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Days.m; sourceTree = "<group>"; };
 		AAC7B998171583E20045EF72 /* LocalDateTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalDateTime.h; sourceTree = "<group>"; };
 		AAC7B999171583E20045EF72 /* LocalDateTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalDateTime.m; sourceTree = "<group>"; };
+		AAF655F5180FE96A00B32A05 /* Minutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Minutes.h; sourceTree = "<group>"; };
+		AAF655F6180FE96A00B32A05 /* Minutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Minutes.m; sourceTree = "<group>"; };
 		D3898A2A16EA082A00CC7AD6 /* libJodaTime.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJodaTime.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3898A2D16EA082A00CC7AD6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D3898A3116EA082A00CC7AD6 /* JodaTime-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JodaTime-Prefix.pch"; sourceTree = "<group>"; };
@@ -88,6 +91,8 @@
 				AAC7B999171583E20045EF72 /* LocalDateTime.m */,
 				AA1BB4081739A6C000FE4944 /* LocalTime.h */,
 				AA1BB4091739A6C000FE4944 /* LocalTime.m */,
+				AAF655F5180FE96A00B32A05 /* Minutes.h */,
+				AAF655F6180FE96A00B32A05 /* Minutes.m */,
 				D3898A3016EA082A00CC7AD6 /* Supporting Files */,
 			);
 			path = JodaTime;
@@ -155,6 +160,7 @@
 				D3898A3E16EA085800CC7AD6 /* LocalDate.m in Sources */,
 				AAC7B99A171583E20045EF72 /* LocalDateTime.m in Sources */,
 				AA1BB40A1739A6C000FE4944 /* LocalTime.m in Sources */,
+				AAF655F7180FE96A00B32A05 /* Minutes.m in Sources */,
 				AAC59D8217D09D0000F7C274 /* Days.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
