@@ -272,9 +272,14 @@ public class StasisController implements Controller
 	{
 		AuthenticationResult authenticationResult;
 
+		if (args == null)
+		{
+			throw new IllegalArgumentException("No arguments supplied for login");
+		}
+
 		if (args.length != 3)
 		{
-			throw new IllegalArgumentException("3 Arguments expected");
+			throw new IllegalArgumentException("3 arguments for login expected");
 		}
 
 		String userName = (String)args[0];
