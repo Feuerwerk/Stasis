@@ -190,7 +190,8 @@ public class StasisController implements Controller
 		String functionName;
 		boolean assumeAuthenticated;
 		Object[] args;
-		Object[] result = null;
+		Object[] result;
+		boolean error = false;
 
 		try
 		{
@@ -220,9 +221,10 @@ public class StasisController implements Controller
 			if (LOGGER.isErrorEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", functionName, formatArray(args), stopTimeMillis - startTimeMillis));
+				LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms, exception = %s)", functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName()));
 			}
 
+			error = true;
 			result = new Object[] { ex };
 		}
 		catch (SerializableException ex)
@@ -230,9 +232,10 @@ public class StasisController implements Controller
 			if (LOGGER.isErrorEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", functionName, formatArray(args), stopTimeMillis - startTimeMillis), ex);
+				LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName(), ex.getLocalizedMessage()));
 			}
 
+			error = true;
 			result = new Object[] { ex };
 		}
 		catch (Throwable ex)
@@ -240,9 +243,18 @@ public class StasisController implements Controller
 			if (LOGGER.isErrorEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", functionName, formatArray(args), stopTimeMillis - startTimeMillis), ex);
+
+				if (ex instanceof RuntimeException)
+				{
+					LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", functionName, formatArray(args), stopTimeMillis - startTimeMillis), ex);
+				}
+				else
+				{
+					LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName(), ex.getLocalizedMessage()));
+				}
 			}
 
+			error = true;
 			result = new Object[] { new SerializableException(ex) };
 		}
 
@@ -252,7 +264,7 @@ public class StasisController implements Controller
 
 			output.flush();
 
-			if (LOGGER.isDebugEnabled())
+			if (!error && LOGGER.isDebugEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
 				LOGGER.debug(String.format("Call succeeded (name = %s, arguments = %s, result = %s, duration = %dms)", functionName, formatArray(args), formatArray(result), stopTimeMillis - startTimeMillis));
