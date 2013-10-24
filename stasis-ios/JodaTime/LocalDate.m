@@ -82,7 +82,7 @@ static NSDateFormatter *descriptionFormatter = nil;
 	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
 }
 
-- (LocalDate *)plusYearsDays:(NSInteger)years
+- (LocalDate *)plusYears:(NSInteger)years
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.year = years;
@@ -110,7 +110,7 @@ static NSDateFormatter *descriptionFormatter = nil;
 	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
 }
 
-- (LocalDate *)minusYearsDays:(NSInteger)years
+- (LocalDate *)minusYears:(NSInteger)years
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.year = -years;
@@ -136,7 +136,13 @@ static NSDateFormatter *descriptionFormatter = nil;
 
 - (LocalDate *)withDayOfYear:(NSInteger)dayOfYear
 {
-	return nil;
+	NSCalendar *calendar = [NSCalendar currentCalendar];
+	NSDateComponents *components = [calendar components:NSYearCalendarUnit fromDate:_date];
+	
+	components.day = dayOfYear;
+	components.month = 1;
+	
+	return [[LocalDate alloc] initFromComponents:components];
 }
 
 - (UInt64)millis
@@ -167,6 +173,11 @@ static NSDateFormatter *descriptionFormatter = nil;
 - (WeekDays)dayOfWeek
 {
 	return [[NSCalendar currentCalendar] components:NSWeekdayCalendarUnit fromDate:_date].weekday;
+}
+
+- (NSInteger)dayOfYear
+{
+	return [[NSCalendar currentCalendar] ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:_date];
 }
 
 - (NSInteger)weekOfWeekyear

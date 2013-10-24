@@ -15,6 +15,7 @@
 #import "LocalDateSerializer.h"
 #import "HandshakeHandler.h"
 #import "AuthenticationResult.h"
+#import "HTTPCookieStorage.h"
 
 @interface HttpRemoteConnection ()
 
@@ -49,6 +50,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 		_userName = nil;
 		_password = nil;
 		_clientVersion = -1;
+		_cookieStorage = [HTTPCookieStorage new];
 	}
 	
 	return self;
@@ -164,9 +166,11 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	
 	[request addValue:CONTENT_TYPE_VALUE forHTTPHeaderField:CONTENT_TYPE_KEY];
 	request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-	request.HTTPShouldHandleCookies = YES;
+	request.HTTPShouldHandleCookies = NO;
 	request.HTTPMethod = REQUEST_METHOD;
 	request.HTTPBody = [_output toData];
+	
+	[_cookieStorage handleCookiesInRequest:request];
 	
 	NSLog(@"Send request to %@", name);
 	
@@ -174,6 +178,8 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	 {
 		if (error == nil)
 		{
+			[_cookieStorage handleCookiesInResponse:(NSHTTPURLResponse *)response];
+			
 			if (data.length == 0)
 			{
 				return;

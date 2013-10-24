@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "WeekDays.h"
 
 @interface LocalDateTime : NSObject
 {
@@ -24,7 +25,7 @@
 - (LocalDateTime *)plusDays:(NSInteger)days;
 - (LocalDateTime *)plusWeeks:(NSInteger)weeks;
 - (LocalDateTime *)plusMonths:(NSInteger)months;
-- (LocalDateTime *)plusYearsDays:(NSInteger)years;
+- (LocalDateTime *)plusYears:(NSInteger)years;
 - (LocalDateTime *)plusHours:(NSInteger)hours;
 - (LocalDateTime *)plusMinutes:(NSInteger)minutes;
 - (LocalDateTime *)plusSeconds:(NSInteger)seconds;
@@ -32,7 +33,7 @@
 - (LocalDateTime *)minusDays:(NSInteger)days;
 - (LocalDateTime *)minusWeeks:(NSInteger)weeks;
 - (LocalDateTime *)minusMonths:(NSInteger)months;
-- (LocalDateTime *)minusYearsDays:(NSInteger)years;
+- (LocalDateTime *)minusYears:(NSInteger)years;
 - (LocalDateTime *)minusHours:(NSInteger)hours;
 - (LocalDateTime *)minusMinutes:(NSInteger)minutes;
 - (LocalDateTime *)minusSeconds:(NSInteger)seconds;
@@ -49,6 +50,8 @@
 - (NSInteger)year;
 - (NSInteger)monthOfYear;
 - (NSInteger)dayOfMonth;
+- (WeekDays)dayOfWeek;
+- (NSInteger)dayOfYear;
 - (NSInteger)weekOfWeekyear;
 - (NSInteger)hourOfDay;
 - (NSInteger)minuteOfHour;

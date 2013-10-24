@@ -12,6 +12,7 @@
 @class Kryo;
 @class KryoInput;
 @class KryoOutput;
+@class HTTPCookieStorage;
 
 @interface HttpRemoteConnection : RemoteConnection
 {
@@ -26,6 +27,7 @@
 	NSString *_activePassword;
 	SInt32 _activeClientVersion;
 	id<HandshakeHandler> _handshakeHandler;
+	HTTPCookieStorage *_cookieStorage;
 }
 
 - (id)initWithUrl:(NSURL *)url;

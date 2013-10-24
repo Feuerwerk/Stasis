@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AA1BB40A1739A6C000FE4944 /* LocalTime.m in Sources */ = {isa = PBXBuildFile; fileRef = AA1BB4091739A6C000FE4944 /* LocalTime.m */; };
+		AA359E7118193DDD003E2E14 /* Seconds.m in Sources */ = {isa = PBXBuildFile; fileRef = AA359E7018193DDD003E2E14 /* Seconds.m */; };
 		AAC59D8217D09D0000F7C274 /* Days.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC59D8117D09D0000F7C274 /* Days.m */; };
 		AAC7B99A171583E20045EF72 /* LocalDateTime.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC7B999171583E20045EF72 /* LocalDateTime.m */; };
 		AAF655F7180FE96A00B32A05 /* Minutes.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF655F6180FE96A00B32A05 /* Minutes.m */; };
@@ -30,6 +31,9 @@
 /* Begin PBXFileReference section */
 		AA1BB4081739A6C000FE4944 /* LocalTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalTime.h; sourceTree = "<group>"; };
 		AA1BB4091739A6C000FE4944 /* LocalTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalTime.m; sourceTree = "<group>"; };
+		AA359E6E1819346D003E2E14 /* WeekDays.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeekDays.h; sourceTree = "<group>"; };
+		AA359E6F18193DDD003E2E14 /* Seconds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Seconds.h; sourceTree = "<group>"; };
+		AA359E7018193DDD003E2E14 /* Seconds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Seconds.m; sourceTree = "<group>"; };
 		AAC59D8017D09D0000F7C274 /* Days.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Days.h; sourceTree = "<group>"; };
 		AAC59D8117D09D0000F7C274 /* Days.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Days.m; sourceTree = "<group>"; };
 		AAC7B998171583E20045EF72 /* LocalDateTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalDateTime.h; sourceTree = "<group>"; };
@@ -93,7 +97,10 @@
 				AA1BB4091739A6C000FE4944 /* LocalTime.m */,
 				AAF655F5180FE96A00B32A05 /* Minutes.h */,
 				AAF655F6180FE96A00B32A05 /* Minutes.m */,
+				AA359E6F18193DDD003E2E14 /* Seconds.h */,
+				AA359E7018193DDD003E2E14 /* Seconds.m */,
 				D3898A3016EA082A00CC7AD6 /* Supporting Files */,
+				AA359E6E1819346D003E2E14 /* WeekDays.h */,
 			);
 			path = JodaTime;
 			sourceTree = "<group>";
@@ -162,6 +169,7 @@
 				AA1BB40A1739A6C000FE4944 /* LocalTime.m in Sources */,
 				AAF655F7180FE96A00B32A05 /* Minutes.m in Sources */,
 				AAC59D8217D09D0000F7C274 /* Days.m in Sources */,
+				AA359E7118193DDD003E2E14 /* Seconds.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

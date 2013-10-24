@@ -221,7 +221,7 @@ public class StasisController implements Controller
 			if (LOGGER.isErrorEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms, exception = %s)", functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName()));
+				LOGGER.error(String.format("Call failed because of authentication missmatch (name = %s, arguments = %s, duration = %dms, exception = %s)", functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName()));
 			}
 
 			error = true;
@@ -232,7 +232,7 @@ public class StasisController implements Controller
 			if (LOGGER.isErrorEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName(), ex.getLocalizedMessage()));
+				LOGGER.error(String.format("Call failed because of serializable exception (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName(), ex.getLocalizedMessage()));
 			}
 
 			error = true;
@@ -243,15 +243,7 @@ public class StasisController implements Controller
 			if (LOGGER.isErrorEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-
-				if (ex instanceof RuntimeException)
-				{
-					LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms)", functionName, formatArray(args), stopTimeMillis - startTimeMillis), ex);
-				}
-				else
-				{
-					LOGGER.error(String.format("Call failed (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName(), ex.getLocalizedMessage()));
-				}
+				LOGGER.error(String.format("Call failed because of throwable exception (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName(), ex.getLocalizedMessage()));
 			}
 
 			error = true;

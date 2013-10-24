@@ -30,7 +30,7 @@ __attribute__((constructor)) static void initialize()
 	NSInteger gmtSec = [gmtTimeZone secondsFromGMTForDate:date.date];
 	NSInteger locSec = [[NSTimeZone localTimeZone] secondsFromGMTForDate:date.date];
 	NSTimeInterval secDelta = locSec - gmtSec;
-	UInt64 millis = date.date.timeIntervalSince1970 * 1000 + secDelta;
+	UInt64 millis = (date.date.timeIntervalSince1970 + secDelta) * 1000;
 	
 	[output writeULong:millis];
 }

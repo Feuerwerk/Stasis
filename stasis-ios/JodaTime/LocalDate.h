@@ -7,17 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-typedef enum
-{
-	SUNDAY = 1,
-	MONDAY = 2,
-	TUESDAY = 3,
-	WEDNESDAY = 4,
-	THURSDAY = 5,
-	FRIDAY = 6,
-	SATURDAY = 7
-} WeekDays;
+#import "WeekDays.h"
 
 @interface LocalDate : NSObject
 {
@@ -35,12 +25,12 @@ typedef enum
 - (LocalDate *)plusDays:(NSInteger)days;
 - (LocalDate *)plusWeeks:(NSInteger)weeks;
 - (LocalDate *)plusMonths:(NSInteger)months;
-- (LocalDate *)plusYearsDays:(NSInteger)years;
+- (LocalDate *)plusYears:(NSInteger)years;
 
 - (LocalDate *)minusDays:(NSInteger)days;
 - (LocalDate *)minusWeeks:(NSInteger)weeks;
 - (LocalDate *)minusMonths:(NSInteger)months;
-- (LocalDate *)minusYearsDays:(NSInteger)years;
+- (LocalDate *)minusYears:(NSInteger)years;
 
 - (LocalDate *)withDayOfWeek:(NSInteger)dayOfWeek;
 - (LocalDate *)withDayOfMonth:(NSInteger)dayOfMonth;
@@ -52,6 +42,7 @@ typedef enum
 - (NSInteger)monthOfYear;
 - (NSInteger)dayOfMonth;
 - (WeekDays)dayOfWeek;
+- (NSInteger)dayOfYear;
 - (NSInteger)weekOfWeekyear;
 
 - (NSComparisonResult)compare:(LocalDate *)aDate;
