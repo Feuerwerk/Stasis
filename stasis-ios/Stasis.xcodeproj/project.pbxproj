@@ -9,10 +9,14 @@
 /* Begin PBXBuildFile section */
 		AA223EC118182541005FD91B /* HTTPCookieStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA223EC018182541005FD91B /* HTTPCookieStorage.m */; };
 		AA4C177C1779C1E8009F6BD0 /* LocalTimeSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4C177B1779C1E8009F6BD0 /* LocalTimeSerializer.m */; };
+		AA5F9342181AD631000BC4DD /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC431F1181AD104005FC2B6 /* CoreFoundation.framework */; };
+		AA5F9348181AD631000BC4DD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA5F9346181AD631000BC4DD /* InfoPlist.strings */; };
+		AA5F9352181AD737000BC4DD /* StasisErrors.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA5F9354181AD737000BC4DD /* StasisErrors.strings */; };
 		AA922E0E17BF884C009B71F2 /* AuthenticationResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AA922E0D17BF884C009B71F2 /* AuthenticationResult.m */; };
 		AAA7C5B11763456800E9DA70 /* CTBlockDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */; };
 		AAA7C5B21763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */; };
 		AAA7C5B41763460B00E9DA70 /* libKryo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7C5B31763460B00E9DA70 /* libKryo.a */; };
+		AAC431C0181AC820005FC2B6 /* StasisError.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC431BF181AC820005FC2B6 /* StasisError.m */; };
 		AAC7B99D171584810045EF72 /* LocalDateTimeSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */; };
 		D308C60A16E768A000FEBEE9 /* AuthenticationMissmatchException.m in Sources */ = {isa = PBXBuildFile; fileRef = D308C60916E768A000FEBEE9 /* AuthenticationMissmatchException.m */; };
 		D308C60D16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D308C60C16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.m */; };
@@ -75,6 +79,12 @@
 		AA223EC018182541005FD91B /* HTTPCookieStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPCookieStorage.m; sourceTree = "<group>"; };
 		AA4C177A1779C1E8009F6BD0 /* LocalTimeSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalTimeSerializer.h; sourceTree = "<group>"; };
 		AA4C177B1779C1E8009F6BD0 /* LocalTimeSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalTimeSerializer.m; sourceTree = "<group>"; };
+		AA5F9341181AD631000BC4DD /* StasisResources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StasisResources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA5F9345181AD631000BC4DD /* StasisResources-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "StasisResources-Info.plist"; sourceTree = "<group>"; };
+		AA5F9349181AD631000BC4DD /* StasisResources-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StasisResources-Prefix.pch"; sourceTree = "<group>"; };
+		AA5F9351181AD708000BC4DD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		AA5F9353181AD737000BC4DD /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/StasisErrors.strings; sourceTree = "<group>"; };
+		AA5F9355181AD77A000BC4DD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/StasisErrors.strings; sourceTree = "<group>"; };
 		AA6F20AE17A29F900087C3AC /* HandshakeHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HandshakeHandler.h; sourceTree = "<group>"; };
 		AA922E0C17BF884C009B71F2 /* AuthenticationResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationResult.h; sourceTree = "<group>"; };
 		AA922E0D17BF884C009B71F2 /* AuthenticationResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthenticationResult.m; sourceTree = "<group>"; };
@@ -84,6 +94,9 @@
 		AAA7C5AF1763456800E9DA70 /* CTObjectiveCRuntimeAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTObjectiveCRuntimeAdditions.h; sourceTree = "<group>"; };
 		AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTObjectiveCRuntimeAdditions.m; sourceTree = "<group>"; };
 		AAA7C5B31763460B00E9DA70 /* libKryo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libKryo.a; path = "../../../../../Users/christian/Library/Developer/Xcode/DerivedData/EmployeePortal-exfqlzkyjsbrdegugzzebazsuclh/Build/Products/Debug-iphoneos/libKryo.a"; sourceTree = "<group>"; };
+		AAC431BE181AC820005FC2B6 /* StasisError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StasisError.h; sourceTree = "<group>"; };
+		AAC431BF181AC820005FC2B6 /* StasisError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StasisError.m; sourceTree = "<group>"; };
+		AAC431F1181AD104005FC2B6 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		AAC7B99B171584810045EF72 /* LocalDateTimeSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalDateTimeSerializer.h; sourceTree = "<group>"; };
 		AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalDateTimeSerializer.m; sourceTree = "<group>"; };
 		D308C60816E768A000FEBEE9 /* AuthenticationMissmatchException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationMissmatchException.h; sourceTree = "<group>"; };
@@ -112,6 +125,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AA5F933E181AD631000BC4DD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA5F9342181AD631000BC4DD /* CoreFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D3EDD21B16E661E6005339C3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -133,6 +154,25 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		AA5F9343181AD631000BC4DD /* StasisResources */ = {
+			isa = PBXGroup;
+			children = (
+				AA5F9354181AD737000BC4DD /* StasisErrors.strings */,
+				AA5F9344181AD631000BC4DD /* Supporting Files */,
+			);
+			path = StasisResources;
+			sourceTree = "<group>";
+		};
+		AA5F9344181AD631000BC4DD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				AA5F9345181AD631000BC4DD /* StasisResources-Info.plist */,
+				AA5F9346181AD631000BC4DD /* InfoPlist.strings */,
+				AA5F9349181AD631000BC4DD /* StasisResources-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		D30BC9F516EA0C57003FD3F6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -144,12 +184,13 @@
 		D3EDD21516E661E6005339C3 = {
 			isa = PBXGroup;
 			children = (
-				AAA7C5B31763460B00E9DA70 /* libKryo.a */,
 				D3EDD22016E661E6005339C3 /* Frameworks */,
 				D30BC9F416EA0C57003FD3F6 /* JodaTime.xcodeproj */,
 				AAA7C5A91763432000E9DA70 /* Kryo.xcodeproj */,
+				AAA7C5B31763460B00E9DA70 /* libKryo.a */,
 				D3EDD21F16E661E6005339C3 /* Products */,
 				D3EDD22316E661E6005339C3 /* Stasis */,
+				AA5F9343181AD631000BC4DD /* StasisResources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -157,6 +198,7 @@
 			isa = PBXGroup;
 			children = (
 				D3EDD21E16E661E6005339C3 /* libStasis.a */,
+				AA5F9341181AD631000BC4DD /* StasisResources.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -165,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				D3EDD22116E661E6005339C3 /* Foundation.framework */,
+				AAC431F1181AD104005FC2B6 /* CoreFoundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -204,6 +247,8 @@
 				D390965C16E79CCA0012B221 /* Stasis.h */,
 				D39ED1AE16E7A36D001AA271 /* StasisAsyncServiceWrapper.h */,
 				D39ED1AF16E7A36D001AA271 /* StasisAsyncServiceWrapper.m */,
+				AAC431BE181AC820005FC2B6 /* StasisError.h */,
+				AAC431BF181AC820005FC2B6 /* StasisError.m */,
 				D3EDD22416E661E6005339C3 /* Supporting Files */,
 			);
 			path = Stasis;
@@ -220,6 +265,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		AA5F9340181AD631000BC4DD /* StasisResources */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA5F934C181AD631000BC4DD /* Build configuration list for PBXNativeTarget "StasisResources" */;
+			buildPhases = (
+				AA5F933D181AD631000BC4DD /* Sources */,
+				AA5F933E181AD631000BC4DD /* Frameworks */,
+				AA5F933F181AD631000BC4DD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StasisResources;
+			productName = StasisResources;
+			productReference = AA5F9341181AD631000BC4DD /* StasisResources.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
 		D3EDD21D16E661E6005339C3 /* Stasis */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D3EDD22C16E661E6005339C3 /* Build configuration list for PBXNativeTarget "Stasis" */;
@@ -246,7 +308,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0460;
-				ORGANIZATIONNAME = "Boxx IT Solutions e.K.";
+				ORGANIZATIONNAME = "Boxx IT Solutions GmbH";
 			};
 			buildConfigurationList = D3EDD21916E661E6005339C3 /* Build configuration list for PBXProject "Stasis" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -254,6 +316,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				de,
 			);
 			mainGroup = D3EDD21516E661E6005339C3;
 			productRefGroup = D3EDD21F16E661E6005339C3 /* Products */;
@@ -271,6 +334,7 @@
 			projectRoot = "";
 			targets = (
 				D3EDD21D16E661E6005339C3 /* Stasis */,
+				AA5F9340181AD631000BC4DD /* StasisResources */,
 			);
 		};
 /* End PBXProject section */
@@ -292,7 +356,26 @@
 		};
 /* End PBXReferenceProxy section */
 
+/* Begin PBXResourcesBuildPhase section */
+		AA5F933F181AD631000BC4DD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA5F9352181AD737000BC4DD /* StasisErrors.strings in Resources */,
+				AA5F9348181AD631000BC4DD /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		AA5F933D181AD631000BC4DD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D3EDD21A16E661E6005339C3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -306,6 +389,7 @@
 				AA223EC118182541005FD91B /* HTTPCookieStorage.m in Sources */,
 				D39ED1B016E7A36D001AA271 /* StasisAsyncServiceWrapper.m in Sources */,
 				D39ED1C516E8C13E001AA271 /* ExceptionError.m in Sources */,
+				AAC431C0181AC820005FC2B6 /* StasisError.m in Sources */,
 				D30BC9EF16EA0B90003FD3F6 /* LocalDateSerializer.m in Sources */,
 				AAC7B99D171584810045EF72 /* LocalDateTimeSerializer.m in Sources */,
 				AAA7C5B11763456800E9DA70 /* CTBlockDescription.m in Sources */,
@@ -330,7 +414,79 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		AA5F9346181AD631000BC4DD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AA5F9351181AD708000BC4DD /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		AA5F9354181AD737000BC4DD /* StasisErrors.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AA5F9353181AD737000BC4DD /* en */,
+				AA5F9355181AD77A000BC4DD /* de */,
+			);
+			name = StasisErrors.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		AA5F934A181AD631000BC4DD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "StasisResources/StasisResources-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "StasisResources/StasisResources-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		AA5F934B181AD631000BC4DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "StasisResources/StasisResources-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "StasisResources/StasisResources-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
 		D3EDD22A16E661E6005339C3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -435,6 +591,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AA5F934C181AD631000BC4DD /* Build configuration list for PBXNativeTarget "StasisResources" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA5F934A181AD631000BC4DD /* Debug */,
+				AA5F934B181AD631000BC4DD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		D3EDD21916E661E6005339C3 /* Build configuration list for PBXProject "Stasis" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

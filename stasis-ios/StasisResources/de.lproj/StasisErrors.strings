@@ -1,0 +1,10 @@
+/* 
+  Errors.strings
+  Stasis
+
+  Created by Christian Fruth on 25.10.13.
+  Copyright (c) 2013 Boxx IT Solutions GmbH. All rights reserved.
+*/
+"httpRemoteConnectionError#100" = "Ein gurkenfehler";
+"httpRemoteConnectionError#101" = "Ein tomatenfehler";
+"httpRemoteConnectionError#102" = "Ein pilzfehler";

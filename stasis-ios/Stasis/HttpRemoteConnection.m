@@ -16,6 +16,7 @@
 #import "HandshakeHandler.h"
 #import "AuthenticationResult.h"
 #import "HTTPCookieStorage.h"
+#import "StasisError.h"
 
 @interface HttpRemoteConnection ()
 
@@ -145,7 +146,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 		 if (authenticationResult != AuthenticationResult.AUTHENTICATED)
 		 {
 			 // Die Authentifizierung ist fehlgeschlagen
-			 errorHandler([NSError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_AUTHENTICATION_FAILED userInfo:nil]);
+			 errorHandler([StasisError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_AUTHENTICATION_FAILED userInfo:nil]);
 			 return;
 		 }
 		 
@@ -206,7 +207,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 				if (!handled)
 				{
 					NSLog(@"Response with MimeType %@ can't be handled", response.MIMEType);
-					errorHandler([NSError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_UNKNOWN_CONTENT_TYPE userInfo:nil]);
+					errorHandler([StasisError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_UNKNOWN_CONTENT_TYPE userInfo:nil]);
 				}
 				
 				return;
@@ -230,7 +231,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 
 						if ([resultValue isKindOfClass:[AuthenticationMissmatchException class]])
 						{
-							transformedError = [NSError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_AUTHENTICATION_MISSMATCH userInfo:nil];
+							transformedError = [StasisError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_AUTHENTICATION_MISSMATCH userInfo:nil];
 						}
 						else
 						{
