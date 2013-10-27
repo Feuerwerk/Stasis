@@ -4,7 +4,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -23,6 +26,7 @@ import de.boxxit.stasis.StasisUtils;
 import de.boxxit.stasis.security.LoginService;
 import de.boxxit.stasis.security.LoginStatus;
 import de.boxxit.stasis.serializer.ArraysListSerializer;
+import de.boxxit.stasis.serializer.CollectionsSerializers;
 import org.apache.commons.pool.BasePoolableObjectFactory;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.PoolableObjectFactory;
@@ -69,6 +73,8 @@ public class StasisController implements Controller
 				io.kryo = new Kryo();
 
 				io.kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
+				io.kryo.addDefaultSerializer(Collections.unmodifiableList(new ArrayList<Object>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
+				io.kryo.addDefaultSerializer(Collections.unmodifiableList(new LinkedList<Object>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
 
 				if (defaultSerializer != null)
 				{

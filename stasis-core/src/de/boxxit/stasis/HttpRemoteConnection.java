@@ -5,8 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.ServiceLoader;
 import java.util.concurrent.BlockingQueue;
@@ -18,6 +21,7 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import de.boxxit.stasis.serializer.ArraysListSerializer;
+import de.boxxit.stasis.serializer.CollectionsSerializers;
 
 /**
  * User: Christian Fruth
@@ -141,6 +145,8 @@ public class HttpRemoteConnection extends RemoteConnection
 
 	{
 		kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
+		kryo.addDefaultSerializer(Collections.unmodifiableList(new ArrayList<Object>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
+		kryo.addDefaultSerializer(Collections.unmodifiableList(new LinkedList<Object>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
 
 		// passenden Synchronizer finden
 		Iterator<Synchronizer> serviceIter = ServiceLoader.load(Synchronizer.class).iterator();

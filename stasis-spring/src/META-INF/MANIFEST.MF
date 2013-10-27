@@ -22,5 +22,4 @@ Class-Path: minlog-none-1.2.jar commons-pool-1.6.jar log4j-1.2.15.jar
  rg.springframework.web.servlet-3.1.2.RELEASE.jar org.springframework.
  web.struts-3.1.2.RELEASE.jar objenesis-1.2.jar reflectasm-1.07.jar ao
  palliance.jar joda-time-2.2.jar
-Main-Class: 
 
