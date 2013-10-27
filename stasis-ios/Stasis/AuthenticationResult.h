@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Boxx IT Solutions e.K. All rights reserved.
 //
 
-#import "Enum.h"
-#import "SerializationAnnotation.h"
+#import "Kryo/Enum.h"
+#import "Kryo/SerializationAnnotation.h"
 
 @interface AuthenticationResult : Enum<SerializationAnnotation>
 

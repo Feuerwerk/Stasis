@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Boxx IT Solutions e.K. All rights reserved.
 //
 
-#import "Kryo.h"
+#import "Kryo/Kryo.h"
 #import "RemoteConnection.h"
 #import "SerializableException.h"
 #import "StasisAsyncServiceWrapper.h"

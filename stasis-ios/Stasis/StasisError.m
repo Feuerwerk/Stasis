@@ -26,7 +26,7 @@
 - (NSString *)localizedDescription
 {
 	NSString *key = [NSString stringWithFormat:@"%@#%d", self.domain, self.code];
-	NSBundle *bundle = [NSBundle bundleForClass:[StasisError class]];
+	NSBundle *bundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"StasisResources" withExtension:@"bundle"]];
 	NSString *localizedDescription = [bundle localizedStringForKey:key value:@"" table:@"StasisErrors"];
 	
 	if (localizedDescription != nil)

@@ -5,6 +5,6 @@
   Created by Christian Fruth on 25.10.13.
   Copyright (c) 2013 Boxx IT Solutions GmbH. All rights reserved.
 */
-"httpRemoteConnectionError#100" = "Ein gurkenfehler";
-"httpRemoteConnectionError#101" = "Ein tomatenfehler";
-"httpRemoteConnectionError#102" = "Ein pilzfehler";
+"httpRemoteConnectionError#100" = "It was repeatedly not possible to authenticate. Please contact the support desk.";
+"httpRemoteConnectionError#101" = "Username and / or password are wrong. Correct your login-credentials and try again.";
+"httpRemoteConnectionError#102" = "The received data from the server couldn't be interpreted. Please contact the support desk.";

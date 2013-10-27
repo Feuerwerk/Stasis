@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		AA1BB40A1739A6C000FE4944 /* LocalTime.m in Sources */ = {isa = PBXBuildFile; fileRef = AA1BB4091739A6C000FE4944 /* LocalTime.m */; };
 		AA359E7118193DDD003E2E14 /* Seconds.m in Sources */ = {isa = PBXBuildFile; fileRef = AA359E7018193DDD003E2E14 /* Seconds.m */; };
+		AA643EF0181D39CF0025B2EA /* Days.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AAC59D8017D09D0000F7C274 /* Days.h */; };
+		AA643EF1181D39CF0025B2EA /* LocalDate.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D3898A3C16EA085800CC7AD6 /* LocalDate.h */; };
+		AA643EF2181D39CF0025B2EA /* LocalDateTime.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AAC7B998171583E20045EF72 /* LocalDateTime.h */; };
+		AA643EF3181D39CF0025B2EA /* LocalTime.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA1BB4081739A6C000FE4944 /* LocalTime.h */; };
+		AA643EF4181D39CF0025B2EA /* Minutes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AAF655F5180FE96A00B32A05 /* Minutes.h */; };
+		AA643EF5181D39CF0025B2EA /* Seconds.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA359E6F18193DDD003E2E14 /* Seconds.h */; };
+		AA643EF6181D39CF0025B2EA /* WeekDays.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA359E6E1819346D003E2E14 /* WeekDays.h */; };
 		AAC59D8217D09D0000F7C274 /* Days.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC59D8117D09D0000F7C274 /* Days.m */; };
 		AAC7B99A171583E20045EF72 /* LocalDateTime.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC7B999171583E20045EF72 /* LocalDateTime.m */; };
 		AAF655F7180FE96A00B32A05 /* Minutes.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF655F6180FE96A00B32A05 /* Minutes.m */; };
@@ -23,6 +30,13 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				AA643EF0181D39CF0025B2EA /* Days.h in CopyFiles */,
+				AA643EF1181D39CF0025B2EA /* LocalDate.h in CopyFiles */,
+				AA643EF2181D39CF0025B2EA /* LocalDateTime.h in CopyFiles */,
+				AA643EF3181D39CF0025B2EA /* LocalTime.h in CopyFiles */,
+				AA643EF4181D39CF0025B2EA /* Minutes.h in CopyFiles */,
+				AA643EF5181D39CF0025B2EA /* Seconds.h in CopyFiles */,
+				AA643EF6181D39CF0025B2EA /* WeekDays.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

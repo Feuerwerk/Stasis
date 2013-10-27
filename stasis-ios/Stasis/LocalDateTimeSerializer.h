@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Serializer.h"
+#import "Kryo/Serializer.h"
 
 @interface LocalDateTimeSerializer : NSObject<Serializer>
 

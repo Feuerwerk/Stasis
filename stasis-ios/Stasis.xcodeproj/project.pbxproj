@@ -12,6 +12,24 @@
 		AA5F9342181AD631000BC4DD /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC431F1181AD104005FC2B6 /* CoreFoundation.framework */; };
 		AA5F9348181AD631000BC4DD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA5F9346181AD631000BC4DD /* InfoPlist.strings */; };
 		AA5F9352181AD737000BC4DD /* StasisErrors.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA5F9354181AD737000BC4DD /* StasisErrors.strings */; };
+		AA643EC2181D39060025B2EA /* AuthenticationMissmatchException.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D308C60816E768A000FEBEE9 /* AuthenticationMissmatchException.h */; };
+		AA643EC3181D39060025B2EA /* AuthenticationMissmatchExceptionSerializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D308C60B16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.h */; };
+		AA643EC4181D39060025B2EA /* AuthenticationResult.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA922E0C17BF884C009B71F2 /* AuthenticationResult.h */; };
+		AA643EC5181D39060025B2EA /* CTBlockDescription.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AAA7C5AD1763456800E9DA70 /* CTBlockDescription.h */; };
+		AA643EC6181D39060025B2EA /* CTObjectiveCRuntimeAdditions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AAA7C5AF1763456800E9DA70 /* CTObjectiveCRuntimeAdditions.h */; };
+		AA643EC7181D39060025B2EA /* ExceptionError.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D39ED1C316E8C13E001AA271 /* ExceptionError.h */; };
+		AA643EC8181D39060025B2EA /* HandshakeHandler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA6F20AE17A29F900087C3AC /* HandshakeHandler.h */; };
+		AA643EC9181D39060025B2EA /* HTTPCookieStorage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA223EBF18182541005FD91B /* HTTPCookieStorage.h */; };
+		AA643ECA181D39060025B2EA /* HttpRemoteConnection.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D3EDD23116E6635B005339C3 /* HttpRemoteConnection.h */; };
+		AA643ECB181D39060025B2EA /* LocalDateSerializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D30BC9ED16EA0B90003FD3F6 /* LocalDateSerializer.h */; };
+		AA643ECC181D39060025B2EA /* LocalDateTimeSerializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AAC7B99B171584810045EF72 /* LocalDateTimeSerializer.h */; };
+		AA643ECD181D39060025B2EA /* LocalTimeSerializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA4C177A1779C1E8009F6BD0 /* LocalTimeSerializer.h */; };
+		AA643ECE181D39060025B2EA /* RemoteConnection.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D3EDD22F16E6634B005339C3 /* RemoteConnection.h */; };
+		AA643ECF181D39060025B2EA /* SerializableException.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D3EDD23416E751F6005339C3 /* SerializableException.h */; };
+		AA643ED0181D39060025B2EA /* SerializableExceptionSerializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D3EDD23716E7520A005339C3 /* SerializableExceptionSerializer.h */; };
+		AA643ED1181D39060025B2EA /* Stasis.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D390965C16E79CCA0012B221 /* Stasis.h */; };
+		AA643ED2181D39060025B2EA /* StasisAsyncServiceWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D39ED1AE16E7A36D001AA271 /* StasisAsyncServiceWrapper.h */; };
+		AA643ED3181D39060025B2EA /* StasisError.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AAC431BE181AC820005FC2B6 /* StasisError.h */; };
 		AA922E0E17BF884C009B71F2 /* AuthenticationResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AA922E0D17BF884C009B71F2 /* AuthenticationResult.m */; };
 		AAA7C5B11763456800E9DA70 /* CTBlockDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */; };
 		AAA7C5B21763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */; };
@@ -32,6 +50,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		AA1353F3181D1C33003B368E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D3EDD21616E661E6005339C3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA5F9340181AD631000BC4DD;
+			remoteInfo = StasisResources;
+		};
 		AA364442176349C800C5D31C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AAA7C5A91763432000E9DA70 /* Kryo.xcodeproj */;
@@ -63,12 +88,30 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		D3EDD21C16E661E6005339C3 /* CopyFiles */ = {
+		AA643EC1181D38EA0025B2EA /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				AA643EC2181D39060025B2EA /* AuthenticationMissmatchException.h in CopyFiles */,
+				AA643EC3181D39060025B2EA /* AuthenticationMissmatchExceptionSerializer.h in CopyFiles */,
+				AA643EC4181D39060025B2EA /* AuthenticationResult.h in CopyFiles */,
+				AA643EC5181D39060025B2EA /* CTBlockDescription.h in CopyFiles */,
+				AA643EC6181D39060025B2EA /* CTObjectiveCRuntimeAdditions.h in CopyFiles */,
+				AA643EC7181D39060025B2EA /* ExceptionError.h in CopyFiles */,
+				AA643EC8181D39060025B2EA /* HandshakeHandler.h in CopyFiles */,
+				AA643EC9181D39060025B2EA /* HTTPCookieStorage.h in CopyFiles */,
+				AA643ECA181D39060025B2EA /* HttpRemoteConnection.h in CopyFiles */,
+				AA643ECB181D39060025B2EA /* LocalDateSerializer.h in CopyFiles */,
+				AA643ECC181D39060025B2EA /* LocalDateTimeSerializer.h in CopyFiles */,
+				AA643ECD181D39060025B2EA /* LocalTimeSerializer.h in CopyFiles */,
+				AA643ECE181D39060025B2EA /* RemoteConnection.h in CopyFiles */,
+				AA643ECF181D39060025B2EA /* SerializableException.h in CopyFiles */,
+				AA643ED0181D39060025B2EA /* SerializableExceptionSerializer.h in CopyFiles */,
+				AA643ED1181D39060025B2EA /* Stasis.h in CopyFiles */,
+				AA643ED2181D39060025B2EA /* StasisAsyncServiceWrapper.h in CopyFiles */,
+				AA643ED3181D39060025B2EA /* StasisError.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +126,7 @@
 		AA5F9345181AD631000BC4DD /* StasisResources-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "StasisResources-Info.plist"; sourceTree = "<group>"; };
 		AA5F9349181AD631000BC4DD /* StasisResources-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StasisResources-Prefix.pch"; sourceTree = "<group>"; };
 		AA5F9351181AD708000BC4DD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		AA5F9353181AD737000BC4DD /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/StasisErrors.strings; sourceTree = "<group>"; };
+		AA5F9353181AD737000BC4DD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/StasisErrors.strings; sourceTree = "<group>"; };
 		AA5F9355181AD77A000BC4DD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/StasisErrors.strings; sourceTree = "<group>"; };
 		AA6F20AE17A29F900087C3AC /* HandshakeHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HandshakeHandler.h; sourceTree = "<group>"; };
 		AA922E0C17BF884C009B71F2 /* AuthenticationResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationResult.h; sourceTree = "<group>"; };
@@ -288,11 +331,12 @@
 			buildPhases = (
 				D3EDD21A16E661E6005339C3 /* Sources */,
 				D3EDD21B16E661E6005339C3 /* Frameworks */,
-				D3EDD21C16E661E6005339C3 /* CopyFiles */,
+				AA643EC1181D38EA0025B2EA /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				AA1353F4181D1C33003B368E /* PBXTargetDependency */,
 				AA572C5817CCEB8F00955DB1 /* PBXTargetDependency */,
 				D30BC9FB16EA0C67003FD3F6 /* PBXTargetDependency */,
 			);
@@ -402,6 +446,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		AA1353F4181D1C33003B368E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA5F9340181AD631000BC4DD /* StasisResources */;
+			targetProxy = AA1353F3181D1C33003B368E /* PBXContainerItemProxy */;
+		};
 		AA572C5817CCEB8F00955DB1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Kryo;
@@ -598,6 +647,7 @@
 				AA5F934B181AD631000BC4DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D3EDD21916E661E6005339C3 /* Build configuration list for PBXProject "Stasis" */ = {
 			isa = XCConfigurationList;

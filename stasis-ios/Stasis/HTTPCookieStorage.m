@@ -129,7 +129,7 @@ void findCookies(NSString *cookiePath, NSString *domainKey, NSDictionary* domain
 	NSURL *url = response.URL;
 	NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:response.allHeaderFields forURL:url];
 	
-	//[self loadCookies:cookies];
+	[self loadCookies:cookies];
 }
 
 #pragma mark Property Access

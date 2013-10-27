@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SerializationAnnotation.h"
+#import "Kryo/SerializationAnnotation.h"
 
 @interface AuthenticationMissmatchException : NSException<SerializationAnnotation>
 
