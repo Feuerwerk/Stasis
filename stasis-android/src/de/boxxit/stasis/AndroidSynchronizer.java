@@ -26,6 +26,9 @@ public class AndroidSynchronizer implements Synchronizer
 	@Override
 	public void runLater(Runnable runnable)
 	{
-		activity.runOnUiThread(runnable);
+		if (!activity.isFinishing())
+		{
+			activity.runOnUiThread(runnable);
+		}
 	}
 }
