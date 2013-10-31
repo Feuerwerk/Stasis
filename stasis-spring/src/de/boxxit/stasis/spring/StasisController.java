@@ -7,11 +7,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.esotericsoftware.kryo.Kryo;
@@ -33,13 +35,16 @@ import org.apache.commons.pool.PoolableObjectFactory;
 import org.apache.commons.pool.impl.StackObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 /**
  * User: Christian Fruth
  */
-public class StasisController implements Controller
+public class StasisController implements Controller, ApplicationContextAware
 {
 	private static final String LOGIN_FUNCTION = "login";
 	private static final Logger LOGGER = LoggerFactory.getLogger(StasisController.class);
@@ -52,11 +57,13 @@ public class StasisController implements Controller
 	}
 
 	private Map<String, Object> services;
+	private List<String> serviceNames;
 	private List<Registration> registeredSerializers;
 	private LoginService loginService;
 	private ObjectPool<InOut> ioPool;
 	private Class<? extends Serializer> defaultSerializer = null;
 	private int serverVersion;
+	private ApplicationContext applicationContext;
 
 	// Ich bin noch ein Kommentar
 	public StasisController()
@@ -138,6 +145,11 @@ public class StasisController implements Controller
 		this.services = services;
 	}
 
+	public void setServiceNames(List<String> serviceNames)
+	{
+		this.serviceNames = serviceNames;
+	}
+
 	public void setRegisteredSerializers(List<Registration> registeredSerializers)
 	{
 		this.registeredSerializers = registeredSerializers;
@@ -146,6 +158,30 @@ public class StasisController implements Controller
 	public void setDefaultSerializer(Class<? extends Serializer> defaultSerializer)
 	{
 		this.defaultSerializer = defaultSerializer;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
+	{
+		this.applicationContext = applicationContext;
+	}
+
+	@PostConstruct
+	public void init()
+	{
+		if (services == null)
+		{
+			services = new HashMap<>();
+		}
+
+		if (serviceNames != null)
+		{
+			for (String serviceName : serviceNames)
+			{
+				Object service = applicationContext.getBean(serviceName);
+				services.put(serviceName, service);
+			}
+		}
 	}
 
 	@Override
