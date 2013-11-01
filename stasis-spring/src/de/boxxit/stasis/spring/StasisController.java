@@ -243,7 +243,7 @@ public class StasisController implements Controller, ApplicationContextAware
 		}
 		catch (Exception ex)
 		{
-			LOGGER.error("Call failed because function name or arguments can't be read");
+			LOGGER.error("Call failed because function name or arguments can't be read", ex);
 			throw ex;
 		}
 

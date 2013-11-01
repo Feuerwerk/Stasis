@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.ServiceLoader;
 import java.util.concurrent.BlockingQueue;
@@ -398,7 +399,7 @@ public class HttpRemoteConnection extends RemoteConnection
 
 					if (!handled)
 					{
-						throw createException("wrongMimeType");
+						throw createException("mimeTypeMissmatch");
 					}
 
 					continue;
@@ -471,7 +472,17 @@ public class HttpRemoteConnection extends RemoteConnection
 
 	protected StasisException createException(String id)
 	{
-		String message = resourceBundle.getString(id);
+		String message;
+
+		try
+		{
+			message = resourceBundle.getString(id);
+		}
+		catch (MissingResourceException ex)
+		{
+			message = "#" + id;
+		}
+
 		return new StasisException(id, message);
 	}
 
