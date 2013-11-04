@@ -1,34 +1,22 @@
 package de.boxxit.stasis;
 
-import android.app.Activity;
+import android.os.Handler;
 
 /**
  * User: Christian Fruth
  */
 public class AndroidSynchronizer implements Synchronizer
 {
-	private Activity activity;
+	private Handler syncHandler;
 
 	public AndroidSynchronizer()
 	{
-	}
-
-	public AndroidSynchronizer(Activity activity)
-	{
-		this.activity = activity;
-	}
-
-	public void setActivity(Activity activity)
-	{
-		this.activity = activity;
+		syncHandler = new Handler();
 	}
 
 	@Override
 	public void runLater(Runnable runnable)
 	{
-		if (!activity.isFinishing())
-		{
-			activity.runOnUiThread(runnable);
-		}
+		syncHandler.post(runnable);
 	}
 }
