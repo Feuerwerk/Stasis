@@ -80,8 +80,8 @@ public class StasisController implements Controller, ApplicationContextAware
 				io.kryo = new Kryo();
 
 				io.kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
-				io.kryo.addDefaultSerializer(Collections.unmodifiableList(new ArrayList<Object>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
-				io.kryo.addDefaultSerializer(Collections.unmodifiableList(new LinkedList<Object>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
+				io.kryo.addDefaultSerializer(Collections.unmodifiableList(new ArrayList<>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
+				io.kryo.addDefaultSerializer(Collections.unmodifiableList(new LinkedList<>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
 
 				if (defaultSerializer != null)
 				{
@@ -127,7 +127,7 @@ public class StasisController implements Controller, ApplicationContextAware
 			}
 		};
 
-		ioPool = new StackObjectPool<InOut>(poolableObjectFactory);
+		ioPool = new StackObjectPool<>(poolableObjectFactory);
 	}
 
 	public void setServerVersion(int serverVersion)
