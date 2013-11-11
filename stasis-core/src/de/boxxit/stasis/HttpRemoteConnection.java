@@ -127,13 +127,11 @@ public class HttpRemoteConnection extends RemoteConnection
 			{
 				ex.printStackTrace();
 			}
-
-			System.out.println("ConnectionWorker beendet");
 		}
 	}
 
 	private URL url;
-	private final Kryo kryo = new Kryo();
+	private final Kryo kryo;
 	private final Output output = new Output(4096);
 	private final Input input = new Input(4096);
 	private final BlockingQueue<Call<?>> pendingCalls = new LinkedBlockingQueue<Call<?>>();
@@ -145,6 +143,8 @@ public class HttpRemoteConnection extends RemoteConnection
 	private int activeClientVersion;
 
 	{
+		kryo = new Kryo();
+		kryo.setClassLoader(Thread.currentThread().getContextClassLoader());
 		kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
 		kryo.addDefaultSerializer(Collections.unmodifiableList(new ArrayList<Object>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
 		kryo.addDefaultSerializer(Collections.unmodifiableList(new LinkedList<Object>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);

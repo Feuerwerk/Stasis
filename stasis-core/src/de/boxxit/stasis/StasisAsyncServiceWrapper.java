@@ -101,6 +101,7 @@ public class StasisAsyncServiceWrapper
 	@SuppressWarnings("unchecked")
 	public static <T> T create(Class<T> serviceInterface, RemoteConnection connection, String serviceName, ErrorHandler defaultErrorHandler)
 	{
-		return (T)Proxy.newProxyInstance(StasisAsyncServiceWrapper.class.getClassLoader(), new Class[] { serviceInterface }, new InvocationHandlerImpl(connection, serviceName, defaultErrorHandler));
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		return (T)Proxy.newProxyInstance(classLoader, new Class[] { serviceInterface }, new InvocationHandlerImpl(connection, serviceName, defaultErrorHandler));
 	}
 }
