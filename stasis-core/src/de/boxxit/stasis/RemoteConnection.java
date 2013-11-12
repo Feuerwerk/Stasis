@@ -65,6 +65,21 @@ public abstract class RemoteConnection
 		this.handshakeHandler = handshakeHandler;
 	}
 
+	public int getClientVersion()
+	{
+		return clientVersion;
+	}
+
+	public String getPassword()
+	{
+		return password;
+	}
+
+	public String getUserName()
+	{
+		return userName;
+	}
+
 	public abstract void setDefaultSerializer(Class<? extends Serializer> defaultSerializer);
 
 	public abstract <T> void callAsync(CallHandler<T> handler, String name, Object... args);
