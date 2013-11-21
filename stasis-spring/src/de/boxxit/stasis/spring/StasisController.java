@@ -61,7 +61,7 @@ public class StasisController implements Controller, ApplicationContextAware
 	private List<Registration> registeredSerializers;
 	private LoginService loginService;
 	private ObjectPool<InOut> ioPool;
-	private Class<? extends Serializer> defaultSerializer = null;
+	private Class<? extends Serializer<?>> defaultSerializer = null;
 	private int serverVersion;
 	private ApplicationContext applicationContext;
 
@@ -155,7 +155,7 @@ public class StasisController implements Controller, ApplicationContextAware
 		this.registeredSerializers = registeredSerializers;
 	}
 
-	public void setDefaultSerializer(Class<? extends Serializer> defaultSerializer)
+	public void setDefaultSerializer(Class<? extends Serializer<?>> defaultSerializer)
 	{
 		this.defaultSerializer = defaultSerializer;
 	}
