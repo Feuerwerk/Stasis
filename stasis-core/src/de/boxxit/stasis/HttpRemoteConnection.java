@@ -214,6 +214,9 @@ public class HttpRemoteConnection extends RemoteConnection
 		newCall.clientVersion = clientVersion;
 		newCall.handler = handler;
 
+		this.userName = userName;
+		this.password = password;
+		this.clientVersion = clientVersion;
 		pendingCalls.add(newCall);
 	}
 

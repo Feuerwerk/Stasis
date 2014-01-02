@@ -332,7 +332,7 @@ public class StasisController implements Controller, ApplicationContextAware
 		String password = (String)args[1];
 		int clientVersion = (Integer)args[2];
 
-		if (clientVersion != serverVersion)
+		if ((clientVersion != serverVersion) && (clientVersion != 0) && (serverVersion != 0))
 		{
 			authenticationResult = AuthenticationResult.VersionMissmatch;
 		}
