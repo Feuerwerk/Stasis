@@ -28,8 +28,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="stasis-core" exported="" />
-    <orderEntry type="library" exported="" name="Spring Framework 3.1.2" level="project" />
-    <orderEntry type="library" exported="" name="Spring Security 3.1.2" level="project" />
+    <orderEntry type="library" exported="" name="Spring Framework 4.0.0" level="project" />
+    <orderEntry type="library" exported="" name="Spring Security 3.2.0" level="project" />
     <orderEntry type="library" exported="" name="Apache Commons Pool 1.6" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="Tomcat 7" level="application_server_libraries" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="Apache Log4J 1.2.15" level="project" />
