@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Class-Path: minlog-none-1.2.jar asm-4.0.jar asm-analysis-4.0.jar asm-c
- ommons-4.0.jar asm-tree-4.0.jar asm-util-4.0.jar kryo-2.20.jar objene
- sis-1.2.jar reflectasm-1.07.jar joda-time-2.2.jar
+Class-Path: objenesis-1.2.jar reflectasm-1.07.jar asm-4.0.jar asm-anal
+ ysis-4.0.jar asm-commons-4.0.jar asm-tree-4.0.jar asm-util-4.0.jar kr
+ yo-2.20.jar minlog-none-1.2.jar joda-time-2.2.jar
 

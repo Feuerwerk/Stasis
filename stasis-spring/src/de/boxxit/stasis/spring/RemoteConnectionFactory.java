@@ -1,12 +1,11 @@
 package de.boxxit.stasis.spring;
 
+import java.net.URL;
+import java.util.List;
 import com.esotericsoftware.kryo.Serializer;
 import de.boxxit.stasis.RemoteConnection;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
-
-import java.net.URL;
-import java.util.List;
 
 /**
  * User: Christian Fruth
@@ -16,9 +15,15 @@ public class RemoteConnectionFactory implements FactoryBean<RemoteConnection>, I
 	private RemoteConnection connection;
 	private List<Registration> registeredSerializers;
 	private URL endpointUrl;
+	private Class<? extends Serializer<?>> defaultSerializer;
 
 	public RemoteConnectionFactory()
 	{
+	}
+
+	public void setDefaultSerializer(Class<? extends Serializer<?>> defaultSerializer)
+	{
+		this.defaultSerializer = defaultSerializer;
 	}
 
 	public void setEndpointUrl(URL endpointUrl)
@@ -51,13 +56,14 @@ public class RemoteConnectionFactory implements FactoryBean<RemoteConnection>, I
 		{
 			for (Registration registration : registeredSerializers)
 			{
-				Serializer serializer = registration.getSerializer();
+				Serializer<?> serializer = registration.getSerializer();
 
 				if ((serializer == null) && (registration.getSerializerClass() != null))
 				{
 					serializer = registration.getSerializerClass().newInstance();
 				}
 
+				@SuppressWarnings("rawtypes")
 				Class type = (Class)registration.getType();
 
 				if (registration.getId() == null)
@@ -72,6 +78,11 @@ public class RemoteConnectionFactory implements FactoryBean<RemoteConnection>, I
 				else
 				{
 					connection.register(type, serializer, registration.getId());
+				}
+
+				if (defaultSerializer != null)
+				{
+					connection.setDefaultSerializer(defaultSerializer);
 				}
 			}
 		}

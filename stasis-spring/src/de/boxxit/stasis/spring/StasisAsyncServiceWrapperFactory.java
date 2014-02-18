@@ -10,11 +10,11 @@ import org.springframework.beans.factory.InitializingBean;
 /**
  * User: Christian Fruth
  */
-public class StasisAsyncServiceWrapperFactory implements FactoryBean<Object>, InitializingBean
+public class StasisAsyncServiceWrapperFactory<T> implements FactoryBean<T>, InitializingBean
 {
-	private Class<?> serviceInterface;
+	private Class<T> serviceInterface;
 	private RemoteConnection connection;
-	private Object serviceProxy;
+	private T serviceProxy;
 	private String serviceName;
 	private ErrorHandler defaultErrorHandler;
 
@@ -22,12 +22,12 @@ public class StasisAsyncServiceWrapperFactory implements FactoryBean<Object>, In
 	{
 	}
 
-	public Class<?> getServiceInterface()
+	public Class<T> getServiceInterface()
 	{
 		return serviceInterface;
 	}
 
-	public void setServiceInterface(Class<?> serviceInterface)
+	public void setServiceInterface(Class<T> serviceInterface)
 	{
 		this.serviceInterface = serviceInterface;
 	}
@@ -48,13 +48,13 @@ public class StasisAsyncServiceWrapperFactory implements FactoryBean<Object>, In
 	}
 
 	@Override
-	public Object getObject()
+	public T getObject()
 	{
 		return serviceProxy;
 	}
 
 	@Override
-	public Class<?> getObjectType()
+	public Class<T> getObjectType()
 	{
 		return serviceInterface;
 	}
