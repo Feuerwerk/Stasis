@@ -21,7 +21,7 @@
 @interface HttpRemoteConnection ()
 
 - (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args handshakeHandler:(id<HandshakeHandler>)handshakeHandler andTryCount:(int)tryCount returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
-- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(AuthenticationResult *))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler;
 - (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
 
 @end
@@ -85,7 +85,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	}
 }
 
-- (void)loginUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion returning:(void (^)(AuthenticationResult *))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)loginUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion returning:(void (^)(NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	[self invokeLoginForUser:userName password:password andClientVersion:clientVersion handshakeHandler:_handshakeHandler returning:resultHandler error:errorHandler];
 }
@@ -141,12 +141,14 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 - (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	// Die Verbindung noch nicht authentifiziert ist, aber Credentials vorliegen zuerst einloggen
-	[self invokeLoginForUser:userName password:password andClientVersion:clientVersion handshakeHandler:_handshakeHandler returning:^(AuthenticationResult *authenticationResult)
+	[self invokeLoginForUser:userName password:password andClientVersion:clientVersion handshakeHandler:_handshakeHandler returning:^(NSDictionary *loginResult)
 	 {
+		 AuthenticationResult *authenticationResult = [loginResult objectForKey:AUTHENTICATION_RESULT_KEY];
+
 		 if (authenticationResult != AuthenticationResult.AUTHENTICATED)
 		 {
 			 // Die Authentifizierung ist fehlgeschlagen
-			 errorHandler([StasisError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_AUTHENTICATION_FAILED userInfo:nil]);
+			 errorHandler([StasisError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_AUTHENTICATION_FAILED userInfo:loginResult]);
 			 return;
 		 }
 		 
@@ -275,14 +277,16 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	 }];
 }
 
-- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(AuthenticationResult *))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	JInteger *clientVersionInt = [JInteger intWithValue:clientVersion];
 	JObjectArray *args = [JObjectArray arrayWithObjects:userName, password, clientVersionInt, nil];
 	
 	[self invokeServiceFunction:LOGIN_FUNCTION withArguments:args handshakeHandler:handshakeHandler andTryCount:1 returning:^(id result)
 	 {
-		 if (result == AuthenticationResult.AUTHENTICATED)
+		 AuthenticationResult *authenticationResult = [result objectForKey:AUTHENTICATION_RESULT_KEY];
+
+		 if (authenticationResult == AuthenticationResult.AUTHENTICATED)
 		 {
 			 _activeUserName = userName;
 			 _activePassword = password;

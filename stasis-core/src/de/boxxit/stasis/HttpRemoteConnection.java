@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.ServiceLoader;
@@ -181,6 +182,7 @@ public class HttpRemoteConnection extends RemoteConnection
 	}
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	public void setDefaultSerializer(Class<? extends Serializer> defaultSerializer)
 	{
 		kryo.setDefaultSerializer(defaultSerializer);
@@ -220,8 +222,8 @@ public class HttpRemoteConnection extends RemoteConnection
 		pendingCalls.add(newCall);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <T> void callAsync(CallHandler<T> handler, String name, Object... args)
 	{
 		FunctionCall newCall = new FunctionCall();
@@ -243,11 +245,11 @@ public class HttpRemoteConnection extends RemoteConnection
 	{
 		try
 		{
-			AuthenticationResult authenticationResult = invokeLogin(call.userName, call.password, call.clientVersion);
+			Map<String, Object> loginResult = invokeLogin(call.userName, call.password, call.clientVersion);
 
-			if (authenticationResult != AuthenticationResult.Authenticated)
+			if (state != ConnectionState.Authenticated)
 			{
-				throw createAuthenticationException(authenticationResult, "loginFailed");
+				throw createAuthenticationException("loginFailed", loginResult);
 			}
 
 			call.succeed(null, synchronizer);
@@ -258,9 +260,10 @@ public class HttpRemoteConnection extends RemoteConnection
 		}
 	}
 
-	protected AuthenticationResult invokeLogin(String userName, String password, int clientVersion) throws Exception
+	protected Map<String, Object> invokeLogin(String userName, String password, int clientVersion) throws Exception
 	{
-		AuthenticationResult authenticationResult = internalCall(LOGIN_FUNCTION, new Object[] { userName, password, clientVersion });
+		Map<String, Object> result = internalCall(LOGIN_FUNCTION, new Object[] { userName, password, clientVersion });
+		AuthenticationResult authenticationResult = (AuthenticationResult)result.get(StasisConstants.AUTHENTICATION_RESULT_KEY);
 
 		if (authenticationResult == AuthenticationResult.Authenticated)
 		{
@@ -271,7 +274,7 @@ public class HttpRemoteConnection extends RemoteConnection
 			this.state = ConnectionState.Authenticated;
 		}
 
-		return authenticationResult;
+		return result;
 	}
 
 	protected void invokeFunction(FunctionCall call)
@@ -280,11 +283,11 @@ public class HttpRemoteConnection extends RemoteConnection
 		{
 			if ((state != ConnectionState.Authenticated) && (userName != null) && (password != null))
 			{
-				AuthenticationResult authenticationResult = invokeLogin(userName, password, clientVersion);
+				Map<String, Object> loginResult = invokeLogin(userName, password, clientVersion);
 
-				if (authenticationResult != AuthenticationResult.Authenticated)
+				if (state != ConnectionState.Authenticated)
 				{
-					throw createAuthenticationException(authenticationResult, "loginFailed");
+					throw createAuthenticationException("loginFailed", loginResult);
 				}
 			}
 
@@ -298,11 +301,11 @@ public class HttpRemoteConnection extends RemoteConnection
 				assert activeUserName != null : "activeUserName is null";
 				assert activePassword != null : "activePassword is null";
 
-				AuthenticationResult authenticationResult = invokeLogin(activeUserName, activePassword, activeClientVersion);
+				Map<String, Object> loginResult = invokeLogin(activeUserName, activePassword, activeClientVersion);
 
-				if (authenticationResult != AuthenticationResult.Authenticated)
+				if (state != ConnectionState.Authenticated)
 				{
-					throw createAuthenticationException(authenticationResult, "loginRepeated");
+					throw createAuthenticationException("loginRepeated", loginResult);
 				}
 
 				Object returnValue = internalCall(call.name, call.args);
@@ -319,11 +322,11 @@ public class HttpRemoteConnection extends RemoteConnection
 	{
 		if ((state != ConnectionState.Authenticated) && (userName != null) && (password != null))
 		{
-			AuthenticationResult authenticationResult = invokeLogin(userName, password, clientVersion);
+			Map<String, Object> loginResult = invokeLogin(userName, password, clientVersion);
 
-			if (authenticationResult != AuthenticationResult.Authenticated)
+			if (state != ConnectionState.Authenticated)
 			{
-				throw createAuthenticationException(authenticationResult, "loginFailed");
+				throw createAuthenticationException("loginFailed", loginResult);
 			}
 		}
 
@@ -339,17 +342,17 @@ public class HttpRemoteConnection extends RemoteConnection
 			assert activeUserName != null : "activeUserName is null";
 			assert activePassword != null : "activePassword is null";
 
-			AuthenticationResult authenticationResult = invokeLogin(activeUserName, activePassword, clientVersion);
+			Map<String, Object> loginResult = invokeLogin(activeUserName, activePassword, clientVersion);
 
-			if (authenticationResult != AuthenticationResult.Authenticated)
+			if (state != ConnectionState.Authenticated)
 			{
-				throw createAuthenticationException(authenticationResult, "loginRepeated");
+				throw createAuthenticationException("loginRepeated", loginResult);
 			}
 
 			@SuppressWarnings("unchecked")
-			T result = internalCall(name, args);
+			T returnValue = internalCall(name, args);
 
-			return result;
+			return returnValue;
 		}
 	}
 
@@ -489,14 +492,14 @@ public class HttpRemoteConnection extends RemoteConnection
 		return new StasisException(id, message);
 	}
 
-	protected StasisException createAuthenticationException(AuthenticationResult authenticationResult, String id)
+	protected StasisException createAuthenticationException(String id, Map<String, Object> userInfo)
 	{
-		if (authenticationResult == AuthenticationResult.VersionMissmatch)
+		if (userInfo.get(StasisConstants.AUTHENTICATION_RESULT_KEY) == AuthenticationResult.VersionMissmatch)
 		{
 			id = "versionMissmatch";
 		}
 
 		String message = resourceBundle.getString(id);
-		return new StasisException(id, message);
+		return new AuthenticationException(id, message, userInfo);
 	}
 }

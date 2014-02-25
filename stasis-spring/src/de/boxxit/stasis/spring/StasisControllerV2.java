@@ -36,6 +36,7 @@ import org.apache.commons.pool.impl.StackObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,10 +45,10 @@ import org.springframework.web.servlet.mvc.Controller;
 /**
  * User: Christian Fruth
  */
-public class StasisController implements Controller, ApplicationContextAware
+public class StasisControllerV2 implements Controller, ApplicationContextAware, BeanNameAware
 {
 	private static final String LOGIN_FUNCTION = "login";
-	private static final Logger LOGGER = LoggerFactory.getLogger(StasisController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StasisControllerV2.class);
 
 	private static class InOut
 	{
@@ -68,9 +69,12 @@ public class StasisController implements Controller, ApplicationContextAware
 	private Class<? extends Serializer<?>> defaultSerializer = null;
 	private int serverVersion;
 	private ApplicationContext applicationContext;
+	private String vmmRedirectPath;
+	private String vmmSerializerHint;
+	private String name;
 
 	// Ich bin noch ein Kommentar
-	public StasisController()
+	public StasisControllerV2()
 	{
 		final PoolableObjectFactory<InOut> poolableObjectFactory = new BasePoolableObjectFactory<InOut>()
 		{
@@ -134,6 +138,16 @@ public class StasisController implements Controller, ApplicationContextAware
 		ioPool = new StackObjectPool<>(poolableObjectFactory);
 	}
 
+	public void setVmmRedirectPath(String vmmRedirectPath)
+	{
+		this.vmmRedirectPath = vmmRedirectPath;
+	}
+
+	public void setVmmSerializerHint(String vmmSerializerHint)
+	{
+		this.vmmSerializerHint = vmmSerializerHint;
+	}
+
 	public void setServerVersion(int serverVersion)
 	{
 		this.serverVersion = serverVersion;
@@ -168,6 +182,12 @@ public class StasisController implements Controller, ApplicationContextAware
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
 	{
 		this.applicationContext = applicationContext;
+	}
+
+	@Override
+	public void setBeanName(String name)
+	{
+		this.name = name;
 	}
 
 	@PostConstruct
@@ -247,7 +267,7 @@ public class StasisController implements Controller, ApplicationContextAware
 		}
 		catch (Exception ex)
 		{
-			LOGGER.error("Call failed because function name or arguments can't be read", ex);
+			LOGGER.error(String.format("%s: Call failed because function name or arguments can't be read", name), ex);
 			throw ex;
 		}
 
@@ -268,7 +288,7 @@ public class StasisController implements Controller, ApplicationContextAware
 			if (LOGGER.isErrorEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.error(String.format("Call failed because of authentication missmatch (name = %s, arguments = %s, duration = %dms, exception = %s)", functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName()));
+				LOGGER.error(String.format("%s: Call failed because of authentication missmatch (name = %s, arguments = %s, duration = %dms, exception = %s)", name, functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName()));
 			}
 
 			error = true;
@@ -279,7 +299,7 @@ public class StasisController implements Controller, ApplicationContextAware
 			if (LOGGER.isErrorEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.error(String.format("Call failed because of serializable exception (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName(), ex.getLocalizedMessage()));
+				LOGGER.error(String.format("%s: Call failed because of serializable exception (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", name, functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName(), ex.getLocalizedMessage()));
 			}
 
 			error = true;
@@ -290,7 +310,7 @@ public class StasisController implements Controller, ApplicationContextAware
 			if (LOGGER.isErrorEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.error(String.format("Call failed because of throwable exception (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName(), ex.getLocalizedMessage()));
+				LOGGER.error(String.format("%s: Call failed because of throwable exception (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", name, functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName(), ex.getLocalizedMessage()));
 			}
 
 			error = true;
@@ -306,7 +326,7 @@ public class StasisController implements Controller, ApplicationContextAware
 			if (!error && LOGGER.isDebugEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.debug(String.format("Call succeeded (name = %s, arguments = %s, result = %s, duration = %dms)", functionName, formatArray(args), formatArray(result), stopTimeMillis - startTimeMillis));
+				LOGGER.debug(String.format("%s: Call succeeded (name = %s, arguments = %s, result = %s, duration = %dms)", name, functionName, formatArray(args), formatArray(result), stopTimeMillis - startTimeMillis));
 			}
 		}
 		catch (Exception ex)
@@ -314,7 +334,7 @@ public class StasisController implements Controller, ApplicationContextAware
 			if (LOGGER.isErrorEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.error(String.format("Call failed because result can't be written back to client (name = %s, arguments = %s, result = %s, duration = %dms)", functionName, formatArray(args), formatArray(result), stopTimeMillis - startTimeMillis), ex);
+				LOGGER.error(String.format("%s: Call failed because result can't be written back to client (name = %s, arguments = %s, result = %s, duration = %dms)", name, functionName, formatArray(args), formatArray(result), stopTimeMillis - startTimeMillis), ex);
 			}
 		}
 	}
@@ -336,10 +356,21 @@ public class StasisController implements Controller, ApplicationContextAware
 		String userName = (String)args[0];
 		String password = (String)args[1];
 		int clientVersion = (Integer)args[2];
+		Map<String, Object> result = new HashMap<>();
 
 		if ((clientVersion != serverVersion) && (clientVersion != 0) && (serverVersion != 0))
 		{
 			authenticationResult = AuthenticationResult.VersionMissmatch;
+
+			if (vmmRedirectPath != null)
+			{
+				result.put(StasisConstants.REDIRECT_PATH_KEY, vmmRedirectPath);
+
+				if (vmmSerializerHint != null)
+				{
+					result.put(StasisConstants.SERIALIZER_HINT_KEY, vmmSerializerHint);
+				}
+			}
 		}
 		else
 		{
@@ -347,7 +378,9 @@ public class StasisController implements Controller, ApplicationContextAware
 			authenticationResult = loginStatus.isAuthenticated() ? AuthenticationResult.Authenticated : AuthenticationResult.Unauthenticated;
 		}
 
-		return new Object[] { authenticationResult };
+		result.put(StasisConstants.AUTHENTICATION_RESULT_KEY, authenticationResult);
+
+		return new Object[] { result };
 	}
 
 	private Object[] handleServiceFunction(String functionName, boolean assumeAuthenticated, Object[] args) throws Throwable
