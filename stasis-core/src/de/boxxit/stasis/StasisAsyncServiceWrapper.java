@@ -58,6 +58,8 @@ public class StasisAsyncServiceWrapper
 
 	private static class InvocationHandlerImpl implements InvocationHandler
 	{
+		private final Method toStringMethod;
+		private final Method equalsMethod;
 		private RemoteConnection connection;
 		private String serviceName;
 		private ErrorHandler defaultErrorHandler;
@@ -67,11 +69,31 @@ public class StasisAsyncServiceWrapper
 			this.connection = connection;
 			this.serviceName = serviceName;
 			this.defaultErrorHandler = defaultErrorHandler;
+
+			try
+			{
+				equalsMethod = getClass().getMethod("equals", Object.class);
+				toStringMethod = getClass().getMethod("toString");
+			}
+			catch (NoSuchMethodException ex)
+			{
+				throw new RuntimeException(ex);
+			}
 		}
 
 		@Override
 		public Object invoke(final Object proxy, Method method, Object[] args) throws Throwable
 		{
+			if (method.equals(equalsMethod))
+			{
+				return serviceEquals(proxy, args[0]);
+			}
+
+			if (method.equals(toStringMethod))
+			{
+				return serviceToString(proxy);
+			}
+
 			if (args.length < 1)
 			{
 				throw new RuntimeException("At least one argument is required");
@@ -91,6 +113,16 @@ public class StasisAsyncServiceWrapper
 
 			connection.callAsync(new CallHandlerImpl(eventHandler, defaultErrorHandler), name, argsSync);
 			return null;
+		}
+
+		private boolean serviceEquals(Object proxy, Object obj)
+		{
+			return proxy == obj;
+		}
+
+		private String serviceToString(Object proxy)
+		{
+			return "Async(" + serviceName + ")";
 		}
 	}
 
