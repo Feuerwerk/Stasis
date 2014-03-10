@@ -28,7 +28,7 @@ import de.boxxit.stasis.serializer.CollectionsSerializers;
 /**
  * User: Christian Fruth
  */
-public class HttpRemoteConnection extends RemoteConnection
+public class HttpRemoteConnection extends AbstractRemoteConnection
 {
 	private static final String CONTENT_TYPE_KEY = "Content-Type";
 	private static final String REQUEST_METHOD = "POST";

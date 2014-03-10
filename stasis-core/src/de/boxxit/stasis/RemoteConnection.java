@@ -1,21 +1,13 @@
 package de.boxxit.stasis;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import com.esotericsoftware.kryo.Serializer;
 
 /**
  * User: Christian Fruth
  */
-public abstract class RemoteConnection
+public interface RemoteConnection
 {
-	protected String userName;
-	protected String password;
-	protected int clientVersion;
-	protected ConnectionState state;
-	protected Synchronizer synchronizer;
-	protected HandshakeHandler handshakeHandler;
-
+	/*
 	public static RemoteConnection createConnection(String url)
 	{
 		try
@@ -44,74 +36,23 @@ public abstract class RemoteConnection
 
 		return null;
 	}
+	*/
 
-	public Synchronizer getSynchronizer()
-	{
-		return synchronizer;
-	}
+	public void setSynchronizer(Synchronizer synchronizer);
+	public void setHandshakeHandler(HandshakeHandler handshakeHandler);
+	public void setDefaultSerializer(Class<? extends Serializer> defaultSerializer);
+	public void setCredentials(String userName, String password, int clientVersion);
 
-	public void setSynchronizer(Synchronizer synchronizer)
-	{
-		this.synchronizer = synchronizer;
-	}
+	public ConnectionState getState();
+	public int getClientVersion();
+	public String getPassword();
+	public String getUserName();
 
-	public HandshakeHandler getHandshakeHandler()
-	{
-		return handshakeHandler;
-	}
+	public <T> void register(Class<T> type, int id);
+	public <T> void register(Class<T> type, Serializer<T> serializer);
+	public <T> void register(Class<T> type, Serializer<T> serializer, int id);
 
-	public void setHandshakeHandler(HandshakeHandler handshakeHandler)
-	{
-		this.handshakeHandler = handshakeHandler;
-	}
-
-	public int getClientVersion()
-	{
-		return clientVersion;
-	}
-
-	public String getPassword()
-	{
-		return password;
-	}
-
-	public String getUserName()
-	{
-		return userName;
-	}
-
-	public abstract void setDefaultSerializer(Class<? extends Serializer> defaultSerializer);
-
-	public abstract <T> void callAsync(CallHandler<T> handler, String name, Object... args);
-
-	public abstract <T> T callSync(String name, Object... args) throws Exception;
-
-	public void setCredentials(String userName, String password, int clientVersion)
-	{
-		this.userName = userName;
-		this.password = password;
-		this.clientVersion = clientVersion;
-
-		if (state == ConnectionState.Authenticated)
-		{
-			this.state = ConnectionState.Connected;
-		}
-	}
-
-	public abstract void login(CallHandler<Void> handler, String userName, String password, int clientVersion);
-
-	public ConnectionState getState()
-	{
-		return state;
-	}
-
-	public abstract <T> void register(Class<T> type, int id);
-
-	public abstract <T> void register(Class<T> type, Serializer<T> serializer);
-
-	public abstract <T> void register(Class<T> type, Serializer<T> serializer, int id);
-
-	protected RemoteConnection()
-	{
-	}
+	public <T> void callAsync(CallHandler<T> handler, String name, Object... args);
+	public <T> T callSync(String name, Object... args) throws Exception;
+	public void login(CallHandler<Void> handler, String userName, String password, int clientVersion);
 }

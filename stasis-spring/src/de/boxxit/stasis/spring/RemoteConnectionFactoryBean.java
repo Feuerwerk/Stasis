@@ -4,20 +4,21 @@ import java.net.URL;
 import java.util.List;
 import com.esotericsoftware.kryo.Serializer;
 import de.boxxit.stasis.RemoteConnection;
+import de.boxxit.stasis.RemoteConnectionFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
  * User: Christian Fruth
  */
-public class RemoteConnectionFactory implements FactoryBean<RemoteConnection>, InitializingBean
+public class RemoteConnectionFactoryBean implements FactoryBean<RemoteConnection>, InitializingBean
 {
 	private RemoteConnection connection;
 	private List<Registration> registeredSerializers;
 	private URL endpointUrl;
 	private Class<? extends Serializer<?>> defaultSerializer;
 
-	public RemoteConnectionFactory()
+	public RemoteConnectionFactoryBean()
 	{
 	}
 
@@ -45,7 +46,7 @@ public class RemoteConnectionFactory implements FactoryBean<RemoteConnection>, I
 			throw new IllegalArgumentException("property endpointUrl must not be null");
 		}
 
-		connection = RemoteConnection.createConnection(endpointUrl);
+		connection = RemoteConnectionFactory.createConnection(endpointUrl);
 
 		if (connection == null)
 		{
