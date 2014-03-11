@@ -310,7 +310,7 @@ public class StasisControllerV2 implements Controller, ApplicationContextAware, 
 			if (LOGGER.isErrorEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.error(String.format("%s: Call failed because of throwable exception (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", name, functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName(), ex.getLocalizedMessage()));
+				LOGGER.error(String.format("%s: Call failed because of throwable exception (name = %s, arguments = %s, duration = %dms)", name, functionName, formatArray(args), stopTimeMillis - startTimeMillis), ex);
 			}
 
 			error = true;
