@@ -6,6 +6,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,7 @@ public class SpringSecurityLoginService implements LoginService
 	}
 
 	@Override
-	public LoginStatus getStatus()
+	public LoginStatus getStatus() throws LoginException
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -44,7 +46,7 @@ public class SpringSecurityLoginService implements LoginService
 	}
 
 	@Override
-	public LoginStatus login(String username, String password)
+	public LoginStatus login(String username, String password) throws LoginException
 	{
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
 
@@ -55,9 +57,26 @@ public class SpringSecurityLoginService implements LoginService
 
 			return new LoginStatus(authentication.isAuthenticated(), authentication.getName());
 		}
-		catch (BadCredentialsException e)
+		catch (BadCredentialsException ex)
 		{
 			return new LoginStatus(false, null);
 		}
+		catch (AuthenticationException ex)
+		{
+			throw new LoginException(ex);
+		}
+	}
+
+	@Override
+	public void logout() throws LoginException
+	{
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+
+		if (securityContext != null)
+		{
+			securityContext.setAuthentication(null);
+		}
+
+		SecurityContextHolder.clearContext();
 	}
 }

@@ -18,15 +18,40 @@ public class SerializableExceptionSerializer extends Serializer<SerializableExce
 	@Override
 	public void write(Kryo kryo, Output output, SerializableException object)
 	{
-		kryo.writeObjectOrNull(output, object.getId(), String.class);
-		kryo.writeObjectOrNull(output, object.getMessage(), String.class);
+		StackTraceElement[] stackTrace = object.getStackTrace();
+
+		output.writeString(object.getType());
+		output.writeString(object.getMessage());
+		output.writeInt(stackTrace.length, true);
+
+		for (StackTraceElement stackFrame : stackTrace)
+		{
+			output.writeString(stackFrame.getClassName());
+			output.writeString(stackFrame.getMethodName());
+			output.writeString(stackFrame.getFileName());
+			output.writeInt(stackFrame.getLineNumber(), true);
+		}
 	}
 
 	@Override
-	public SerializableException read(Kryo kryo, Input input, Class<SerializableException> type)
+	public SerializableException read(Kryo kryo, Input input, Class<SerializableException> clazz)
 	{
-		String id = kryo.readObjectOrNull(input, String.class);
-		String message = kryo.readObjectOrNull(input, String.class);
-		return new SerializableException(id, message);
+		String type = input.readString();
+		String message = input.readString();
+		int stackLength = input.readInt(true);
+		StackTraceElement[] stackTrace = new StackTraceElement[stackLength];
+
+		for (int i = 0; i < stackLength; ++i)
+		{
+			String className = input.readString();
+			String methodName = input.readString();
+			String fileName = input.readString();
+			int lineNumber = input.readInt(true);
+			stackTrace[i] = new StackTraceElement(className, methodName, fileName, lineNumber);
+		}
+
+		SerializableException ex = new SerializableException(type, message);
+		ex.setStackTrace(stackTrace);
+		return ex;
 	}
 }

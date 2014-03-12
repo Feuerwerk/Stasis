@@ -1,5 +1,6 @@
 package de.boxxit.stasis;
 
+import java.util.Map;
 import com.esotericsoftware.kryo.Serializer;
 
 /**
@@ -40,11 +41,12 @@ public interface RemoteConnection
 
 	public void setSynchronizer(Synchronizer synchronizer);
 	public void setHandshakeHandler(HandshakeHandler handshakeHandler);
+	@SuppressWarnings("rawtypes")
 	public void setDefaultSerializer(Class<? extends Serializer> defaultSerializer);
-	public void setCredentials(String userName, String password, int clientVersion);
+	public void setCredentials(String userName, String password, Map<String, Object> parameters);
 
 	public ConnectionState getState();
-	public int getClientVersion();
+	public Map<String, Object> getParameters();
 	public String getPassword();
 	public String getUserName();
 
@@ -54,5 +56,5 @@ public interface RemoteConnection
 
 	public <T> void callAsync(CallHandler<T> handler, String name, Object... args);
 	public <T> T callSync(String name, Object... args) throws Exception;
-	public void login(CallHandler<Void> handler, String userName, String password, int clientVersion);
+	public void login(CallHandler<Void> handler, String userName, String password, Map<String, Object> parameters);
 }

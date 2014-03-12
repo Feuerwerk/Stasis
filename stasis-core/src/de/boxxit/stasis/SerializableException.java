@@ -7,24 +7,24 @@ import de.boxxit.stasis.serializer.SerializableExceptionSerializer;
  * User: Christian Fruth
  */
 @DefaultSerializer(SerializableExceptionSerializer.class)
-public class SerializableException extends RuntimeException
+public class SerializableException extends Exception
 {
-	private String id;
+	private String type;
 
-	public SerializableException(String id, String message)
+	public SerializableException(String type, String message)
 	{
 		super(message);
-		this.id = id;
+		this.type = type;
 	}
 
 	public SerializableException(Throwable ex)
 	{
 		super(ex.getMessage());
-		this.id = ex.getClass().getName();
+		this.type = ex.getClass().getName();
 	}
 
-	public String getId()
+	public String getType()
 	{
-		return id;
+		return type;
 	}
 }

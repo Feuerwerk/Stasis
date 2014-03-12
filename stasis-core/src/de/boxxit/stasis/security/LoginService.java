@@ -5,7 +5,9 @@ package de.boxxit.stasis.security;
  */
 public interface LoginService
 {
-	public LoginStatus getStatus();
+	public LoginStatus getStatus() throws LoginException;
 
-	public LoginStatus login(String username, String password);
+	public LoginStatus login(String username, String password) throws LoginException;
+
+	public void logout() throws LoginException;
 }

@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -73,7 +74,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 	{
 		public String userName;
 		public String password;
-		public int clientVersion;
+		public Map<String, Object> parameters;
 
 		public LoginCall()
 		{
@@ -140,8 +141,8 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 	private CookieManager cookieManager = new CookieManager();
 	private String activeUserName;
 	private String activePassword;
+	private Map<String, Object> activeRequest;
 	private boolean gzipAvailable = false;
-	private int activeClientVersion;
 
 	{
 		kryo = new Kryo();
@@ -207,18 +208,18 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 	}
 
 	@Override
-	public void login(CallHandler<Void> handler, String userName, String password, int clientVersion)
+	public void login(CallHandler<Void> handler, String userName, String password, Map<String, Object> parameters)
 	{
 		LoginCall newCall = new LoginCall();
 
 		newCall.userName = userName;
 		newCall.password = password;
-		newCall.clientVersion = clientVersion;
+		newCall.parameters = parameters;
 		newCall.handler = handler;
 
 		this.userName = userName;
 		this.password = password;
-		this.clientVersion = clientVersion;
+		this.parameters = parameters;
 		pendingCalls.add(newCall);
 	}
 
@@ -245,13 +246,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 	{
 		try
 		{
-			Map<String, Object> loginResult = invokeLogin(call.userName, call.password, call.clientVersion);
-
-			if (state != ConnectionState.Authenticated)
-			{
-				throw createAuthenticationException("loginFailed", loginResult);
-			}
-
+			invokeLogin(call.userName, call.password, call.parameters, "loginFailed");
 			call.succeed(null, synchronizer);
 		}
 		catch (Exception ex)
@@ -260,21 +255,43 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 		}
 	}
 
-	protected Map<String, Object> invokeLogin(String userName, String password, int clientVersion) throws Exception
+	protected void invokeLogin(String userName, String password, Map<String, Object> request, String errorCode) throws Exception
 	{
-		Map<String, Object> result = internalCall(LOGIN_FUNCTION, new Object[] { userName, password, clientVersion });
-		AuthenticationResult authenticationResult = (AuthenticationResult)result.get(StasisConstants.AUTHENTICATION_RESULT_KEY);
+		if (request == null)
+		{
+			request = Collections.emptyMap();
+		}
+		else if (!(request instanceof HashMap))
+		{
+			request = new HashMap<String, Object>(request);
+		}
+
+		Object[] result = internalCall(LOGIN_FUNCTION, new Object[] { userName, password, request });
+
+		if (result.length != 2)
+		{
+			throw new IllegalArgumentException("login response count");
+		}
+
+		AuthenticationResult authenticationResult = (AuthenticationResult)result[0];
+		@SuppressWarnings({ "unchecked" , "rawtypes" })
+		Map<String, Object> loginResponse = (Map)result[1];
 
 		if (authenticationResult == AuthenticationResult.Authenticated)
 		{
+			Map<String, Object> newRequest = new HashMap<String, Object>(request);
+			newRequest.putAll(loginResponse);
+
 			this.activeUserName = userName;
 			this.activePassword = password;
-			this.activeClientVersion = clientVersion;
+			this.activeRequest = newRequest;
 
 			this.state = ConnectionState.Authenticated;
 		}
-
-		return result;
+		else
+		{
+			throw createAuthenticationException(errorCode, loginResponse);
+		}
 	}
 
 	protected void invokeFunction(FunctionCall call)
@@ -283,12 +300,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 		{
 			if ((state != ConnectionState.Authenticated) && (userName != null) && (password != null))
 			{
-				Map<String, Object> loginResult = invokeLogin(userName, password, clientVersion);
-
-				if (state != ConnectionState.Authenticated)
-				{
-					throw createAuthenticationException("loginFailed", loginResult);
-				}
+				invokeLogin(userName, password, parameters, "loginFailed");
 			}
 
 			try
@@ -300,13 +312,9 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 			{
 				assert activeUserName != null : "activeUserName is null";
 				assert activePassword != null : "activePassword is null";
+				assert activeRequest != null : "activeRequest is null";
 
-				Map<String, Object> loginResult = invokeLogin(activeUserName, activePassword, activeClientVersion);
-
-				if (state != ConnectionState.Authenticated)
-				{
-					throw createAuthenticationException("loginRepeated", loginResult);
-				}
+				invokeLogin(activeUserName, activePassword, activeRequest, "loginRepeated");
 
 				Object returnValue = internalCall(call.name, call.args);
 				call.succeed(returnValue, synchronizer);
@@ -322,42 +330,35 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 	{
 		if ((state != ConnectionState.Authenticated) && (userName != null) && (password != null))
 		{
-			Map<String, Object> loginResult = invokeLogin(userName, password, clientVersion);
-
-			if (state != ConnectionState.Authenticated)
-			{
-				throw createAuthenticationException("loginFailed", loginResult);
-			}
+			invokeLogin(userName, password, parameters, "loginFailed");
 		}
 
 		try
 		{
+			Object[] result = internalCall(name, args);
 			@SuppressWarnings("unchecked")
-			T result = internalCall(name, args);
+			T returnValue = (T)result[0];
 
-			return result;
+			return returnValue;
 		}
 		catch (AuthenticationMissmatchException ex)
 		{
 			assert activeUserName != null : "activeUserName is null";
 			assert activePassword != null : "activePassword is null";
+			assert activeRequest != null : "activeRequest is null";
 
-			Map<String, Object> loginResult = invokeLogin(activeUserName, activePassword, clientVersion);
+			invokeLogin(activeUserName, activePassword, activeRequest, "loginRepeated");
 
-			if (state != ConnectionState.Authenticated)
-			{
-				throw createAuthenticationException("loginRepeated", loginResult);
-			}
-
+			Object[] result = internalCall(name, args);
 			@SuppressWarnings("unchecked")
-			T returnValue = internalCall(name, args);
+			T returnValue = (T)result[0];
 
 			return returnValue;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T> T internalCall(String name, Object[] args) throws Exception
+	protected Object[] internalCall(String name, Object[] args) throws Exception
 	{
 		int tryCount = 0;
 
@@ -438,10 +439,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 					throw (Exception)result[0];
 				}
 
-				@SuppressWarnings("unchecked")
-				T returnValue = (T)result[0];
-
-				return returnValue;
+				return result;
 			}
 
 			finally
@@ -494,11 +492,6 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 
 	protected StasisException createAuthenticationException(String id, Map<String, Object> userInfo)
 	{
-		if (userInfo.get(StasisConstants.AUTHENTICATION_RESULT_KEY) == AuthenticationResult.VersionMissmatch)
-		{
-			id = "versionMissmatch";
-		}
-
 		String message = resourceBundle.getString(id);
 		return new AuthenticationException(id, message, userInfo);
 	}

@@ -16,15 +16,18 @@ import java.util.zip.GZIPOutputStream;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import de.boxxit.stasis.AuthenticationMissmatchException;
 import de.boxxit.stasis.AuthenticationResult;
+import de.boxxit.stasis.MessageException;
 import de.boxxit.stasis.SerializableException;
 import de.boxxit.stasis.StasisConstants;
 import de.boxxit.stasis.StasisUtils;
+import de.boxxit.stasis.security.LoginException;
 import de.boxxit.stasis.security.LoginService;
 import de.boxxit.stasis.security.LoginStatus;
 import de.boxxit.stasis.serializer.ArraysListSerializer;
@@ -48,6 +51,7 @@ import org.springframework.web.servlet.mvc.Controller;
 public class StasisControllerV2 implements Controller, ApplicationContextAware, BeanNameAware
 {
 	private static final String LOGIN_FUNCTION = "login";
+	private static final String LOGOUT_FUNCTION = "logout";
 	private static final Logger LOGGER = LoggerFactory.getLogger(StasisControllerV2.class);
 
 	private static class InOut
@@ -67,10 +71,8 @@ public class StasisControllerV2 implements Controller, ApplicationContextAware, 
 	private LoginService loginService;
 	private ObjectPool<InOut> ioPool;
 	private Class<? extends Serializer<?>> defaultSerializer = null;
-	private int serverVersion;
 	private ApplicationContext applicationContext;
-	private String vmmRedirectPath;
-	private String vmmSerializerHint;
+	private LoginValidator loginValidator;
 	private String name;
 
 	// Ich bin noch ein Kommentar
@@ -138,19 +140,9 @@ public class StasisControllerV2 implements Controller, ApplicationContextAware, 
 		ioPool = new StackObjectPool<>(poolableObjectFactory);
 	}
 
-	public void setVmmRedirectPath(String vmmRedirectPath)
+	public void setLoginValidator(LoginValidator loginValidator)
 	{
-		this.vmmRedirectPath = vmmRedirectPath;
-	}
-
-	public void setVmmSerializerHint(String vmmSerializerHint)
-	{
-		this.vmmSerializerHint = vmmSerializerHint;
-	}
-
-	public void setServerVersion(int serverVersion)
-	{
-		this.serverVersion = serverVersion;
+		this.loginValidator = loginValidator;
 	}
 
 	public void setLoginService(LoginService loginService)
@@ -236,7 +228,7 @@ public class StasisControllerV2 implements Controller, ApplicationContextAware, 
 			io.input.setInputStream(inputStream);
 			io.output.setOutputStream(outputStream);
 
-			handleIO(io.kryo, io.input, io.output);
+			handleIO(io.kryo, io.input, io.output, request);
 
 			//io.output.close();
 			outputStream.close();
@@ -249,7 +241,7 @@ public class StasisControllerV2 implements Controller, ApplicationContextAware, 
 		return null;
 	}
 
-	protected void handleIO(Kryo kryo, Input input, Output output) throws AuthenticationMissmatchException
+	protected void handleIO(Kryo kryo, Input input, Output output, HttpServletRequest request) throws AuthenticationMissmatchException
 	{
 		// Funktionsnamen lesen
 		long startTimeMillis = System.currentTimeMillis();
@@ -273,15 +265,32 @@ public class StasisControllerV2 implements Controller, ApplicationContextAware, 
 
 		try
 		{
-			if (LOGIN_FUNCTION.equals(functionName))
+			switch (functionName)
 			{
-				result = handleLogin(args);
-				args = new Object[] { args[0], "######", args[2] }; // Das Passwort darf nicht geloggt werden
+				case LOGIN_FUNCTION:
+					result = handleLogin(args);
+					args = new Object[] { args[0], "######", args[2] }; // Das Passwort darf nicht geloggt werden
+					break;
+
+				case LOGOUT_FUNCTION:
+					result = handleLogout(request);
+					break;
+
+				default:
+					result = handleServiceFunction(functionName, assumeAuthenticated, args);
+					break;
 			}
-			else
+		}
+		catch (LoginException ex)
+		{
+			if (LOGGER.isErrorEnabled())
 			{
-				result = handleServiceFunction(functionName, assumeAuthenticated, args);
+				long stopTimeMillis = System.currentTimeMillis();
+				LOGGER.error(String.format("%s: Call failed because of login exception (name = %s, arguments = %s, duration = %dms, exception = %s)", name, functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getMessage()));
 			}
+
+			error = true;
+			result = new Object[] { new SerializableException(ex) };
 		}
 		catch (AuthenticationMissmatchException ex)
 		{
@@ -294,12 +303,12 @@ public class StasisControllerV2 implements Controller, ApplicationContextAware, 
 			error = true;
 			result = new Object[] { ex };
 		}
-		catch (SerializableException ex)
+		catch (MessageException ex)
 		{
 			if (LOGGER.isErrorEnabled())
 			{
 				long stopTimeMillis = System.currentTimeMillis();
-				LOGGER.error(String.format("%s: Call failed because of serializable exception (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", name, functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getClass().getName(), ex.getLocalizedMessage()));
+				LOGGER.error(String.format("%s: Call failed because of message exception (name = %s, arguments = %s, duration = %dms, exception = %s:%s)", name, functionName, formatArray(args), stopTimeMillis - startTimeMillis, ex.getId(), ex.getMessage()));
 			}
 
 			error = true;
@@ -339,7 +348,7 @@ public class StasisControllerV2 implements Controller, ApplicationContextAware, 
 		}
 	}
 
-	private Object[] handleLogin(Object[] args)
+	private Object[] handleLogin(Object[] args) throws LoginException
 	{
 		AuthenticationResult authenticationResult;
 
@@ -355,32 +364,36 @@ public class StasisControllerV2 implements Controller, ApplicationContextAware, 
 
 		String userName = (String)args[0];
 		String password = (String)args[1];
-		int clientVersion = (Integer)args[2];
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		Map<String, Object> payload = (Map)args[2];
 		Map<String, Object> result = new HashMap<>();
 
-		if ((clientVersion != serverVersion) && (clientVersion != 0) && (serverVersion != 0))
-		{
-			authenticationResult = AuthenticationResult.VersionMissmatch;
-
-			if (vmmRedirectPath != null)
-			{
-				result.put(StasisConstants.REDIRECT_PATH_KEY, vmmRedirectPath);
-
-				if (vmmSerializerHint != null)
-				{
-					result.put(StasisConstants.SERIALIZER_HINT_KEY, vmmSerializerHint);
-				}
-			}
-		}
-		else
+		if ((loginValidator == null) || loginValidator.validate(payload, result))
 		{
 			LoginStatus loginStatus = loginService.login(userName, password);
 			authenticationResult = loginStatus.isAuthenticated() ? AuthenticationResult.Authenticated : AuthenticationResult.Unauthenticated;
 		}
+		else
+		{
+			authenticationResult = AuthenticationResult.Invalid;
+		}
 
-		result.put(StasisConstants.AUTHENTICATION_RESULT_KEY, authenticationResult);
+		return new Object[] { authenticationResult, result };
+	}
 
-		return new Object[] { result };
+	private Object[] handleLogout(HttpServletRequest request) throws LoginException
+	{
+		loginService.logout();
+
+		// HTTP-Sitzung für ungültig erklären
+		HttpSession session = request.getSession(false);
+
+		if (session != null)
+		{
+			session.invalidate();
+		}
+
+		return new Object[0];
 	}
 
 	private Object[] handleServiceFunction(String functionName, boolean assumeAuthenticated, Object[] args) throws Throwable

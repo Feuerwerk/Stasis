@@ -23,7 +23,7 @@ public class JavaEELoginService implements LoginService
 		this.request = request;
 	}
 
-	public LoginStatus getStatus()
+	public LoginStatus getStatus() throws LoginException
 	{
 		if (request.getRemoteUser() != null)
 		{
@@ -36,7 +36,7 @@ public class JavaEELoginService implements LoginService
 	}
 
 	@Override
-	public LoginStatus login(String username, String password)
+	public LoginStatus login(String username, String password) throws LoginException
 	{
 		try
 		{
@@ -48,8 +48,20 @@ public class JavaEELoginService implements LoginService
 		}
 		catch (ServletException ex)
 		{
-			ex.printStackTrace();
-			return new LoginStatus(false, null);
+			throw new LoginException("login error", ex);
+		}
+	}
+
+	@Override
+	public void logout() throws LoginException
+	{
+		try
+		{
+			request.logout();
+		}
+		catch (ServletException ex)
+		{
+			throw new LoginException("logout error", ex);
 		}
 	}
 }

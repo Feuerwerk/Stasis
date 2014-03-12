@@ -1,9 +1,6 @@
 package de.boxxit.stasis;
 
-import de.boxxit.stasis.ConnectionState;
-import de.boxxit.stasis.HandshakeHandler;
-import de.boxxit.stasis.RemoteConnection;
-import de.boxxit.stasis.Synchronizer;
+import java.util.Map;
 
 /**
  * User: Christian Fruth
@@ -12,7 +9,7 @@ public abstract class AbstractRemoteConnection implements RemoteConnection
 {
 	protected String userName;
 	protected String password;
-	protected int clientVersion;
+	protected Map<String, Object> parameters;
 	protected ConnectionState state;
 	protected Synchronizer synchronizer;
 	protected HandshakeHandler handshakeHandler;
@@ -22,6 +19,7 @@ public abstract class AbstractRemoteConnection implements RemoteConnection
 		return synchronizer;
 	}
 
+	@Override
 	public void setSynchronizer(Synchronizer synchronizer)
 	{
 		this.synchronizer = synchronizer;
@@ -32,31 +30,36 @@ public abstract class AbstractRemoteConnection implements RemoteConnection
 		return handshakeHandler;
 	}
 
+	@Override
 	public void setHandshakeHandler(HandshakeHandler handshakeHandler)
 	{
 		this.handshakeHandler = handshakeHandler;
 	}
 
-	public int getClientVersion()
-	{
-		return clientVersion;
-	}
-
+	@Override
 	public String getPassword()
 	{
 		return password;
 	}
 
+	@Override
 	public String getUserName()
 	{
 		return userName;
 	}
 
-	public void setCredentials(String userName, String password, int clientVersion)
+	@Override
+	public Map<String, Object> getParameters()
+	{
+		return parameters;
+	}
+
+	@Override
+	public void setCredentials(String userName, String password, Map<String, Object> parameters)
 	{
 		this.userName = userName;
 		this.password = password;
-		this.clientVersion = clientVersion;
+		this.parameters = parameters;
 
 		if (state == ConnectionState.Authenticated)
 		{
@@ -64,8 +67,13 @@ public abstract class AbstractRemoteConnection implements RemoteConnection
 		}
 	}
 
+	@Override
 	public ConnectionState getState()
 	{
 		return state;
+	}
+
+	protected AbstractRemoteConnection()
+	{
 	}
 }

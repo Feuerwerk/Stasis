@@ -5,5 +5,5 @@ package de.boxxit.stasis;
  */
 public enum AuthenticationResult
 {
-	Unauthenticated, Authenticated, VersionMissmatch
+	Unauthenticated, Authenticated, Invalid
 }

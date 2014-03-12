@@ -25,6 +25,7 @@ import de.boxxit.stasis.AuthenticationResult;
 import de.boxxit.stasis.SerializableException;
 import de.boxxit.stasis.StasisConstants;
 import de.boxxit.stasis.StasisUtils;
+import de.boxxit.stasis.security.LoginException;
 import de.boxxit.stasis.security.LoginService;
 import de.boxxit.stasis.security.LoginStatus;
 import de.boxxit.stasis.serializer.ArraysListSerializer;
@@ -339,11 +340,21 @@ public class StasisController implements Controller, ApplicationContextAware
 
 		if ((clientVersion != serverVersion) && (clientVersion != 0) && (serverVersion != 0))
 		{
-			authenticationResult = AuthenticationResult.VersionMissmatch;
+			authenticationResult = AuthenticationResult.Invalid;
 		}
 		else
 		{
-			LoginStatus loginStatus = loginService.login(userName, password);
+			LoginStatus loginStatus;
+
+			try
+			{
+				loginStatus = loginService.login(userName, password);
+			}
+			catch (LoginException ex)
+			{
+				loginStatus = new LoginStatus(false, null);
+			}
+
 			authenticationResult = loginStatus.isAuthenticated() ? AuthenticationResult.Authenticated : AuthenticationResult.Unauthenticated;
 		}
 
