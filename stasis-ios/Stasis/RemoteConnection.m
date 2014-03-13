@@ -38,12 +38,12 @@
 	[NSException raise:NSInternalInconsistencyException format:@"%@ must be overwritten in subclass", NSStringFromSelector(_cmd)];
 }
 
-- (void)setCredentialsForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion
+- (void)setCredentialsForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters
 {
 	[NSException raise:NSInternalInconsistencyException format:@"%@ must be overwritten in subclass", NSStringFromSelector(_cmd)];
 }
 
-- (void)loginUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion returning:(void (^)(NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)loginUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters returning:(void (^)(AuthenticationResult *, NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	[NSException raise:NSInternalInconsistencyException format:@"%@ must be overwritten in subclass", NSStringFromSelector(_cmd)];
 }

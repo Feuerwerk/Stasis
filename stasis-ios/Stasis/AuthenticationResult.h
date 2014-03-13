@@ -13,6 +13,6 @@
 
 + (instancetype)UNAUTHENTICATED;
 + (instancetype)AUTHENTICATED;
-+ (instancetype)VERSIONMISSMATCH;
++ (instancetype)INVALID;
 
 @end

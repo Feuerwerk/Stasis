@@ -30,7 +30,7 @@ static NSDateFormatter *descriptionFormatter = nil;
 + (instancetype)timeFromMillisOfDay:(UInt64)millisOfDay
 {
 	NSDateComponents *components = [NSDateComponents new];
-	UInt32 seconds = millisOfDay / 1000;
+	UInt32 seconds = (UInt32)(millisOfDay / 1000);
 	UInt32 minutes = seconds / 60;
 	components.year = 1970;
 	components.month = 1;

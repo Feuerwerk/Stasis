@@ -11,14 +11,26 @@
 
 @implementation SerializableException
 
-+ (instancetype)exceptionWithIdent:(NSString *)ident andMessage:(NSString *)message
++ (instancetype)exceptionWithType:(NSString *)type message:(NSString *)message andStackSymbols:(NSArray *)stackSymbols
 {
-	return [[SerializableException alloc] initWithIdent:ident andMessage:message];
+	return [[SerializableException alloc] initWithType:type message:message andStackSymbols:stackSymbols];
 }
 
-- (id)initWithIdent:(NSString *)ident andMessage:(NSString *)message
+- (id)initWithType:(NSString *)type message:(NSString *)message andStackSymbols:(NSArray *)stackSymbols
 {
-	return [super initWithName:ident reason:message userInfo:nil];
+	self = [super initWithName:type reason:message userInfo:nil];
+	
+	if (self != nil)
+	{
+		_stackSymbols = stackSymbols;
+	}
+	
+	return self;
+}
+
+- (NSArray *)callStackSymbols
+{
+	return _stackSymbols;
 }
 
 + (NSString *)serializingAlias

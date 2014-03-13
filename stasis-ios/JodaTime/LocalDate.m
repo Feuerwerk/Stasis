@@ -172,7 +172,7 @@ static NSDateFormatter *descriptionFormatter = nil;
 
 - (WeekDays)dayOfWeek
 {
-	return [[NSCalendar currentCalendar] components:NSWeekdayCalendarUnit fromDate:_date].weekday;
+	return (WeekDays)[[NSCalendar currentCalendar] components:NSWeekdayCalendarUnit fromDate:_date].weekday;
 }
 
 - (NSInteger)dayOfYear

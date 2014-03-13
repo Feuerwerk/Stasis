@@ -27,8 +27,8 @@ typedef enum { Unconnected, Connected, Authenticated } ConnectionState;
 - (ConnectionState)state;
 
 - (void)callAsync:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
-- (void)setCredentialsForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion;
-- (void)loginUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion returning:(void (^)(NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)setCredentialsForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters;
+- (void)loginUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters returning:(void (^)(AuthenticationResult *, NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler;
 
 - (void)setHandshakeHandler:(id<HandshakeHandler>)handshakeHandler;
 - (void)setDefaultSerializer:(Class)defaultSerializer;

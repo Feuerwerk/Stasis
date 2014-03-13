@@ -9,8 +9,10 @@
 #import "Kryo/Kryo.h"
 #import "RemoteConnection.h"
 #import "SerializableException.h"
+#import "MessageException.h"
 #import "StasisAsyncServiceWrapper.h"
 
-#define AUTHENTICATION_RESULT_KEY @"authentication.result"
+#define VERSION_NUMBER_KEY @"version.number"
+#define VERSION_MISSMATCH_KEY @"version.missmatch"
 #define REDIRECT_PATH_KEY @"redirect.path"
 #define SERIALIZER_HINT_KEY @"serializer.hint"

@@ -20,9 +20,9 @@
 
 @interface HttpRemoteConnection ()
 
-- (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args handshakeHandler:(id<HandshakeHandler>)handshakeHandler andTryCount:(int)tryCount returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
-- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler;
-- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args handshakeHandler:(id<HandshakeHandler>)handshakeHandler andTryCount:(int)tryCount extractResult:(BOOL)extractResult returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(AuthenticationResult *, NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
 
 @end
 
@@ -50,7 +50,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 		_state = Unconnected;
 		_userName = nil;
 		_password = nil;
-		_clientVersion = -1;
+		_parameters = nil;
 		_cookieStorage = [HTTPCookieStorage new];
 	}
 	
@@ -62,12 +62,12 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	if ((_state != Authenticated) && (_userName != nil) && (_password != nil))
 	{
 		// Die Verbindung noch nicht authentifiziert ist, aber Credentials vorliegen zuerst einloggen
-		[self invokeLoginForUser:_userName password:_password andClientVersion:_clientVersion followingFunction:name withArguments:args returning:resultHandler error:errorHandler];
+		[self invokeLoginForUser:_userName password:_password andParameters:_parameters followingFunction:name withArguments:args returning:resultHandler error:errorHandler];
 	}
 	else
 	{
 		// Die Service-Funktion ausführen
-		[self invokeServiceFunction:name withArguments:args handshakeHandler:_handshakeHandler andTryCount:1 returning:resultHandler error:^(NSError *error)
+		[self invokeServiceFunction:name withArguments:args handshakeHandler:_handshakeHandler andTryCount:1 extractResult:YES returning:resultHandler error:^(NSError *error)
 		{
 			// Ausführung der Service-Funktion ist fehlgeschlagen
 			if ([error.domain isEqualToString:CONNECTION_ERROR_DOMAIN] && (error.code == ERROR_AUTHENTICATION_MISSMATCH))
@@ -75,7 +75,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 				assert(_activeUserName != nil);
 				assert(_activePassword != nil);
 				
-				[self invokeLoginForUser:_activeUserName password:_activePassword andClientVersion:_activeClientVersion followingFunction:name withArguments:args returning:resultHandler error:errorHandler];
+				[self invokeLoginForUser:_activeUserName password:_activePassword andParameters:_activeParameters followingFunction:name withArguments:args returning:resultHandler error:errorHandler];
 			}
 			else
 			{
@@ -85,16 +85,16 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	}
 }
 
-- (void)loginUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion returning:(void (^)(NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)loginUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters returning:(void (^)(AuthenticationResult *, NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler
 {
-	[self invokeLoginForUser:userName password:password andClientVersion:clientVersion handshakeHandler:_handshakeHandler returning:resultHandler error:errorHandler];
+	[self invokeLoginForUser:userName password:password andParameters:parameters handshakeHandler:_handshakeHandler returning:resultHandler error:errorHandler];
 }
 
-- (void)setCredentialsForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion
+- (void)setCredentialsForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters
 {
 	_userName = userName;
 	_password = password;
-	_clientVersion = clientVersion;
+	_parameters = parameters;
 	_state = Connected;
 }
 
@@ -138,26 +138,24 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	[_kryo registerClass:type usingSerializer:serializer andIdent:ident];
 }
 
-- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	// Die Verbindung noch nicht authentifiziert ist, aber Credentials vorliegen zuerst einloggen
-	[self invokeLoginForUser:userName password:password andClientVersion:clientVersion handshakeHandler:_handshakeHandler returning:^(NSDictionary *loginResult)
-	 {
-		 AuthenticationResult *authenticationResult = [loginResult objectForKey:AUTHENTICATION_RESULT_KEY];
-
-		 if (authenticationResult != AuthenticationResult.AUTHENTICATED)
-		 {
-			 // Die Authentifizierung ist fehlgeschlagen
-			 errorHandler([StasisError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_AUTHENTICATION_FAILED userInfo:loginResult]);
-			 return;
-		 }
+	[self invokeLoginForUser:userName password:password andParameters:parameters handshakeHandler:_handshakeHandler returning:^(AuthenticationResult *authenticationResult, NSDictionary *loginResult)
+	{
+		if (authenticationResult != AuthenticationResult.AUTHENTICATED)
+		{
+			// Die Authentifizierung ist fehlgeschlagen
+			errorHandler([StasisError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_AUTHENTICATION_FAILED userInfo:loginResult]);
+			return;
+		}
 		 
-		 // Die Service-Funktion ausführen
-		 [self invokeServiceFunction:name withArguments:args handshakeHandler:_handshakeHandler andTryCount:1 returning:resultHandler error:errorHandler];
-	 } error:errorHandler];
+		// Die Service-Funktion ausführen
+		[self invokeServiceFunction:name withArguments:args handshakeHandler:_handshakeHandler andTryCount:1 extractResult:YES returning:resultHandler error:errorHandler];
+	} error:errorHandler];
 }
 
-- (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args handshakeHandler:(id<HandshakeHandler>)handshakeHandler andTryCount:(int)tryCount returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args handshakeHandler:(id<HandshakeHandler>)handshakeHandler andTryCount:(int)tryCount extractResult:(BOOL)extractResult returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	[_output clear];
 	[_kryo writeObject:name to:_output];
@@ -197,7 +195,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 					handled = [handshakeHandler handleResponse:response withData:data forConnection:weakSelf tryCount:tryCount returning:^(NSError *error) {
 						if (error == nil)
 						{
-							[weakSelf invokeServiceFunction:name withArguments:args handshakeHandler:handshakeHandler andTryCount:tryCount + 1 returning:resultHandler error:errorHandler];
+							[weakSelf invokeServiceFunction:name withArguments:args handshakeHandler:handshakeHandler andTryCount:tryCount + 1 extractResult:extractResult returning:resultHandler error:errorHandler];
 						}
 						else
 						{
@@ -252,7 +250,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 				
 				@try
 				{
-					resultHandler(resultValue);
+					resultHandler(extractResult ? resultValue : result);
 				}
 				@catch (NSException *ex)
 				{
@@ -277,25 +275,35 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	 }];
 }
 
-- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andClientVersion:(SInt32)clientVersion handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(AuthenticationResult *, NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler
 {
-	JInteger *clientVersionInt = [JInteger intWithValue:clientVersion];
-	JObjectArray *args = [JObjectArray arrayWithObjects:userName, password, clientVersionInt, nil];
+	if (parameters == nil)
+	{
+		parameters = [NSDictionary dictionary];
+	}
 	
-	[self invokeServiceFunction:LOGIN_FUNCTION withArguments:args handshakeHandler:handshakeHandler andTryCount:1 returning:^(id result)
-	 {
-		 AuthenticationResult *authenticationResult = [result objectForKey:AUTHENTICATION_RESULT_KEY];
+	JObjectArray *args = [JObjectArray arrayWithObjects:userName, password, parameters, nil];
+	
+	[self invokeServiceFunction:LOGIN_FUNCTION withArguments:args handshakeHandler:handshakeHandler andTryCount:1 extractResult:NO returning:^(id result)
+	{
+		JObjectArray *resultValues = (JObjectArray *)result;
+		AuthenticationResult *authenticationResult = [resultValues objectAtIndex:0];
+		NSDictionary *response = [resultValues objectAtIndex:1];
 
-		 if (authenticationResult == AuthenticationResult.AUTHENTICATED)
-		 {
-			 _activeUserName = userName;
-			 _activePassword = password;
-			 _activeClientVersion = clientVersion;
-			 _state = Authenticated;
-		 }
+		if (authenticationResult == AuthenticationResult.AUTHENTICATED)
+		{
+			NSMutableDictionary *newParameters = [NSMutableDictionary new];
+			[newParameters addEntriesFromDictionary:parameters];
+			[newParameters addEntriesFromDictionary:response];
+			 
+			_activeUserName = userName;
+			_activePassword = password;
+			_activeParameters = newParameters;
+			_state = Authenticated;
+		}
 		 
-		 resultHandler(result);
-	 } error:errorHandler];
+		resultHandler(authenticationResult, response);
+	} error:errorHandler];
 }
 
 @end

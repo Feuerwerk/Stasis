@@ -10,8 +10,11 @@
 #import "Kryo/SerializationAnnotation.h"
 
 @interface SerializableException : NSException<SerializationAnnotation>
+{
+	NSArray *_stackSymbols;
+}
 
-+ (instancetype)exceptionWithIdent:(NSString *)ident andMessage:(NSString *)message;
-- (id)initWithIdent:(NSString *)ident andMessage:(NSString *)message;
++ (instancetype)exceptionWithType:(NSString *)type message:(NSString *)message andStackSymbols:(NSArray *)stackSymbols;
+- (id)initWithType:(NSString *)type message:(NSString *)message andStackSymbols:(NSArray *)stackSymbols;
 
 @end

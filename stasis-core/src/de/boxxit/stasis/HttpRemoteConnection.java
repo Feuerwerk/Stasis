@@ -268,9 +268,28 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 
 		Object[] result = internalCall(LOGIN_FUNCTION, new Object[] { userName, password, request });
 
-		if (result.length != 2)
+		switch (result.length)
 		{
-			throw new IllegalArgumentException("login response count");
+			case 1:
+			{
+				Object returnValue = result[0];
+
+				if (returnValue instanceof Exception)
+				{
+					throw ((Exception)returnValue);
+				}
+				else
+				{
+					throw new IllegalArgumentException("return value is not an exception");
+				}
+			}
+
+			case 2:
+				// die richtige Anzahl Argumente
+				break;
+
+			default:
+				throw new IllegalArgumentException("multiple return values");
 		}
 
 		AuthenticationResult authenticationResult = (AuthenticationResult)result[0];
@@ -305,7 +324,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 
 			try
 			{
-				Object returnValue = internalCall(call.name, call.args);
+				Object returnValue = internalFunctionCall(call.name, call.args);
 				call.succeed(returnValue, synchronizer);
 			}
 			catch (AuthenticationMissmatchException ex)
@@ -316,7 +335,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 
 				invokeLogin(activeUserName, activePassword, activeRequest, "loginRepeated");
 
-				Object returnValue = internalCall(call.name, call.args);
+				Object returnValue = internalFunctionCall(call.name, call.args);
 				call.succeed(returnValue, synchronizer);
 			}
 		}
@@ -335,11 +354,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 
 		try
 		{
-			Object[] result = internalCall(name, args);
-			@SuppressWarnings("unchecked")
-			T returnValue = (T)result[0];
-
-			return returnValue;
+			return internalFunctionCall(name, args);
 		}
 		catch (AuthenticationMissmatchException ex)
 		{
@@ -349,12 +364,33 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 
 			invokeLogin(activeUserName, activePassword, activeRequest, "loginRepeated");
 
-			Object[] result = internalCall(name, args);
-			@SuppressWarnings("unchecked")
-			T returnValue = (T)result[0];
-
-			return returnValue;
+			return internalFunctionCall(name, args);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <T> T internalFunctionCall(String name, Object[] args) throws Exception
+	{
+		Object[] result = internalCall(name, args);
+
+		if (result.length == 0)
+		{
+			return null;
+		}
+
+		if (result.length != 1)
+		{
+			throw new IllegalArgumentException("multiple return values");
+		}
+
+		Object returnValue = result[0];
+
+		if (returnValue instanceof Exception)
+		{
+			throw ((Exception)returnValue);
+		}
+
+		return (T)returnValue;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -427,19 +463,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 				input.setInputStream(inputStream);
 
 				// Antwort aus Datenstrom lesen
-				Object[] result = kryo.readObject(input, Object[].class);
-
-				if (result.length == 0)
-				{
-					return null;
-				}
-
-				if (result[0] instanceof Exception)
-				{
-					throw (Exception)result[0];
-				}
-
-				return result;
+				return kryo.readObject(input, Object[].class);
 			}
 
 			finally

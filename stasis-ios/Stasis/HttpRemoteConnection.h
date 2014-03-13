@@ -22,10 +22,10 @@
 	KryoInput *_input;
 	NSString *_userName;
 	NSString *_password;
-	SInt32 _clientVersion;
+	NSDictionary *_parameters;
 	NSString *_activeUserName;
 	NSString *_activePassword;
-	SInt32 _activeClientVersion;
+	NSDictionary *_activeParameters;
 	id<HandshakeHandler> _handshakeHandler;
 	HTTPCookieStorage *_cookieStorage;
 }

@@ -30,6 +30,10 @@
 		AA643ED1181D39060025B2EA /* Stasis.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D390965C16E79CCA0012B221 /* Stasis.h */; };
 		AA643ED2181D39060025B2EA /* StasisAsyncServiceWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D39ED1AE16E7A36D001AA271 /* StasisAsyncServiceWrapper.h */; };
 		AA643ED3181D39060025B2EA /* StasisError.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AAC431BE181AC820005FC2B6 /* StasisError.h */; };
+		AA727A9018D1AC6100DDC086 /* MessageException.m in Sources */ = {isa = PBXBuildFile; fileRef = AA727A8D18D1AC6100DDC086 /* MessageException.m */; };
+		AA727A9118D1AC6100DDC086 /* MessageExceptionSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AA727A8F18D1AC6100DDC086 /* MessageExceptionSerializer.m */; };
+		AA727A9218D1ACF900DDC086 /* MessageException.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA727A8C18D1AC6100DDC086 /* MessageException.h */; };
+		AA727A9318D1ACF900DDC086 /* MessageExceptionSerializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA727A8E18D1AC6100DDC086 /* MessageExceptionSerializer.h */; };
 		AA922E0E17BF884C009B71F2 /* AuthenticationResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AA922E0D17BF884C009B71F2 /* AuthenticationResult.m */; };
 		AAA7C5B11763456800E9DA70 /* CTBlockDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */; };
 		AAA7C5B21763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */; };
@@ -94,6 +98,8 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				AA727A9218D1ACF900DDC086 /* MessageException.h in CopyFiles */,
+				AA727A9318D1ACF900DDC086 /* MessageExceptionSerializer.h in CopyFiles */,
 				AA643EC2181D39060025B2EA /* AuthenticationMissmatchException.h in CopyFiles */,
 				AA643EC3181D39060025B2EA /* AuthenticationMissmatchExceptionSerializer.h in CopyFiles */,
 				AA643EC4181D39060025B2EA /* AuthenticationResult.h in CopyFiles */,
@@ -129,6 +135,10 @@
 		AA5F9353181AD737000BC4DD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/StasisErrors.strings; sourceTree = "<group>"; };
 		AA5F9355181AD77A000BC4DD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/StasisErrors.strings; sourceTree = "<group>"; };
 		AA6F20AE17A29F900087C3AC /* HandshakeHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HandshakeHandler.h; sourceTree = "<group>"; };
+		AA727A8C18D1AC6100DDC086 /* MessageException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageException.h; sourceTree = "<group>"; };
+		AA727A8D18D1AC6100DDC086 /* MessageException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageException.m; sourceTree = "<group>"; };
+		AA727A8E18D1AC6100DDC086 /* MessageExceptionSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageExceptionSerializer.h; sourceTree = "<group>"; };
+		AA727A8F18D1AC6100DDC086 /* MessageExceptionSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageExceptionSerializer.m; sourceTree = "<group>"; };
 		AA922E0C17BF884C009B71F2 /* AuthenticationResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationResult.h; sourceTree = "<group>"; };
 		AA922E0D17BF884C009B71F2 /* AuthenticationResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthenticationResult.m; sourceTree = "<group>"; };
 		AAA7C5A91763432000E9DA70 /* Kryo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Kryo.xcodeproj; path = ../../kryococoa/Kryo.xcodeproj; sourceTree = "<group>"; };
@@ -281,6 +291,10 @@
 				AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */,
 				AA4C177A1779C1E8009F6BD0 /* LocalTimeSerializer.h */,
 				AA4C177B1779C1E8009F6BD0 /* LocalTimeSerializer.m */,
+				AA727A8C18D1AC6100DDC086 /* MessageException.h */,
+				AA727A8D18D1AC6100DDC086 /* MessageException.m */,
+				AA727A8E18D1AC6100DDC086 /* MessageExceptionSerializer.h */,
+				AA727A8F18D1AC6100DDC086 /* MessageExceptionSerializer.m */,
 				D3EDD22F16E6634B005339C3 /* RemoteConnection.h */,
 				D3EDD23016E6634B005339C3 /* RemoteConnection.m */,
 				D3EDD23416E751F6005339C3 /* SerializableException.h */,
@@ -424,10 +438,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA727A9018D1AC6100DDC086 /* MessageException.m in Sources */,
 				D3EDD23316E6635B005339C3 /* HttpRemoteConnection.m in Sources */,
 				D3EDD23616E751F6005339C3 /* SerializableException.m in Sources */,
 				D3EDD23916E7520A005339C3 /* SerializableExceptionSerializer.m in Sources */,
 				D3EDD27316E75F5C005339C3 /* RemoteConnection.m in Sources */,
+				AA727A9118D1AC6100DDC086 /* MessageExceptionSerializer.m in Sources */,
 				D308C60A16E768A000FEBEE9 /* AuthenticationMissmatchException.m in Sources */,
 				D308C60D16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.m in Sources */,
 				AA223EC118182541005FD91B /* HTTPCookieStorage.m in Sources */,
@@ -606,10 +622,7 @@
 					"\"/Users/cfruth/Library/Developer/Xcode/DerivedData/KryoCocoa-apdomryzocgostgfwjcqxxxilkkl/Build/Products/Debug-iphoneos\"",
 					"\"/Users/christian/Library/Developer/Xcode/DerivedData/EmployeePortal-exfqlzkyjsbrdegugzzebazsuclh/Build/Products/Debug-iphoneos\"",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -630,10 +643,7 @@
 					"\"/Users/cfruth/Library/Developer/Xcode/DerivedData/KryoCocoa-apdomryzocgostgfwjcqxxxilkkl/Build/Products/Debug-iphoneos\"",
 					"\"/Users/christian/Library/Developer/Xcode/DerivedData/EmployeePortal-exfqlzkyjsbrdegugzzebazsuclh/Build/Products/Debug-iphoneos\"",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};

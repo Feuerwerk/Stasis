@@ -19,16 +19,28 @@
 
 - (void)write:(Kryo *)kryo value:(id)value to:(KryoOutput *)output
 {
-	SerializableException *exception = value;
-	[kryo writeNullableObject:exception.name withClass:[NSString class] to:output];
-	[kryo writeNullableObject:exception.reason withClass:[NSString class] to:output];
+	[NSException raise:NSInternalInconsistencyException format:@"%@ is an unsupported operation", NSStringFromSelector(_cmd)];
 }
 
-- (id)read:(Kryo *)kryo withClass:(Class)type from:(KryoInput *)input
+- (id)read:(Kryo *)kryo withClass:(Class)clazz from:(KryoInput *)input
 {
-	NSString *ident = [kryo readNullableObject:input ofClass:[NSString class]];
-	NSString *message = [kryo readNullableObject:input ofClass:[NSString class]];
-	return [SerializableException exceptionWithIdent:ident andMessage:message];
+	NSString *type = [input readString];
+	NSString *message = [input readString];
+	SInt32 stackLength = [input readIntOptimizePositive:YES];
+	NSMutableArray *stackSymbols = [NSMutableArray arrayWithCapacity:stackLength];
+	
+	for (SInt32 i = 0; i < stackLength; ++i)
+	{
+		NSString *className = [input readString];
+		NSString *methodName = [input readString];
+		NSString *fileName = [input readString];
+		SInt32 lineNumber = [input readIntOptimizePositive:YES];
+		NSString *stackSymbol = [NSString stringWithFormat:@"%@.%@(%@:%d)", className, methodName, fileName, (int)lineNumber];
+		
+		[stackSymbols addObject:stackSymbol];
+	}
+
+	return [SerializableException exceptionWithType:type message:message andStackSymbols:stackSymbols];
 }
 
 @end
