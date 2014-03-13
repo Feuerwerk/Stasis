@@ -368,10 +368,18 @@ public class StasisControllerV2 implements Controller, ApplicationContextAware, 
 		Map<String, Object> payload = (Map)args[2];
 		Map<String, Object> result = new HashMap<>();
 
-		if ((loginValidator == null) || loginValidator.validate(payload, result))
+		if ((loginValidator == null) || loginValidator.preAuthenticate(payload, result))
 		{
 			LoginStatus loginStatus = loginService.login(userName, password);
-			authenticationResult = loginStatus.isAuthenticated() ? AuthenticationResult.Authenticated : AuthenticationResult.Unauthenticated;
+
+			if ((loginValidator == null) || loginValidator.postAuthenticate(loginStatus, payload, result))
+			{
+				authenticationResult = loginStatus.isAuthenticated() ? AuthenticationResult.Authenticated : AuthenticationResult.Unauthenticated;
+			}
+			else
+			{
+				authenticationResult = AuthenticationResult.Invalid;
+			}
 		}
 		else
 		{

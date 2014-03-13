@@ -2,14 +2,14 @@ package de.boxxit.stasis.spring;
 
 import java.util.Map;
 import de.boxxit.stasis.StasisConstants;
+import de.boxxit.stasis.security.LoginException;
+import de.boxxit.stasis.security.LoginStatus;
 
 /**
  * User: Christian Fruth
  */
 public class SimpleVersionLoginValidator implements LoginValidator
 {
-
-
 	private int serverVersion;
 	private String vmmRedirectPath;
 	private String vmmSerializerHint;
@@ -34,7 +34,7 @@ public class SimpleVersionLoginValidator implements LoginValidator
 	}
 
 	@Override
-	public boolean validate(Map<String, Object> request, Map<String, Object> response)
+	public boolean preAuthenticate(Map<String, Object> request, Map<String, Object> response) throws LoginException
 	{
 		Number clientVersion = (Number)request.get(StasisConstants.VERSION_NUMBER_KEY);
 
@@ -55,6 +55,12 @@ public class SimpleVersionLoginValidator implements LoginValidator
 			return false;
 		}
 
+		return true;
+	}
+
+	@Override
+	public boolean postAuthenticate(LoginStatus loginStatus, Map<String, Object> request, Map<String, Object> response) throws LoginException
+	{
 		return true;
 	}
 }
