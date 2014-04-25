@@ -260,6 +260,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 			@catch (NSException *ex)
 			{
 				NSLog(@"Request %@ returned, but throw exception: %@", name, ex.description);
+				NSLog(@"StackTrace: %@", ex.callStackSymbols);
 				errorHandler([ExceptionError errorWithException:ex]);
 			}
 			@finally
