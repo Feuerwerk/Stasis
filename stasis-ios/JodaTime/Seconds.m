@@ -20,4 +20,9 @@
 	return newSeconds;
 }
 
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"%li", (long)_seconds];
+}
+
 @end

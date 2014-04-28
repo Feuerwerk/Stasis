@@ -18,6 +18,7 @@
 + (instancetype)dateFromMillis:(UInt64)millis;
 + (instancetype)dateFromDate:(NSDate *)date;
 + (instancetype)dateFromYear:(NSInteger)year month:(NSInteger)monthOfYear andDay:(NSInteger)dayOfMonth;
++ (instancetype)dateFromYear:(NSInteger)year weekOfYear:(NSInteger)weekOfYear andDayOfWeek:(NSInteger)dayOfWeek;
 
 - (id)initFromDate:(NSDate *)date;
 - (id)initFromComponents:(NSDateComponents *)components;
@@ -43,6 +44,7 @@
 - (NSInteger)dayOfMonth;
 - (WeekDays)dayOfWeek;
 - (NSInteger)dayOfYear;
+- (NSInteger)weekyear;
 - (NSInteger)weekOfWeekyear;
 
 - (NSComparisonResult)compare:(LocalDate *)aDate;

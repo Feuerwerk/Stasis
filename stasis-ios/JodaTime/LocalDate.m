@@ -43,6 +43,17 @@ static NSDateFormatter *descriptionFormatter = nil;
 	return [[LocalDate alloc] initFromComponents:components];
 }
 
++ (instancetype)dateFromYear:(NSInteger)year weekOfYear:(NSInteger)weekOfYear andDayOfWeek:(NSInteger)dayOfWeek
+{
+	NSDateComponents *components = [NSDateComponents new];
+	
+	components.yearForWeekOfYear = year;
+	components.weekOfYear = weekOfYear;
+	components.weekday = dayOfWeek;
+	
+	return [[LocalDate alloc] initFromComponents:components];
+}
+
 - (id)initFromDate:(NSDate *)date
 {
 	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit fromDate:date];
@@ -178,6 +189,11 @@ static NSDateFormatter *descriptionFormatter = nil;
 - (NSInteger)dayOfYear
 {
 	return [[NSCalendar currentCalendar] ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:_date];
+}
+
+- (NSInteger)weekyear
+{
+	return [[NSCalendar currentCalendar] components:NSYearForWeekOfYearCalendarUnit fromDate:_date].yearForWeekOfYear;
 }
 
 - (NSInteger)weekOfWeekyear

@@ -20,4 +20,9 @@
 	return newMinutes;
 }
 
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"%li", (long)_minutes];
+}
+
 @end

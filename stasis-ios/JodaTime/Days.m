@@ -20,4 +20,9 @@
 	return newDays;
 }
 
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"%li", (long)_days];
+}
+
 @end
