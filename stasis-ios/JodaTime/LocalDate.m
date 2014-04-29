@@ -141,7 +141,7 @@ static NSDateFormatter *descriptionFormatter = nil;
 - (LocalDate *)withDayOfMonth:(NSInteger)dayOfMonth
 {
 	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit fromDate:_date];
-	components.month = dayOfMonth;
+	components.day = dayOfMonth;
 	return [[LocalDate alloc] initFromComponents:components];
 }
 
