@@ -38,8 +38,10 @@
 		AAA7C5B11763456800E9DA70 /* CTBlockDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */; };
 		AAA7C5B21763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */; };
 		AAA7C5B41763460B00E9DA70 /* libKryo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7C5B31763460B00E9DA70 /* libKryo.a */; };
+		AAB897C0191BD64F001ADD6E /* UUIDSerializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D22F4D513C706CD597BF64D7 /* UUIDSerializer.h */; };
 		AAC431C0181AC820005FC2B6 /* StasisError.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC431BF181AC820005FC2B6 /* StasisError.m */; };
 		AAC7B99D171584810045EF72 /* LocalDateTimeSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */; };
+		D22F4775C7DD411423551C7E /* UUIDSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D22F437765DAF584201C6EAF /* UUIDSerializer.m */; };
 		D308C60A16E768A000FEBEE9 /* AuthenticationMissmatchException.m in Sources */ = {isa = PBXBuildFile; fileRef = D308C60916E768A000FEBEE9 /* AuthenticationMissmatchException.m */; };
 		D308C60D16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D308C60C16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.m */; };
 		D30BC9EF16EA0B90003FD3F6 /* LocalDateSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D30BC9EE16EA0B90003FD3F6 /* LocalDateSerializer.m */; };
@@ -98,6 +100,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				AAB897C0191BD64F001ADD6E /* UUIDSerializer.h in CopyFiles */,
 				AA727A9218D1ACF900DDC086 /* MessageException.h in CopyFiles */,
 				AA727A9318D1ACF900DDC086 /* MessageExceptionSerializer.h in CopyFiles */,
 				AA643EC2181D39060025B2EA /* AuthenticationMissmatchException.h in CopyFiles */,
@@ -152,6 +155,8 @@
 		AAC431F1181AD104005FC2B6 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		AAC7B99B171584810045EF72 /* LocalDateTimeSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalDateTimeSerializer.h; sourceTree = "<group>"; };
 		AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalDateTimeSerializer.m; sourceTree = "<group>"; };
+		D22F437765DAF584201C6EAF /* UUIDSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUIDSerializer.m; sourceTree = "<group>"; };
+		D22F4D513C706CD597BF64D7 /* UUIDSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUIDSerializer.h; sourceTree = "<group>"; };
 		D308C60816E768A000FEBEE9 /* AuthenticationMissmatchException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationMissmatchException.h; sourceTree = "<group>"; };
 		D308C60916E768A000FEBEE9 /* AuthenticationMissmatchException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthenticationMissmatchException.m; sourceTree = "<group>"; };
 		D308C60B16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationMissmatchExceptionSerializer.h; sourceTree = "<group>"; };
@@ -307,6 +312,8 @@
 				AAC431BE181AC820005FC2B6 /* StasisError.h */,
 				AAC431BF181AC820005FC2B6 /* StasisError.m */,
 				D3EDD22416E661E6005339C3 /* Supporting Files */,
+				D22F4D513C706CD597BF64D7 /* UUIDSerializer.h */,
+				D22F437765DAF584201C6EAF /* UUIDSerializer.m */,
 			);
 			path = Stasis;
 			sourceTree = "<group>";
@@ -456,6 +463,7 @@
 				AAA7C5B21763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m in Sources */,
 				AA4C177C1779C1E8009F6BD0 /* LocalTimeSerializer.m in Sources */,
 				AA922E0E17BF884C009B71F2 /* AuthenticationResult.m in Sources */,
+				D22F4775C7DD411423551C7E /* UUIDSerializer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,7 +16,6 @@
 
 @interface HttpRemoteConnection : RemoteConnection
 {
-	NSURL *_url;
 	Kryo *_kryo;
 	KryoOutput *_output;
 	KryoInput *_input;

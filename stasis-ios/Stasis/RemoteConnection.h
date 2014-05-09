@@ -18,8 +18,9 @@ typedef enum { Unconnected, Connected, Authenticated } ConnectionState;
 
 @interface RemoteConnection : NSObject
 {
-	@protected
+@protected
 	ConnectionState _state;
+	NSURL *_url;
 }
 
 + (instancetype)connectionFromUrl:(NSURL *)url;
@@ -38,5 +39,7 @@ typedef enum { Unconnected, Connected, Authenticated } ConnectionState;
 - (void)registerClass:(Class)type usingSerializer:(id<Serializer>)serializer;
 - (void)registerClass:(Class)type andIdent:(NSInteger)ident;
 - (void)registerClass:(Class)type usingSerializer:(id<Serializer>)serializer andIdent:(NSInteger)ident;
+
+@property (readonly) NSURL *url;
 
 @end
