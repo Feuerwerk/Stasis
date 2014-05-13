@@ -8,6 +8,7 @@
 
 #import "Minutes.h"
 #import "LocalDateTime.h"
+#import "LocalTime.h"
 
 @implementation Minutes
 
@@ -15,6 +16,15 @@
 {
 	NSCalendar *calendar = [NSCalendar currentCalendar];
 	NSDateComponents *components = [calendar components:NSMinuteCalendarUnit fromDate:startDate.date toDate:stopDate.date options:0];
+	Minutes *newMinutes = [Minutes new];
+	newMinutes->_minutes = components.minute;
+	return newMinutes;
+}
+
++ (instancetype)minutesOfTimeBetween:(LocalTime *)startTime and:(LocalTime *)stopTime
+{
+	NSCalendar *calendar = [NSCalendar currentCalendar];
+	NSDateComponents *components = [calendar components:NSMinuteCalendarUnit fromDate:startTime.date toDate:startTime.date options:0];
 	Minutes *newMinutes = [Minutes new];
 	newMinutes->_minutes = components.minute;
 	return newMinutes;
