@@ -10,6 +10,7 @@
 #import "RemoteConnection.h"
 #import "Kryo.h"
 #import "CTBlockDescription.h"
+#import "AsyncServiceDelegate.h"
 #import <objc/runtime.h>
 
 typedef void(^RawDelegatePtr)();
@@ -19,7 +20,6 @@ typedef void(^RawDelegatePtr)();
 - (id)initWithProtocol:(id)protocol name:(NSString *)serviceName andConnection:(RemoteConnection *)connection;
 - (void)writeArgumentAtIndex:(NSUInteger)index ofInvocation:(NSInvocation *)invocation havingType:(const char *)type toList:(JObjectArray *)arguments;
 - (NSString *)methodNameFromInvocation:(NSInvocation *)invocation;
-- (void (^)(id))createCompletionHandlerForDelegate:(RawDelegatePtr)delegate;
 
 @end
 
@@ -86,13 +86,22 @@ static NSMethodSignature *getMethodSignatureRecursively(Protocol *protocol, SEL 
 	}
 	
 	// Datentyp des Rückgabe-Handlers auswerten
-	//__unsafe_unretained id delegate = nil;
 	__unsafe_unretained RawDelegatePtr delegate = nil;
 	[invocation getArgument:&delegate atIndex:argumentCount - 1];
-	void (^resultHandler)(id) = [self createCompletionHandlerForDelegate:delegate]; // Einen Completion-Handler erzeugen, der mit dem Parameter des Blocks kompatibel ist
-	
+
 	// Abfrage an Server senden
-	[_connection callAsync:name withArguments:arguments returning:resultHandler error:^(NSError *error) { [self handleError:error]; }];
+	if ((_delegate != nil) && [_delegate respondsToSelector:@selector(serviceCallWillBegin)])
+	{
+		[_delegate serviceCallWillBegin];
+	}
+
+	RawDelegatePtr retainedDelegate = delegate;
+	[_connection callAsync:name withArguments:arguments returning:^(id result) { [self handleResult:result forDelegate:retainedDelegate];	} error:^(NSError *error) { [self handleError:error]; }];
+
+	if ((_delegate != nil) && [_delegate respondsToSelector:@selector(serviceCallDidBegin)])
+	{
+		[_delegate serviceCallDidBegin];
+	}
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector
@@ -130,12 +139,8 @@ static NSMethodSignature *getMethodSignatureRecursively(Protocol *protocol, SEL 
 
 -(BOOL)isKindOfClass:(Class)aClass;
 {
-	if ((aClass == [self class]) || (aClass == [NSProxy class]))
-	{
-		return YES;
-	}
+	return (aClass == [self class]) || (aClass == [NSProxy class]);
 
-	return NO;
 }
 
 - (void)writeArgumentAtIndex:(NSUInteger)index ofInvocation:(NSInvocation *)invocation havingType:(const char *)type toList:(JObjectArray *)arguments
@@ -230,171 +235,156 @@ static NSMethodSignature *getMethodSignatureRecursively(Protocol *protocol, SEL 
 	return methodName;
 }
 
-- (void (^)(id))createCompletionHandlerForDelegate:(RawDelegatePtr)delegate
+- (void)handleResult:(id)result forDelegate:(RawDelegatePtr)delegate
 {
+	if ((_delegate != nil) && [_delegate respondsToSelector:@selector(serviceCallWillFinish)])
+	{
+		[_delegate serviceCallWillFinish];
+	}
+
 	CTBlockDescription *blockDescription = [[CTBlockDescription alloc] initWithBlock:delegate];
 	NSMethodSignature *blockSignature = blockDescription.blockSignature;
 	NSUInteger blockArgumentCount = blockSignature.numberOfArguments;
 
 	if (blockArgumentCount == 1)
 	{
-		return ^(id result)
-		{
-			void (^voidDelegate)() = delegate;
-			voidDelegate();
-		};
+		void (^voidDelegate)() = delegate;
+		voidDelegate();
 	}
 	else if (blockArgumentCount == 2)
 	{
 		const char *type = [blockSignature getArgumentTypeAtIndex:1];
-		
+
 		if (strcmp(type, @encode(bool)) == 0)
 		{
-			return ^(id result)
+			void (^boolDelegate)(bool) = (void (^)(bool))delegate;
+
+			if (![result isKindOfClass:[JNumeric class]])
 			{
-				void (^boolDelegate)(bool) = (void (^)(bool))delegate;
-				
-				if (![result isKindOfClass:[JNumeric class]])
-				{
-					[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
-				}
-				
-				JNumeric *numeric = result;
-				boolDelegate(numeric.boolValue);
-			};
+				[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
+			}
+
+			JNumeric *numeric = result;
+			boolDelegate(numeric.boolValue);
 		}
-		
-		if (strcmp(type, @encode(SInt8)) == 0)
+		else if (strcmp(type, @encode(SInt8)) == 0)
 		{
-			return ^(id result)
+			void (^byteDelegate)(SInt8) = (void (^)(SInt8))delegate;
+
+			if (![result isKindOfClass:[JNumeric class]])
 			{
-				void (^byteDelegate)(SInt8) = (void (^)(SInt8))delegate;
-				
-				if (![result isKindOfClass:[JNumeric class]])
-				{
-					[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
-				}
-				
-				JNumeric *numeric = result;
-				byteDelegate(numeric.byteValue);
-			};
+				[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
+			}
+
+			JNumeric *numeric = result;
+			byteDelegate(numeric.byteValue);
 		}
-		
-		if (strcmp(type, @encode(SInt16)) == 0)
+		else if (strcmp(type, @encode(SInt16)) == 0)
 		{
-			return ^(id result)
+			void (^shortDelegate)(SInt16) = (void (^)(SInt16))delegate;
+
+			if (![result isKindOfClass:[JNumeric class]])
 			{
-				void (^shortDelegate)(SInt16) = (void (^)(SInt16))delegate;
-				
-				if (![result isKindOfClass:[JNumeric class]])
-				{
-					[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
-				}
-				
-				JNumeric *numeric = result;
-				shortDelegate(numeric.shortValue);
-			};
+				[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
+			}
+
+			JNumeric *numeric = result;
+			shortDelegate(numeric.shortValue);
 		}
-		
-		if (strcmp(type, @encode(SInt32)) == 0)
+		else if (strcmp(type, @encode(SInt32)) == 0)
 		{
-			return ^(id result)
+			void (^intDelegate)(SInt32) = (void (^)(SInt32))delegate;
+
+			if (![result isKindOfClass:[JNumeric class]])
 			{
-				void (^intDelegate)(SInt32) = (void (^)(SInt32))delegate;
-				
-				if (![result isKindOfClass:[JNumeric class]])
-				{
-					[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
-				}
-			
-				JNumeric *numeric = result;
-				intDelegate(numeric.intValue);
-			};
+				[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
+			}
+
+			JNumeric *numeric = result;
+			intDelegate(numeric.intValue);
 		}
-		
-		if (strcmp(type, @encode(SInt64)) == 0)
+		else if (strcmp(type, @encode(SInt64)) == 0)
 		{
-			return ^(id result)
+			void (^longDelegate)(SInt64) = (void (^)(SInt64))delegate;
+
+			if (![result isKindOfClass:[JNumeric class]])
 			{
-				void (^longDelegate)(SInt64) = (void (^)(SInt64))delegate;
-				
-				if (![result isKindOfClass:[JNumeric class]])
-				{
-					[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
-				}
-				
-				JNumeric *numeric = result;
-				longDelegate(numeric.longValue);
-			};
+				[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
+			}
+
+			JNumeric *numeric = result;
+			longDelegate(numeric.longValue);
 		}
-		
-		if (strcmp(type, @encode(float)) == 0)
+		else if (strcmp(type, @encode(float)) == 0)
 		{
-			return ^(id result)
+			void (^floatDelegate)(float) = (void (^)(float))delegate;
+
+			if (![result isKindOfClass:[JNumeric class]])
 			{
-				void (^floatDelegate)(float) = (void (^)(float))delegate;
-				
-				if (![result isKindOfClass:[JNumeric class]])
-				{
-					[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
-				}
-				
-				JNumeric *numeric = result;
-				floatDelegate(numeric.floatValue);
-			};
+				[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
+			}
+
+			JNumeric *numeric = result;
+			floatDelegate(numeric.floatValue);
 		}
-		
-		if (strcmp(type, @encode(double)) == 0)
+		else if (strcmp(type, @encode(double)) == 0)
 		{
-			return ^(id result)
+			void (^doubleDelegate)(double) = (void (^)(double))delegate;
+
+			if (![result isKindOfClass:[JNumeric class]])
 			{
-				void (^doubleDelegate)(double) = (void (^)(double))delegate;
-				
-				if (![result isKindOfClass:[JNumeric class]])
-				{
-					[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
-				}
-				
-				JNumeric *numeric = result;
-				doubleDelegate(numeric.doubleValue);
-			};
+				[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
+			}
+
+			JNumeric *numeric = result;
+			doubleDelegate(numeric.doubleValue);
 		}
-		
-		if (strcmp(type, @encode(id)) == 0)
+		else if (strcmp(type, @encode(id)) == 0)
 		{
-			return ^(id result)
-			{
-				void (^objectDelegate)(id) = (void (^)(id))delegate;
-				objectDelegate(result);
-			};
+			void (^objectDelegate)(id) = (void (^)(id))delegate;
+			objectDelegate(result);
 		}
-        
-        if (type[0] == '@')
-        {
-            return ^(id result)
-			{
-				void (^objectDelegate)(id) = (void (^)(id))delegate;
-				objectDelegate(result);
-			};
-        }
-		
-		[NSException raise:NSInvalidArchiveOperationException format:@"Unsupported type %s", type];
+		else if (type[0] == '@')
+		{
+			void (^objectDelegate)(id) = (void (^)(id))delegate;
+			objectDelegate(result);
+		}
+		else
+		{
+			[NSException raise:NSInvalidArchiveOperationException format:@"Unsupported type %s", type];
+		}
 	}
 	else
 	{
 		[NSException raise:NSInvalidArgumentException format:@"Block must have one parameter or no parameter at all"];
 	}
 
-	return nil;
+	if ((_delegate != nil) && [_delegate respondsToSelector:@selector(serviceCallDidFinish)])
+	{
+		[_delegate serviceCallDidFinish];
+	}
 }
 
 - (void)handleError:(NSError *)error
 {
 	NSLog(@"Error received: %@", error.localizedDescription);
-	
-	if (_defaultErrorHandler != nil)
+
+	if (_delegate != nil)
 	{
-		_defaultErrorHandler(error);
+		if ([_delegate respondsToSelector:@selector(serviceCallWillFinish)])
+		{
+			[_delegate serviceCallWillFinish];
+		}
+
+		if ([_delegate respondsToSelector:@selector(serviceCallFailed:)])
+		{
+			[_delegate serviceCallFailed:error];
+		}
+
+		if ([_delegate respondsToSelector:@selector(serviceCallDidFinish)])
+		{
+			[_delegate serviceCallDidFinish];
+		}
 	}
 }
 

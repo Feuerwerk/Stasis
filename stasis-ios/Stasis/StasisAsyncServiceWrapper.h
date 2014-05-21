@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void(^ErrorHandler)(NSError *error);
-
 @class RemoteConnection;
+@protocol AsyncServiceDelegate;
 
 @interface StasisAsyncServiceWrapper : NSProxy
 {
@@ -21,7 +20,7 @@ typedef void(^ErrorHandler)(NSError *error);
 	Protocol *_protocol;
 }
 
-@property (nonatomic, copy) ErrorHandler defaultErrorHandler;
+@property (nonatomic, weak) id<AsyncServiceDelegate> delegate;
 
 + (id)createProxy:(id)protocol forService:(NSString *)serviceName usingConnection:(RemoteConnection *)connection;
 

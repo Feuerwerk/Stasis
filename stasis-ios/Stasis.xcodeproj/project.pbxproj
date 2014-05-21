@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AA223EC118182541005FD91B /* HTTPCookieStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA223EC018182541005FD91B /* HTTPCookieStorage.m */; };
+		AA350668192CD048006BA15A /* AsyncServiceDelegate.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D22F49099EC70664A9A4A15E /* AsyncServiceDelegate.h */; };
 		AA4C177C1779C1E8009F6BD0 /* LocalTimeSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4C177B1779C1E8009F6BD0 /* LocalTimeSerializer.m */; };
 		AA5F9342181AD631000BC4DD /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC431F1181AD104005FC2B6 /* CoreFoundation.framework */; };
 		AA5F9348181AD631000BC4DD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA5F9346181AD631000BC4DD /* InfoPlist.strings */; };
@@ -100,6 +101,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				AA350668192CD048006BA15A /* AsyncServiceDelegate.h in CopyFiles */,
 				AAB897C0191BD64F001ADD6E /* UUIDSerializer.h in CopyFiles */,
 				AA727A9218D1ACF900DDC086 /* MessageException.h in CopyFiles */,
 				AA727A9318D1ACF900DDC086 /* MessageExceptionSerializer.h in CopyFiles */,
@@ -156,6 +158,7 @@
 		AAC7B99B171584810045EF72 /* LocalDateTimeSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalDateTimeSerializer.h; sourceTree = "<group>"; };
 		AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalDateTimeSerializer.m; sourceTree = "<group>"; };
 		D22F437765DAF584201C6EAF /* UUIDSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUIDSerializer.m; sourceTree = "<group>"; };
+		D22F49099EC70664A9A4A15E /* AsyncServiceDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncServiceDelegate.h; sourceTree = "<group>"; };
 		D22F4D513C706CD597BF64D7 /* UUIDSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUIDSerializer.h; sourceTree = "<group>"; };
 		D308C60816E768A000FEBEE9 /* AuthenticationMissmatchException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthenticationMissmatchException.h; sourceTree = "<group>"; };
 		D308C60916E768A000FEBEE9 /* AuthenticationMissmatchException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthenticationMissmatchException.m; sourceTree = "<group>"; };
@@ -314,6 +317,7 @@
 				D3EDD22416E661E6005339C3 /* Supporting Files */,
 				D22F4D513C706CD597BF64D7 /* UUIDSerializer.h */,
 				D22F437765DAF584201C6EAF /* UUIDSerializer.m */,
+				D22F49099EC70664A9A4A15E /* AsyncServiceDelegate.h */,
 			);
 			path = Stasis;
 			sourceTree = "<group>";
