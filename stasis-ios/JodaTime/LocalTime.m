@@ -22,6 +22,14 @@
 
 static NSDateFormatter *descriptionFormatter = nil;
 
++ (instancetype)midnight
+{
+	static LocalTime *_midnight = nil;
+	static dispatch_once_t once = 0;
+	dispatch_once(&once, ^{ _midnight = [LocalTime timeFromMillisOfDay:0]; });
+	return _midnight;
+}
+
 + (instancetype)time
 {
 	return [[LocalTime alloc] init];
@@ -94,7 +102,11 @@ static NSDateFormatter *descriptionFormatter = nil;
 
 - (id)initFromDate:(NSDate *)date
 {
-	return [self initFromComponents:[[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:date]];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:date];
+	components.year = 1970;
+	components.month = 1;
+	components.day = 1;
+	return [self initFromComponents:components];
 }
 
 - (id)initFromComponents:(NSDateComponents *)components
@@ -236,9 +248,19 @@ static NSDateFormatter *descriptionFormatter = nil;
 	return [_date compare:aTime.date] == NSOrderedAscending;
 }
 
+- (BOOL)isBeforeOrEqual:(LocalTime *)aTime
+{
+	return [_date compare:aTime.date] != NSOrderedDescending;
+}
+
 - (BOOL)isAfter:(LocalTime *)aTime
 {
 	return [_date compare:aTime.date] == NSOrderedDescending;
+}
+
+- (BOOL)isAfterOrEqual:(LocalTime *)aTime
+{
+	return [_date compare:aTime.date] != NSOrderedAscending;
 }
 
 @end

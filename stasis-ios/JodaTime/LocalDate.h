@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "WeekDays.h"
 
+@class LocalDateTime;
+@class LocalTime;
+
 @interface LocalDate : NSObject
 {
 	NSDate *_date;
@@ -54,5 +57,8 @@
 - (BOOL)isAfterOrEqual:(LocalDate *)aDate;
 - (BOOL)isEqual:(id)object;
 - (BOOL)isEqualToDate:(LocalDate *)aDate;
+
+- (LocalDateTime *)atTime:(LocalTime *)time;
+- (LocalDateTime *)atStartOfDay;
 
 @end

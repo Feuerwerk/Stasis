@@ -7,6 +7,8 @@
 //
 
 #import "LocalDate.h"
+#import "LocalDateTime.h"
+#import "LocalTime.h"
 
 @implementation LocalDate
 
@@ -158,7 +160,7 @@ static NSDateFormatter *descriptionFormatter = nil;
 
 - (UInt64)millis
 {
-	return _date.timeIntervalSince1970 * 1000;
+	return (UInt64)(_date.timeIntervalSince1970 * 1000);
 }
 
 - (NSDate *)date
@@ -267,6 +269,16 @@ static NSDateFormatter *descriptionFormatter = nil;
 - (BOOL)isEqualToDate:(LocalDate *)aDate
 {
 	return [_date isEqualToDate:aDate.date];
+}
+
+- (LocalDateTime *)atTime:(LocalTime *)time
+{
+	return [LocalDateTime dateFromDate:self andTime:time];
+}
+
+- (LocalDateTime *)atStartOfDay
+{
+	return [LocalDateTime dateFromDate:self andTime:[LocalTime midnight]];
 }
 
 @end

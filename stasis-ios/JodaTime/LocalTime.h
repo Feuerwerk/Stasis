@@ -10,6 +10,8 @@
 
 @interface LocalTime : NSObject
 
++ (instancetype)midnight;
+
 + (instancetype)time;
 + (instancetype)timeFromMillisOfDay:(UInt64)millisOfDay;
 + (instancetype)timeFromDate:(NSDate *)date;
@@ -40,6 +42,8 @@
 
 - (NSComparisonResult)compare:(LocalTime *)aTime;
 - (BOOL)isBefore:(LocalTime *)aTime;
+- (BOOL)isBeforeOrEqual:(LocalTime *)aTime;
 - (BOOL)isAfter:(LocalTime *)aTime;
+- (BOOL)isAfterOrEqual:(LocalTime *)aTime;
 
 @end

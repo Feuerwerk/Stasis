@@ -7,6 +7,8 @@
 //
 
 #import "LocalDateTime.h"
+#import "LocalDate.h"
+#import "LocalTime.h"
 
 @interface LocalDateTime ()
 
@@ -32,6 +34,18 @@ static NSDateFormatter *descriptionFormatter = nil;
     }
 
 	return [[LocalDateTime alloc] initFromDate:date];
+}
+
++ (instancetype)dateFromDate:(LocalDate *)date andTime:(LocalTime *)time
+{
+	NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:date.date];
+	NSDateComponents *timeComponents = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:time.date];
+
+	dateComponents.hour = timeComponents.hour;
+	dateComponents.minute = timeComponents.minute;
+	dateComponents.second = timeComponents.second;
+
+	return [[LocalDateTime alloc] initFromComponents:dateComponents];
 }
 
 + (instancetype)dateFromMillis:(UInt64)millis

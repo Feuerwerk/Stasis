@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "WeekDays.h"
 
+@class LocalDate;
+@class LocalTime;
+
 @interface LocalDateTime : NSObject
 {
 	NSDate *_date;
@@ -18,6 +21,7 @@
 + (instancetype)dateFromMillis:(UInt64)millis;
 + (instancetype)dateFromDate:(NSDate *)date;
 + (instancetype)dateFromYear:(NSInteger)year month:(NSInteger)monthOfYear andDay:(NSInteger)dayOfMonth;
++ (instancetype)dateFromDate:(LocalDate *)date andTime:(LocalTime *)time;
 
 - (id)initFromDate:(NSDate *)date;
 - (id)initFromComponents:(NSDateComponents *)components;
