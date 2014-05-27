@@ -170,21 +170,21 @@ static NSDateFormatter *descriptionFormatter = nil;
 
 - (LocalTime *)withHourOfDay:(NSInteger)hourOfDay
 {
-	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit fromDate:_date];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:_date];
 	components.hour = hourOfDay;
 	return [[LocalTime alloc] initFromComponents:components];
 }
 
 - (LocalTime *)withMinuteOfHour:(NSInteger)minuteOfHour
 {
-	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit fromDate:_date];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSSecondCalendarUnit fromDate:_date];
 	components.minute = minuteOfHour;
 	return [[LocalTime alloc] initFromComponents:components];
 }
 
 - (LocalTime *)withSecondOfMinute:(NSInteger)secondOfMinute
 {
-	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit fromDate:_date];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:_date];
 	components.second = secondOfMinute;
 	return [[LocalTime alloc] initFromComponents:components];
 }
@@ -192,8 +192,8 @@ static NSDateFormatter *descriptionFormatter = nil;
 
 - (UInt64)millisOfDay
 {
-	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit fromDate:_date];
-	UInt64 millisOfDay = components.hour;
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:_date];
+	UInt64 millisOfDay = (UInt64)components.hour;
 	millisOfDay = millisOfDay * 60 + components.minute;
 	millisOfDay = millisOfDay * 60 + components.second;
 	return millisOfDay * 1000;
