@@ -43,26 +43,50 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 		{
 		}
 
-		public void succeed(final T value, Synchronizer synchronizer)
+		public void callWillBegin(Synchronizer synchronizer)
 		{
 			synchronizer.runLater(new Runnable()
 			{
 				@Override
 				public void run()
 				{
-					handler.succeeded(value);
+					handler.callWillBegin();
 				}
 			});
 		}
 
-		public void fail(final Exception ex, Synchronizer synchronizer)
+		public void callDidFinish(Synchronizer synchronizer)
 		{
 			synchronizer.runLater(new Runnable()
 			{
 				@Override
 				public void run()
 				{
-					handler.failed(ex);
+					handler.callDidFinish();
+				}
+			});
+		}
+
+		public void callSucceeded(final T value, Synchronizer synchronizer)
+		{
+			synchronizer.runLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					handler.callSucceeded(value);
+				}
+			});
+		}
+
+		public void callFailed(final Exception ex, Synchronizer synchronizer)
+		{
+			synchronizer.runLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					handler.callFailed(ex);
 				}
 			});
 		}
@@ -122,7 +146,9 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 				while (true)
 				{
 					Call<?> call = pendingCalls.take();
+					call.callWillBegin(synchronizer);
 					call.execute(this);
+					call.callDidFinish(synchronizer);
 				}
 			}
 			catch (InterruptedException ex)
@@ -247,11 +273,11 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 		try
 		{
 			invokeLogin(call.userName, call.password, call.parameters, "loginFailed");
-			call.succeed(null, synchronizer);
+			call.callSucceeded(null, synchronizer);
 		}
 		catch (Exception ex)
 		{
-			call.fail(ex, synchronizer);
+			call.callFailed(ex, synchronizer);
 		}
 	}
 
@@ -325,7 +351,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 			try
 			{
 				Object returnValue = internalFunctionCall(call.name, call.args);
-				call.succeed(returnValue, synchronizer);
+				call.callSucceeded(returnValue, synchronizer);
 			}
 			catch (AuthenticationMissmatchException ex)
 			{
@@ -336,12 +362,12 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 				invokeLogin(activeUserName, activePassword, activeRequest, "loginRepeated");
 
 				Object returnValue = internalFunctionCall(call.name, call.args);
-				call.succeed(returnValue, synchronizer);
+				call.callSucceeded(returnValue, synchronizer);
 			}
 		}
 		catch (Exception ex)
 		{
-			call.fail(ex, synchronizer);
+			call.callFailed(ex, synchronizer);
 		}
 	}
 

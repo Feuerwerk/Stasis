@@ -5,7 +5,11 @@ package de.boxxit.stasis;
  */
 public interface CallHandler<T>
 {
-	public void succeeded(T value);
+	public void callWillBegin();
 
-	public void failed(Exception ex);
+	public void callSucceeded(T value);
+
+	public void callFailed(Exception ex);
+
+	public void callDidFinish();
 }

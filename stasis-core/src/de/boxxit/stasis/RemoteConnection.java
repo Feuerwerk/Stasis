@@ -8,37 +8,6 @@ import com.esotericsoftware.kryo.Serializer;
  */
 public interface RemoteConnection
 {
-	/*
-	public static RemoteConnection createConnection(String url)
-	{
-		try
-		{
-			return createConnection(new URL(url));
-		}
-		catch (MalformedURLException ex)
-		{
-			return null;
-		}
-	}
-
-	public static RemoteConnection createConnection(URL url)
-	{
-		String protocol = url.getProtocol();
-
-		if ("http".equals(protocol))
-		{
-			return new HttpRemoteConnection(url);
-		}
-
-		if ("https".equals(protocol))
-		{
-			return new HttpRemoteConnection(url);
-		}
-
-		return null;
-	}
-	*/
-
 	public void setSynchronizer(Synchronizer synchronizer);
 	public void setHandshakeHandler(HandshakeHandler handshakeHandler);
 	@SuppressWarnings("rawtypes")

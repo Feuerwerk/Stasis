@@ -14,21 +14,41 @@ public class StasisAsyncServiceWrapper
 	{
 		private ResultHandler<? super Object> eventHandler;
 		private ErrorHandler defaultErrorHandler;
+		private AsyncServiceDelegate delegate;
 
-		private CallHandlerImpl(ResultHandler<? super Object> eventHandler, ErrorHandler defaultErrorHandler)
+		private CallHandlerImpl(ResultHandler<? super Object> eventHandler, ErrorHandler defaultErrorHandler, AsyncServiceDelegate delegate)
 		{
 			this.eventHandler = eventHandler;
 			this.defaultErrorHandler = defaultErrorHandler;
+			this.delegate = delegate;
 		}
 
 		@Override
-		public void succeeded(Object value)
+		public void callWillBegin()
+		{
+			if (delegate != null)
+			{
+				delegate.serviceCallWillBegin();
+			}
+		}
+
+		@Override
+		public void callDidFinish()
+		{
+			if (delegate != null)
+			{
+				delegate.serviceCallDidFinish();
+			}
+		}
+
+		@Override
+		public void callSucceeded(Object value)
 		{
 			eventHandler.handle(value);
 		}
 
 		@Override
-		public void failed(Exception ex)
+		public void callFailed(Exception ex)
 		{
 			ex.printStackTrace();
 
@@ -41,6 +61,11 @@ public class StasisAsyncServiceWrapper
 				ErrorHandler errorHandler = defaultErrorHandler;
 				defaultErrorHandler = null;
 				errorHandler.failed(ex, this);
+			}
+
+			if (delegate != null)
+			{
+				delegate.serviceCallFailed(ex);
 			}
 		}
 
@@ -63,12 +88,30 @@ public class StasisAsyncServiceWrapper
 		private RemoteConnection connection;
 		private String serviceName;
 		private ErrorHandler defaultErrorHandler;
+		private AsyncServiceDelegate delegate;
 
 		private InvocationHandlerImpl(RemoteConnection connection, String serviceName, ErrorHandler defaultErrorHandler)
 		{
 			this.connection = connection;
 			this.serviceName = serviceName;
 			this.defaultErrorHandler = defaultErrorHandler;
+
+			try
+			{
+				equalsMethod = getClass().getMethod("equals", Object.class);
+				toStringMethod = getClass().getMethod("toString");
+			}
+			catch (NoSuchMethodException ex)
+			{
+				throw new RuntimeException(ex);
+			}
+		}
+
+		private InvocationHandlerImpl(RemoteConnection connection, String serviceName, AsyncServiceDelegate delegate)
+		{
+			this.connection = connection;
+			this.serviceName = serviceName;
+			this.delegate = delegate;
 
 			try
 			{
@@ -111,7 +154,7 @@ public class StasisAsyncServiceWrapper
 			ResultHandler<? super Object> eventHandler = (ResultHandler)lastArg;
 			String name = serviceName + "." + method.getName();
 
-			connection.callAsync(new CallHandlerImpl(eventHandler, defaultErrorHandler), name, argsSync);
+			connection.callAsync(new CallHandlerImpl(eventHandler, defaultErrorHandler, delegate), name, argsSync);
 			return null;
 		}
 
@@ -135,5 +178,12 @@ public class StasisAsyncServiceWrapper
 	{
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		return (T)Proxy.newProxyInstance(classLoader, new Class[] { serviceInterface }, new InvocationHandlerImpl(connection, serviceName, defaultErrorHandler));
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T create(Class<T> serviceInterface, RemoteConnection connection, String serviceName, AsyncServiceDelegate delegate)
+	{
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		return (T)Proxy.newProxyInstance(classLoader, new Class[] { serviceInterface }, new InvocationHandlerImpl(connection, serviceName, delegate));
 	}
 }
