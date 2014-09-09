@@ -173,6 +173,7 @@
       <module fileurl="file://$PROJECT_DIR$/stasis-android/stasis-android.iml" filepath="$PROJECT_DIR$/stasis-android/stasis-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/stasis-core/stasis-core.iml" filepath="$PROJECT_DIR$/stasis-core/stasis-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/stasis-javafx/stasis-javafx.iml" filepath="$PROJECT_DIR$/stasis-javafx/stasis-javafx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/stasis-spring/stasis-spring.iml" filepath="$PROJECT_DIR$/stasis-spring/stasis-spring.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" project-jdk-type="JavaSDK">
@@ -183,6 +184,17 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
   <component name="libraryTable">
+    <library name="Apache Commons Pool 1.6">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/commons-pool-1.6/commons-pool-1.6.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/commons-pool-1.6/commons-pool-1.6-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/commons-pool-1.6/commons-pool-1.6-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="ASM 4.0">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/asm-4.0/asm-4.0.jar!/" />
@@ -236,6 +248,125 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+    </library>
+    <library name="SLF4J 1.6.1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/slf4j-1.6.1/slf4j-api-1.6.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/slf4j-1.6.1/slf4j-log4j12-1.6.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/slf4j-1.6.1/slf4j-api-1.6.1-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/slf4j-1.6.1/slf4j-log4j12-1.6.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Spring Framework 4.0.1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-aop-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-aspects-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-beans-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-build-src-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-context-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-context-support-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-core-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-expression-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-instrument-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-instrument-tomcat-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-jdbc-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-jms-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-messaging-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-orm-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-oxm-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-test-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-tx-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-web-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-webmvc-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-webmvc-portlet-4.0.1.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-websocket-4.0.1.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-aop-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-aspects-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-beans-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-context-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-context-support-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-core-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-expression-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-instrument-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-instrument-tomcat-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-jdbc-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-jms-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-messaging-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-orm-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-oxm-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-test-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-tx-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-web-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-webmvc-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-webmvc-portlet-4.0.1.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-websocket-4.0.1.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-aop-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-aspects-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-beans-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-context-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-context-support-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-core-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-expression-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-instrument-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-instrument-tomcat-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-jdbc-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-jms-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-messaging-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-orm-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-oxm-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-test-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-tx-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-web-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-webmvc-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-webmvc-portlet-4.0.1.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-4.0.1/spring-websocket-4.0.1.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Spring Security 3.2.0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-acl-3.2.0.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-aspects-3.2.0.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-cas-3.2.0.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-config-3.2.0.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-core-3.2.0.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-crypto-3.2.0.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-ldap-3.2.0.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-openid-3.2.0.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-remoting-3.2.0.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-taglibs-3.2.0.RELEASE.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-web-3.2.0.RELEASE.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-acl-3.2.0.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-cas-3.2.0.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-config-3.2.0.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-core-3.2.0.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-crypto-3.2.0.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-ldap-3.2.0.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-openid-3.2.0.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-remoting-3.2.0.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-taglibs-3.2.0.RELEASE-javadoc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-web-3.2.0.RELEASE-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-acl-3.2.0.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-cas-3.2.0.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-config-3.2.0.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-core-3.2.0.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-crypto-3.2.0.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-ldap-3.2.0.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-openid-3.2.0.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-remoting-3.2.0.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-taglibs-3.2.0.RELEASE-sources.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/spring-security-3.2.0/spring-security-web-3.2.0.RELEASE-sources.jar!/" />
+      </SOURCES>
     </library>
   </component>
 </project>

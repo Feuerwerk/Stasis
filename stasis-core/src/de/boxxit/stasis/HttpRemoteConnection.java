@@ -292,30 +292,26 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 			request = new HashMap<String, Object>(request);
 		}
 
-		Object[] result = internalCall(LOGIN_FUNCTION, new Object[] { userName, password, request });
+		MethodResult methodResult = internalCall(LOGIN_FUNCTION, new Object[] { userName, password, request });
+		Object[] result;
 
-		switch (result.length)
+		switch (methodResult.getType())
 		{
-			case 1:
-			{
-				Object returnValue = result[0];
+			case Value:
+				result = (Object[])methodResult.getResult();
 
-				if (returnValue instanceof Exception)
+				if (result.length != 2)
 				{
-					throw ((Exception)returnValue);
+					throw new IllegalArgumentException("multiple return values");
 				}
-				else
-				{
-					throw new IllegalArgumentException("return value is not an exception");
-				}
-			}
 
-			case 2:
-				// die richtige Anzahl Argumente
 				break;
 
+			case Exception:
+				throw (Exception)methodResult.getResult();
+
 			default:
-				throw new IllegalArgumentException("multiple return values");
+				throw new IllegalArgumentException("empty return values");
 		}
 
 		AuthenticationResult authenticationResult = (AuthenticationResult)result[0];
@@ -397,30 +393,23 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 	@SuppressWarnings("unchecked")
 	protected <T> T internalFunctionCall(String name, Object[] args) throws Exception
 	{
-		Object[] result = internalCall(name, args);
+		MethodResult methodResult = internalCall(name, args);
 
-		if (result.length == 0)
+		switch (methodResult.getType())
 		{
-			return null;
+			case Value:
+				return (T)methodResult.getResult();
+
+			case Exception:
+				throw (Exception)methodResult.getResult();
+
+			default:
+				return null;
 		}
-
-		if (result.length != 1)
-		{
-			throw new IllegalArgumentException("multiple return values");
-		}
-
-		Object returnValue = result[0];
-
-		if (returnValue instanceof Exception)
-		{
-			throw ((Exception)returnValue);
-		}
-
-		return (T)returnValue;
 	}
 
 	@SuppressWarnings("unchecked")
-	protected Object[] internalCall(String name, Object[] args) throws Exception
+	protected MethodResult internalCall(String name, Object[] args) throws Exception
 	{
 		int tryCount = 0;
 
@@ -446,10 +435,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 				}
 
 				output.setOutputStream(outputStream);
-
-				kryo.writeObject(output, name);
-				kryo.writeObject(output, state == ConnectionState.Authenticated); // Dem Server mitteilen ob wir davon ausgehen, dass wir bereits authentifiziert sind
-				kryo.writeObject(output, args != null ? args : new Object[0]);
+				kryo.writeObject(output, new MethodCall(name, state == ConnectionState.Authenticated, args));
 
 				output.close();
 				output.setOutputStream(null);
@@ -489,7 +475,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 				input.setInputStream(inputStream);
 
 				// Antwort aus Datenstrom lesen
-				return kryo.readObject(input, Object[].class);
+				return kryo.readObject(input, MethodResult.class);
 			}
 
 			finally
