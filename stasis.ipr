@@ -13,6 +13,9 @@
         <element id="archive" name="stasis-android.jar">
           <element id="module-output" name="stasis-android" />
         </element>
+        <element id="archive" name="stasis-spring.jar">
+          <element id="module-output" name="stasis-spring" />
+        </element>
       </root>
     </artifact>
   </component>

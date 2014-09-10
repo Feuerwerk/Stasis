@@ -25,6 +25,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
 import de.boxxit.stasis.AuthenticationMissmatchException;
 import de.boxxit.stasis.AuthenticationResult;
+import de.boxxit.stasis.LoginResult;
 import de.boxxit.stasis.MessageException;
 import de.boxxit.stasis.MethodCall;
 import de.boxxit.stasis.MethodResult;
@@ -96,6 +97,8 @@ public class StasisControllerV3 implements Controller, ApplicationContextAware, 
 				io.kryo.addDefaultSerializer(TreeMap.class, MapSerializer.class);
 				io.kryo.addDefaultSerializer(Collections.unmodifiableList(new ArrayList<>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
 				io.kryo.addDefaultSerializer(Collections.unmodifiableList(new LinkedList<>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
+				io.kryo.register(MethodCall.class, 10);
+				io.kryo.register(MethodResult.class, 11);
 
 				if (defaultSerializer != null)
 				{
@@ -388,7 +391,7 @@ public class StasisControllerV3 implements Controller, ApplicationContextAware, 
 			authenticationResult = AuthenticationResult.Invalid;
 		}
 
-		return new MethodResult(new Object[] { authenticationResult, result });
+		return new MethodResult(new LoginResult(authenticationResult, result));
 	}
 
 	private MethodResult handleLogout(HttpServletRequest request) throws LoginException

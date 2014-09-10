@@ -293,19 +293,31 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 		}
 
 		MethodResult methodResult = internalCall(LOGIN_FUNCTION, new Object[] { userName, password, request });
-		Object[] result;
 
 		switch (methodResult.getType())
 		{
 			case Value:
-				result = (Object[])methodResult.getResult();
+			{
+				LoginResult loginResult = (LoginResult)methodResult.getResult();
 
-				if (result.length != 2)
+				if (loginResult.getAuthenticationResult() == AuthenticationResult.Authenticated)
 				{
-					throw new IllegalArgumentException("multiple return values");
+					Map<String, Object> newRequest = new HashMap<String, Object>(request);
+					newRequest.putAll(loginResult.getLoginResponse());
+
+					this.activeUserName = userName;
+					this.activePassword = password;
+					this.activeRequest = newRequest;
+
+					this.state = ConnectionState.Authenticated;
+				}
+				else
+				{
+					throw createAuthenticationException(errorCode, loginResult.getLoginResponse());
 				}
 
 				break;
+			}
 
 			case Exception:
 				throw (Exception)methodResult.getResult();
@@ -314,25 +326,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 				throw new IllegalArgumentException("empty return values");
 		}
 
-		AuthenticationResult authenticationResult = (AuthenticationResult)result[0];
-		@SuppressWarnings({ "unchecked" , "rawtypes" })
-		Map<String, Object> loginResponse = (Map)result[1];
 
-		if (authenticationResult == AuthenticationResult.Authenticated)
-		{
-			Map<String, Object> newRequest = new HashMap<String, Object>(request);
-			newRequest.putAll(loginResponse);
-
-			this.activeUserName = userName;
-			this.activePassword = password;
-			this.activeRequest = newRequest;
-
-			this.state = ConnectionState.Authenticated;
-		}
-		else
-		{
-			throw createAuthenticationException(errorCode, loginResponse);
-		}
 	}
 
 	protected void invokeFunction(FunctionCall call)
