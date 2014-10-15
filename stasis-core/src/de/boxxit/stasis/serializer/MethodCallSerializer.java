@@ -35,6 +35,9 @@ public class MethodCallSerializer extends Serializer<MethodCall>
 	@Override
 	public MethodCall read(Kryo kryo, Input input, Class<MethodCall> type)
 	{
+		MethodCall methodCall = new MethodCall();
+		kryo.reference(methodCall);
+
 		String name = input.readString();
 		boolean assumeAuthenticated = input.readBoolean();
 		int argCount = input.readInt(true);
@@ -44,8 +47,6 @@ public class MethodCallSerializer extends Serializer<MethodCall>
 		{
 			args[i] = kryo.readClassAndObject(input);
 		}
-
-		MethodCall methodCall = new MethodCall();
 
 		methodCall.setName(name);
 		methodCall.setAssumeAuthenticated(assumeAuthenticated);

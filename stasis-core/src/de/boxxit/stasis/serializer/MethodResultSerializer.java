@@ -35,6 +35,9 @@ public class MethodResultSerializer extends Serializer<MethodResult>
 	@Override
 	public MethodResult read(Kryo kryo, Input input, Class<MethodResult> type)
 	{
+		MethodResult methodResult = new MethodResult();
+		kryo.reference(methodResult);
+
 		MethodResult.Type resultType = MethodResult.Type.values()[input.readInt(true)];
 		Object result = null;
 
@@ -48,8 +51,6 @@ public class MethodResultSerializer extends Serializer<MethodResult>
 				result = kryo.readClassAndObject(input);
 				break;
 		}
-
-		MethodResult methodResult = new MethodResult();
 
 		methodResult.setType(resultType);
 		methodResult.setResult(result);
