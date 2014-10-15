@@ -1,5 +1,6 @@
 package de.boxxit.stasis;
 
+import java.net.URL;
 import java.util.Map;
 import com.esotericsoftware.kryo.Serializer;
 
@@ -18,6 +19,7 @@ public interface RemoteConnection
 	public Map<String, Object> getParameters();
 	public String getPassword();
 	public String getUserName();
+	public URL getUrl();
 
 	public <T> void register(Class<T> type, int id);
 	public <T> void register(Class<T> type, Serializer<T> serializer);

@@ -209,6 +209,12 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 	}
 
 	@Override
+	public URL getUrl()
+	{
+		return url;
+	}
+
+	@Override
 	@SuppressWarnings("rawtypes")
 	public void setDefaultSerializer(Class<? extends Serializer> defaultSerializer)
 	{
