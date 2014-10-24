@@ -11,5 +11,7 @@ public interface CallHandler<T>
 
 	public void callFailed(Exception ex);
 
+	public void callWillFinish();
+
 	public void callDidFinish();
 }

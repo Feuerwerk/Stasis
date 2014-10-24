@@ -55,18 +55,6 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 			});
 		}
 
-		public void callDidFinish(Synchronizer synchronizer)
-		{
-			synchronizer.runLater(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					handler.callDidFinish();
-				}
-			});
-		}
-
 		public void callSucceeded(final T value, Synchronizer synchronizer)
 		{
 			synchronizer.runLater(new Runnable()
@@ -74,7 +62,9 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 				@Override
 				public void run()
 				{
+					handler.callWillFinish();
 					handler.callSucceeded(value);
+					handler.callDidFinish();
 				}
 			});
 		}
@@ -86,7 +76,9 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 				@Override
 				public void run()
 				{
+					handler.callWillFinish();
 					handler.callFailed(ex);
+					handler.callDidFinish();
 				}
 			});
 		}
@@ -148,7 +140,6 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 					Call<?> call = pendingCalls.take();
 					call.callWillBegin(synchronizer);
 					call.execute(this);
-					call.callDidFinish(synchronizer);
 				}
 			}
 			catch (InterruptedException ex)

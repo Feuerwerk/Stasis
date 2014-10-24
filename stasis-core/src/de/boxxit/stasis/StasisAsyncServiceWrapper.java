@@ -33,6 +33,15 @@ public class StasisAsyncServiceWrapper
 		}
 
 		@Override
+		public void callWillFinish()
+		{
+			if (delegate != null)
+			{
+				delegate.serviceCallWillFinish();
+			}
+		}
+
+		@Override
 		public void callDidFinish()
 		{
 			if (delegate != null)

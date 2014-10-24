@@ -22,6 +22,12 @@ public class DefaultAsyncServiceDelegate implements AsyncServiceDelegate
 	}
 
 	@Override
+	public void serviceCallWillFinish()
+	{
+
+	}
+
+	@Override
 	public void serviceCallFailed(Exception ex)
 	{
 
