@@ -40,6 +40,11 @@
 		AAA7C5B21763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */; };
 		AAA7C5B41763460B00E9DA70 /* libKryo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7C5B31763460B00E9DA70 /* libKryo.a */; };
 		AAB897C0191BD64F001ADD6E /* UUIDSerializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D22F4D513C706CD597BF64D7 /* UUIDSerializer.h */; };
+		AAC205A019FA93E40040093F /* MethodCall.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC2059F19FA93E40040093F /* MethodCall.m */; };
+		AAC205A319FA93F10040093F /* MethodResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC205A219FA93F10040093F /* MethodResult.m */; };
+		AAC205A619FA941D0040093F /* MethodCallSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC205A519FA941D0040093F /* MethodCallSerializer.m */; };
+		AAC205A919FA942F0040093F /* MethodResultSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC205A819FA942F0040093F /* MethodResultSerializer.m */; };
+		AAC205B119FA9F6C0040093F /* LoginResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC205B019FA9F6C0040093F /* LoginResult.m */; };
 		AAC431C0181AC820005FC2B6 /* StasisError.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC431BF181AC820005FC2B6 /* StasisError.m */; };
 		AAC7B99D171584810045EF72 /* LocalDateTimeSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */; };
 		D22F4775C7DD411423551C7E /* UUIDSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D22F437765DAF584201C6EAF /* UUIDSerializer.m */; };
@@ -152,6 +157,16 @@
 		AAA7C5AF1763456800E9DA70 /* CTObjectiveCRuntimeAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTObjectiveCRuntimeAdditions.h; sourceTree = "<group>"; };
 		AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTObjectiveCRuntimeAdditions.m; sourceTree = "<group>"; };
 		AAA7C5B31763460B00E9DA70 /* libKryo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libKryo.a; path = "../../../../../Users/christian/Library/Developer/Xcode/DerivedData/EmployeePortal-exfqlzkyjsbrdegugzzebazsuclh/Build/Products/Debug-iphoneos/libKryo.a"; sourceTree = "<group>"; };
+		AAC2059E19FA93E40040093F /* MethodCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MethodCall.h; sourceTree = "<group>"; };
+		AAC2059F19FA93E40040093F /* MethodCall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MethodCall.m; sourceTree = "<group>"; };
+		AAC205A119FA93F10040093F /* MethodResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MethodResult.h; sourceTree = "<group>"; };
+		AAC205A219FA93F10040093F /* MethodResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MethodResult.m; sourceTree = "<group>"; };
+		AAC205A419FA941D0040093F /* MethodCallSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MethodCallSerializer.h; sourceTree = "<group>"; };
+		AAC205A519FA941D0040093F /* MethodCallSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MethodCallSerializer.m; sourceTree = "<group>"; };
+		AAC205A719FA942F0040093F /* MethodResultSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MethodResultSerializer.h; sourceTree = "<group>"; };
+		AAC205A819FA942F0040093F /* MethodResultSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MethodResultSerializer.m; sourceTree = "<group>"; };
+		AAC205AF19FA9F6C0040093F /* LoginResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginResult.h; sourceTree = "<group>"; };
+		AAC205B019FA9F6C0040093F /* LoginResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginResult.m; sourceTree = "<group>"; };
 		AAC431BE181AC820005FC2B6 /* StasisError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StasisError.h; sourceTree = "<group>"; };
 		AAC431BF181AC820005FC2B6 /* StasisError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StasisError.m; sourceTree = "<group>"; };
 		AAC431F1181AD104005FC2B6 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -234,6 +249,31 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		AAC205AA19FA94510040093F /* Serializer */ = {
+			isa = PBXGroup;
+			children = (
+				D308C60B16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.h */,
+				D308C60C16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.m */,
+				D30BC9ED16EA0B90003FD3F6 /* LocalDateSerializer.h */,
+				D30BC9EE16EA0B90003FD3F6 /* LocalDateSerializer.m */,
+				AAC7B99B171584810045EF72 /* LocalDateTimeSerializer.h */,
+				AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */,
+				AA4C177A1779C1E8009F6BD0 /* LocalTimeSerializer.h */,
+				AA4C177B1779C1E8009F6BD0 /* LocalTimeSerializer.m */,
+				AA727A8E18D1AC6100DDC086 /* MessageExceptionSerializer.h */,
+				AA727A8F18D1AC6100DDC086 /* MessageExceptionSerializer.m */,
+				AAC205A419FA941D0040093F /* MethodCallSerializer.h */,
+				AAC205A519FA941D0040093F /* MethodCallSerializer.m */,
+				AAC205A719FA942F0040093F /* MethodResultSerializer.h */,
+				AAC205A819FA942F0040093F /* MethodResultSerializer.m */,
+				D3EDD23716E7520A005339C3 /* SerializableExceptionSerializer.h */,
+				D3EDD23816E7520A005339C3 /* SerializableExceptionSerializer.m */,
+				D22F4D513C706CD597BF64D7 /* UUIDSerializer.h */,
+				D22F437765DAF584201C6EAF /* UUIDSerializer.m */,
+			);
+			name = Serializer;
+			sourceTree = "<group>";
+		};
 		D30BC9F516EA0C57003FD3F6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -276,10 +316,9 @@
 		D3EDD22316E661E6005339C3 /* Stasis */ = {
 			isa = PBXGroup;
 			children = (
+				D22F49099EC70664A9A4A15E /* AsyncServiceDelegate.h */,
 				D308C60816E768A000FEBEE9 /* AuthenticationMissmatchException.h */,
 				D308C60916E768A000FEBEE9 /* AuthenticationMissmatchException.m */,
-				D308C60B16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.h */,
-				D308C60C16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.m */,
 				AA922E0C17BF884C009B71F2 /* AuthenticationResult.h */,
 				AA922E0D17BF884C009B71F2 /* AuthenticationResult.m */,
 				AAA7C5AD1763456800E9DA70 /* CTBlockDescription.h */,
@@ -293,31 +332,25 @@
 				AA223EC018182541005FD91B /* HTTPCookieStorage.m */,
 				D3EDD23116E6635B005339C3 /* HttpRemoteConnection.h */,
 				D3EDD23216E6635B005339C3 /* HttpRemoteConnection.m */,
-				D30BC9ED16EA0B90003FD3F6 /* LocalDateSerializer.h */,
-				D30BC9EE16EA0B90003FD3F6 /* LocalDateSerializer.m */,
-				AAC7B99B171584810045EF72 /* LocalDateTimeSerializer.h */,
-				AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */,
-				AA4C177A1779C1E8009F6BD0 /* LocalTimeSerializer.h */,
-				AA4C177B1779C1E8009F6BD0 /* LocalTimeSerializer.m */,
+				AAC205AF19FA9F6C0040093F /* LoginResult.h */,
+				AAC205B019FA9F6C0040093F /* LoginResult.m */,
 				AA727A8C18D1AC6100DDC086 /* MessageException.h */,
 				AA727A8D18D1AC6100DDC086 /* MessageException.m */,
-				AA727A8E18D1AC6100DDC086 /* MessageExceptionSerializer.h */,
-				AA727A8F18D1AC6100DDC086 /* MessageExceptionSerializer.m */,
+				AAC2059E19FA93E40040093F /* MethodCall.h */,
+				AAC2059F19FA93E40040093F /* MethodCall.m */,
+				AAC205A119FA93F10040093F /* MethodResult.h */,
+				AAC205A219FA93F10040093F /* MethodResult.m */,
 				D3EDD22F16E6634B005339C3 /* RemoteConnection.h */,
 				D3EDD23016E6634B005339C3 /* RemoteConnection.m */,
 				D3EDD23416E751F6005339C3 /* SerializableException.h */,
 				D3EDD23516E751F6005339C3 /* SerializableException.m */,
-				D3EDD23716E7520A005339C3 /* SerializableExceptionSerializer.h */,
-				D3EDD23816E7520A005339C3 /* SerializableExceptionSerializer.m */,
+				AAC205AA19FA94510040093F /* Serializer */,
 				D390965C16E79CCA0012B221 /* Stasis.h */,
 				D39ED1AE16E7A36D001AA271 /* StasisAsyncServiceWrapper.h */,
 				D39ED1AF16E7A36D001AA271 /* StasisAsyncServiceWrapper.m */,
 				AAC431BE181AC820005FC2B6 /* StasisError.h */,
 				AAC431BF181AC820005FC2B6 /* StasisError.m */,
 				D3EDD22416E661E6005339C3 /* Supporting Files */,
-				D22F4D513C706CD597BF64D7 /* UUIDSerializer.h */,
-				D22F437765DAF584201C6EAF /* UUIDSerializer.m */,
-				D22F49099EC70664A9A4A15E /* AsyncServiceDelegate.h */,
 			);
 			path = Stasis;
 			sourceTree = "<group>";
@@ -449,18 +482,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAC205A319FA93F10040093F /* MethodResult.m in Sources */,
+				AAC205A019FA93E40040093F /* MethodCall.m in Sources */,
 				AA727A9018D1AC6100DDC086 /* MessageException.m in Sources */,
 				D3EDD23316E6635B005339C3 /* HttpRemoteConnection.m in Sources */,
 				D3EDD23616E751F6005339C3 /* SerializableException.m in Sources */,
 				D3EDD23916E7520A005339C3 /* SerializableExceptionSerializer.m in Sources */,
 				D3EDD27316E75F5C005339C3 /* RemoteConnection.m in Sources */,
+				AAC205A919FA942F0040093F /* MethodResultSerializer.m in Sources */,
 				AA727A9118D1AC6100DDC086 /* MessageExceptionSerializer.m in Sources */,
 				D308C60A16E768A000FEBEE9 /* AuthenticationMissmatchException.m in Sources */,
 				D308C60D16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.m in Sources */,
+				AAC205A619FA941D0040093F /* MethodCallSerializer.m in Sources */,
 				AA223EC118182541005FD91B /* HTTPCookieStorage.m in Sources */,
 				D39ED1B016E7A36D001AA271 /* StasisAsyncServiceWrapper.m in Sources */,
 				D39ED1C516E8C13E001AA271 /* ExceptionError.m in Sources */,
 				AAC431C0181AC820005FC2B6 /* StasisError.m in Sources */,
+				AAC205B119FA9F6C0040093F /* LoginResult.m in Sources */,
 				D30BC9EF16EA0B90003FD3F6 /* LocalDateSerializer.m in Sources */,
 				AAC7B99D171584810045EF72 /* LocalDateTimeSerializer.m in Sources */,
 				AAA7C5B11763456800E9DA70 /* CTBlockDescription.m in Sources */,

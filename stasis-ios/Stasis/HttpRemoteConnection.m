@@ -15,14 +15,17 @@
 #import "LocalDateSerializer.h"
 #import "HandshakeHandler.h"
 #import "AuthenticationResult.h"
+#import "MethodCall.h"
+#import "MethodResult.h"
 #import "HTTPCookieStorage.h"
 #import "StasisError.h"
+#import "LoginResult.h"
 
 @interface HttpRemoteConnection ()
 
-- (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args handshakeHandler:(id<HandshakeHandler>)handshakeHandler andTryCount:(int)tryCount extractResult:(BOOL)extractResult returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)invokeServiceFunction:(NSString *)name withArguments:(NSArray *)args handshakeHandler:(id<HandshakeHandler>)handshakeHandler andTryCount:(int)tryCount returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
 - (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters handshakeHandler:(id<HandshakeHandler>)handshakeHandler returning:(void (^)(AuthenticationResult *, NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler;
-- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
+- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters followingFunction:(NSString *)name withArguments:(NSArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler;
 
 @end
 
@@ -57,7 +60,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	return self;
 }
 
-- (void)callAsync:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)callAsync:(NSString *)name withArguments:(NSArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	if ((_state != Authenticated) && (_userName != nil) && (_password != nil))
 	{
@@ -67,7 +70,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	else
 	{
 		// Die Service-Funktion ausführen
-		[self invokeServiceFunction:name withArguments:args handshakeHandler:_handshakeHandler andTryCount:1 extractResult:YES returning:resultHandler error:^(NSError *error)
+		[self invokeServiceFunction:name withArguments:args handshakeHandler:_handshakeHandler andTryCount:1 returning:resultHandler error:^(NSError *error)
 		{
 			// Ausführung der Service-Funktion ist fehlgeschlagen
 			if ([error.domain isEqualToString:CONNECTION_ERROR_DOMAIN] && (error.code == ERROR_AUTHENTICATION_MISSMATCH))
@@ -138,7 +141,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	[_kryo registerClass:type usingSerializer:serializer andIdent:ident];
 }
 
-- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters followingFunction:(NSString *)name withArguments:(JObjectArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters followingFunction:(NSString *)name withArguments:(NSArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	// Die Verbindung noch nicht authentifiziert ist, aber Credentials vorliegen zuerst einloggen
 	[self invokeLoginForUser:userName password:password andParameters:parameters handshakeHandler:_handshakeHandler returning:^(AuthenticationResult *authenticationResult, NSDictionary *loginResult)
@@ -151,16 +154,14 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 		}
 		 
 		// Die Service-Funktion ausführen
-		[self invokeServiceFunction:name withArguments:args handshakeHandler:_handshakeHandler andTryCount:1 extractResult:YES returning:resultHandler error:errorHandler];
+		[self invokeServiceFunction:name withArguments:args handshakeHandler:_handshakeHandler andTryCount:1 returning:resultHandler error:errorHandler];
 	} error:errorHandler];
 }
 
-- (void)invokeServiceFunction:(NSString *)name withArguments:(JObjectArray *)args handshakeHandler:(id<HandshakeHandler>)handshakeHandler andTryCount:(int)tryCount extractResult:(BOOL)extractResult returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
+- (void)invokeServiceFunction:(NSString *)name withArguments:(NSArray *)args handshakeHandler:(id<HandshakeHandler>)handshakeHandler andTryCount:(int)tryCount returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	[_output clear];
-	[_kryo writeObject:name to:_output];
-	[_kryo writeObject:[JBoolean boolWithValue:self.state == Authenticated] to:_output]; // Dem Server mitteilen ob wir davon ausgehen, dass wir bereits authentifiziert sind
-	[_kryo writeObject:args to:_output];
+	[_kryo writeObject:[MethodCall methodCall:name withArguments:args assumingAuthenticated:self.state == Authenticated] to:_output];
 	
 	__weak HttpRemoteConnection *weakSelf = self;
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:_url];
@@ -195,7 +196,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 					handled = [handshakeHandler handleResponse:response withData:data forConnection:weakSelf tryCount:tryCount returning:^(NSError *error) {
 						if (error == nil)
 						{
-							[weakSelf invokeServiceFunction:name withArguments:args handshakeHandler:handshakeHandler andTryCount:tryCount + 1 extractResult:extractResult returning:resultHandler error:errorHandler];
+							[weakSelf invokeServiceFunction:name withArguments:args handshakeHandler:handshakeHandler andTryCount:tryCount + 1 returning:resultHandler error:errorHandler];
 						}
 						else
 						{
@@ -216,46 +217,44 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 			@try
 			{
 				_input.buffer = data;
-				JObjectArray *result = [_kryo readObject:_input ofClass:[JObjectArray class]];
-				id resultValue = nil;
-				 
-				if (result.count != 0)
-				{
-					resultValue = [result objectAtIndex:0];
-					//NSLog(@"Request %@ returned with: %@", name, resultValue);
-					NSLog(@"Request %@ returned", name);
-				 
-					if ([resultValue isKindOfClass:[NSException class]])
-					{
-						NSError *transformedError;
-
-						if ([resultValue isKindOfClass:[AuthenticationMissmatchException class]])
-						{
-							transformedError = [StasisError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_AUTHENTICATION_MISSMATCH userInfo:nil];
-						}
-						else
-						{
-							transformedError = [ExceptionError errorWithException:resultValue];
-						}
-					
-						errorHandler(transformedError);
-						return;
-					}
-				}
+				MethodResult *methodResult = [_kryo readObject:_input ofClass:[MethodResult class]];
 				
 				if (_state == Unconnected)
 				{
 					_state = Connected;
 				}
 				
-				@try
+				switch (methodResult.type)
 				{
-					resultHandler(extractResult ? resultValue : result);
-				}
-				@catch (NSException *ex)
-				{
-					NSLog(@"ResultHandler for %@ threw exception: %@", name, ex.description);
-					NSLog(@"StackTrace: %@", ex.callStackSymbols);
+					case MethodResultVoid:
+					case MethodResultValue:
+						@try
+						{
+							resultHandler(methodResult.result);
+						}
+						@catch (NSException *ex)
+						{
+							NSLog(@"ResultHandler for %@ threw exception: %@", name, ex.description);
+							NSLog(@"StackTrace: %@", ex.callStackSymbols);
+						}
+						break;
+
+					case MethodResultException:
+					{
+						NSError *transformedError;
+						
+						if ([methodResult.result isKindOfClass:[AuthenticationMissmatchException class]])
+						{
+							transformedError = [StasisError errorWithDomain:CONNECTION_ERROR_DOMAIN code:ERROR_AUTHENTICATION_MISSMATCH userInfo:nil];
+						}
+						else
+						{
+							transformedError = [ExceptionError errorWithException:(NSException *)methodResult.result];
+						}
+						
+						errorHandler(transformedError);
+						break;
+					}
 				}
 			}
 			@catch (NSException *ex)
@@ -284,19 +283,17 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 		parameters = [NSDictionary dictionary];
 	}
 	
-	JObjectArray *args = [JObjectArray arrayWithObjects:userName, password, parameters, nil];
+	NSArray *args = [NSArray arrayWithObjects:userName, password, parameters, nil];
 	
-	[self invokeServiceFunction:LOGIN_FUNCTION withArguments:args handshakeHandler:handshakeHandler andTryCount:1 extractResult:NO returning:^(id result)
+	[self invokeServiceFunction:LOGIN_FUNCTION withArguments:args handshakeHandler:handshakeHandler andTryCount:1 returning:^(id result)
 	{
-		JObjectArray *resultValues = (JObjectArray *)result;
-		AuthenticationResult *authenticationResult = [resultValues objectAtIndex:0];
-		NSDictionary *response = [resultValues objectAtIndex:1];
+		LoginResult *loginResult = (LoginResult *)result;
 
-		if (authenticationResult == AuthenticationResult.AUTHENTICATED)
+		if (loginResult.authenticationResult == AuthenticationResult.AUTHENTICATED)
 		{
 			NSMutableDictionary *newParameters = [NSMutableDictionary new];
 			[newParameters addEntriesFromDictionary:parameters];
-			[newParameters addEntriesFromDictionary:response];
+			[newParameters addEntriesFromDictionary:loginResult.loginResponse];
 			 
 			_activeUserName = userName;
 			_activePassword = password;
@@ -304,7 +301,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 			_state = Authenticated;
 		}
 		 
-		resultHandler(authenticationResult, response);
+		resultHandler(loginResult.authenticationResult, loginResult.loginResponse);
 	} error:errorHandler];
 }
 
