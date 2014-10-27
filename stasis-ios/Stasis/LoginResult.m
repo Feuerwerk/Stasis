@@ -10,6 +10,11 @@
 
 @implementation LoginResult
 
++ (NSArray *)loginResponseGenerics
+{
+	return [NSArray arrayWithObjects:[NSString class], [NSObject class], nil];
+}
+
 + (NSString *)serializingAlias
 {
 	return @"de.boxxit.stasis.LoginResult";
