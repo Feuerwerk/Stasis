@@ -25,6 +25,7 @@
 	NSString *_activeUserName;
 	NSString *_activePassword;
 	NSDictionary *_activeParameters;
+	BOOL _gzipAvailable;
 	id<HandshakeHandler> _handshakeHandler;
 	HTTPCookieStorage *_cookieStorage;
 }

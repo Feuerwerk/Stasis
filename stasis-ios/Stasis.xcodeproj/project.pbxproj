@@ -172,6 +172,7 @@
 		AAC431F1181AD104005FC2B6 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		AAC7B99B171584810045EF72 /* LocalDateTimeSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalDateTimeSerializer.h; sourceTree = "<group>"; };
 		AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalDateTimeSerializer.m; sourceTree = "<group>"; };
+		AAF005061A0132260031B53E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		D22F437765DAF584201C6EAF /* UUIDSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUIDSerializer.m; sourceTree = "<group>"; };
 		D22F49099EC70664A9A4A15E /* AsyncServiceDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncServiceDelegate.h; sourceTree = "<group>"; };
 		D22F4D513C706CD597BF64D7 /* UUIDSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUIDSerializer.h; sourceTree = "<group>"; };
@@ -307,6 +308,7 @@
 		D3EDD22016E661E6005339C3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AAF005061A0132260031B53E /* libz.dylib */,
 				D3EDD22116E661E6005339C3 /* Foundation.framework */,
 				AAC431F1181AD104005FC2B6 /* CoreFoundation.framework */,
 			);

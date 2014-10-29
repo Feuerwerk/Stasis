@@ -20,6 +20,7 @@
 #import "HTTPCookieStorage.h"
 #import "StasisError.h"
 #import "LoginResult.h"
+#import <zlib.h>
 
 @interface HttpRemoteConnection ()
 
@@ -29,16 +30,97 @@
 
 @end
 
+@interface KryoOutput (gzip)
+
+- (NSData *)toGzippedData;
+
+@end
+
+@implementation KryoOutput (gzip)
+
+static const NSUInteger ChunkSize = 16384;
+
+- (NSData *)toGzippedData
+{
+	if (self.position == 0)
+	{
+		return [NSData data];
+	}
+	
+	z_stream stream;
+
+	stream.zalloc = Z_NULL;
+	stream.zfree = Z_NULL;
+	stream.opaque = Z_NULL;
+	stream.avail_in = (uint)self.position;
+	stream.next_in = (Bytef *)self.buffer;
+	stream.total_out = 0;
+	stream.avail_out = 0;
+
+	if (deflateInit2(&stream, Z_DEFAULT_COMPRESSION, Z_DEFLATED, 31, 8, Z_DEFAULT_STRATEGY) == Z_OK)
+	{
+		NSMutableData *data = [NSMutableData dataWithLength:ChunkSize];
+
+		while (stream.avail_out == 0)
+		{
+			if (stream.total_out >= data.length)
+			{
+				data.length += ChunkSize;
+			}
+
+			stream.next_out = (uint8_t *)data.mutableBytes + stream.total_out;
+			stream.avail_out = (uInt)(data.length - stream.total_out);
+			deflate(&stream, Z_FINISH);
+		}
+
+		deflateEnd(&stream);
+		data.length = stream.total_out;
+
+		return data;
+	}
+
+	return nil;
+}
+
+@end
+
 @implementation HttpRemoteConnection
 
 static NSString * const CONTENT_TYPE_KEY = @"Content-Type";
+static NSString * const CONTENT_ENCODING_KEY = @"Content-Encoding";
 static NSString * const CONTENT_TYPE_VALUE = @"application/x-stasis";
 static NSString * const REQUEST_METHOD = @"POST";
 static NSString * const LOGIN_FUNCTION = @"login";
+static NSString * const GZIP_ENCODING = @"gzip";
 static NSString * const CONNECTION_ERROR_DOMAIN = @"httpRemoteConnectionError";
 static const NSInteger ERROR_AUTHENTICATION_MISSMATCH = 100;
 static const NSInteger ERROR_AUTHENTICATION_FAILED = 101;
 static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
+
+BOOL isUsingGzipEncoding(NSString *headerValue)
+{
+	NSArray *chunks = [headerValue componentsSeparatedByString: @","];
+
+	for (NSString *chunk in chunks)
+	{
+		NSRange offset = [chunk rangeOfString:@";"];
+		NSString *encoding = chunk;
+		
+		if (offset.location != NSNotFound)
+		{
+			encoding = [encoding substringToIndex:offset.location];
+		}
+		
+		encoding = [encoding stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+
+		if ([encoding caseInsensitiveCompare:GZIP_ENCODING] == NSOrderedSame)
+		{
+			return YES;
+		}
+	}
+	
+	return NO;
+}
 
 - (id)initWithUrl:(NSURL *)url
 {
@@ -54,6 +136,7 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 		_userName = nil;
 		_password = nil;
 		_parameters = nil;
+		_gzipAvailable = NO;
 		_cookieStorage = [HTTPCookieStorage new];
 	}
 	
@@ -170,7 +253,16 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
 	request.HTTPShouldHandleCookies = NO;
 	request.HTTPMethod = REQUEST_METHOD;
-	request.HTTPBody = [_output toData];
+	
+	if (_gzipAvailable)
+	{
+		[request setValue:GZIP_ENCODING forHTTPHeaderField:CONTENT_ENCODING_KEY];
+		request.HTTPBody = [_output toGzippedData];
+	}
+	else
+	{
+		request.HTTPBody = [_output toData];
+	}
 	
 	[_cookieStorage handleCookiesInRequest:request];
 	
@@ -180,7 +272,10 @@ static const NSInteger ERROR_UNKNOWN_CONTENT_TYPE = 102;
 	 {
 		if (error == nil)
 		{
-			[_cookieStorage handleCookiesInResponse:(NSHTTPURLResponse *)response];
+			NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+			_gzipAvailable |= isUsingGzipEncoding(httpResponse.allHeaderFields[CONTENT_ENCODING_KEY]);
+			
+			[_cookieStorage handleCookiesInResponse:httpResponse];
 			
 			if (data.length == 0)
 			{
