@@ -11,6 +11,7 @@
 
 @class LocalDate;
 @class LocalTime;
+@class Period;
 
 @interface LocalDateTime : NSObject
 {
@@ -26,6 +27,7 @@
 - (id)initFromDate:(NSDate *)date;
 - (id)initFromComponents:(NSDateComponents *)components;
 
+- (LocalDateTime *)plus:(Period *)period;
 - (LocalDateTime *)plusDays:(NSInteger)days;
 - (LocalDateTime *)plusWeeks:(NSInteger)weeks;
 - (LocalDateTime *)plusMonths:(NSInteger)months;
@@ -34,6 +36,7 @@
 - (LocalDateTime *)plusMinutes:(NSInteger)minutes;
 - (LocalDateTime *)plusSeconds:(NSInteger)seconds;
 
+- (LocalDateTime *)minus:(Period *)period;
 - (LocalDateTime *)minusDays:(NSInteger)days;
 - (LocalDateTime *)minusWeeks:(NSInteger)weeks;
 - (LocalDateTime *)minusMonths:(NSInteger)months;

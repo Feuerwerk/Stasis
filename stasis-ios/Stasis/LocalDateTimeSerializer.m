@@ -21,6 +21,11 @@ __attribute__((constructor)) static void initialize()
 
 - (BOOL)acceptsNull
 {
+	return NO;
+}
+
+- (BOOL)isFinal:(Class)type
+{
 	return YES;
 }
 
@@ -54,11 +59,6 @@ __attribute__((constructor)) static void initialize()
 - (NSString *)getClassName:(Class)type
 {
 	return @"org.joda.time.LocalDateTime";
-}
-
-- (BOOL)isFinal:(Class)type
-{
-	return YES;
 }
 
 @end

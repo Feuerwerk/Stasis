@@ -15,7 +15,7 @@
 
 - (BOOL)acceptsNull
 {
-	return YES;
+	return NO;
 }
 
 - (BOOL)isFinal:(Class)type

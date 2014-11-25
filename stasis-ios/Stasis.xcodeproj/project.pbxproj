@@ -47,6 +47,8 @@
 		AAC205B119FA9F6C0040093F /* LoginResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC205B019FA9F6C0040093F /* LoginResult.m */; };
 		AAC431C0181AC820005FC2B6 /* StasisError.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC431BF181AC820005FC2B6 /* StasisError.m */; };
 		AAC7B99D171584810045EF72 /* LocalDateTimeSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */; };
+		AAFD3C0B1A23772900354E8F /* MinutesSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFD3C0A1A23772900354E8F /* MinutesSerializer.m */; };
+		AAFD3C0C1A23793F00354E8F /* MinutesSerializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AAFD3C091A23772900354E8F /* MinutesSerializer.h */; };
 		D22F4775C7DD411423551C7E /* UUIDSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D22F437765DAF584201C6EAF /* UUIDSerializer.m */; };
 		D308C60A16E768A000FEBEE9 /* AuthenticationMissmatchException.m in Sources */ = {isa = PBXBuildFile; fileRef = D308C60916E768A000FEBEE9 /* AuthenticationMissmatchException.m */; };
 		D308C60D16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D308C60C16E768B400FEBEE9 /* AuthenticationMissmatchExceptionSerializer.m */; };
@@ -106,6 +108,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				AAFD3C0C1A23793F00354E8F /* MinutesSerializer.h in CopyFiles */,
 				AA350668192CD048006BA15A /* AsyncServiceDelegate.h in CopyFiles */,
 				AAB897C0191BD64F001ADD6E /* UUIDSerializer.h in CopyFiles */,
 				AA727A9218D1ACF900DDC086 /* MessageException.h in CopyFiles */,
@@ -173,6 +176,8 @@
 		AAC7B99B171584810045EF72 /* LocalDateTimeSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalDateTimeSerializer.h; sourceTree = "<group>"; };
 		AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalDateTimeSerializer.m; sourceTree = "<group>"; };
 		AAF005061A0132260031B53E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		AAFD3C091A23772900354E8F /* MinutesSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MinutesSerializer.h; sourceTree = "<group>"; };
+		AAFD3C0A1A23772900354E8F /* MinutesSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MinutesSerializer.m; sourceTree = "<group>"; };
 		D22F437765DAF584201C6EAF /* UUIDSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUIDSerializer.m; sourceTree = "<group>"; };
 		D22F49099EC70664A9A4A15E /* AsyncServiceDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncServiceDelegate.h; sourceTree = "<group>"; };
 		D22F4D513C706CD597BF64D7 /* UUIDSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUIDSerializer.h; sourceTree = "<group>"; };
@@ -267,6 +272,8 @@
 				AAC205A519FA941D0040093F /* MethodCallSerializer.m */,
 				AAC205A719FA942F0040093F /* MethodResultSerializer.h */,
 				AAC205A819FA942F0040093F /* MethodResultSerializer.m */,
+				AAFD3C091A23772900354E8F /* MinutesSerializer.h */,
+				AAFD3C0A1A23772900354E8F /* MinutesSerializer.m */,
 				D3EDD23716E7520A005339C3 /* SerializableExceptionSerializer.h */,
 				D3EDD23816E7520A005339C3 /* SerializableExceptionSerializer.m */,
 				D22F4D513C706CD597BF64D7 /* UUIDSerializer.h */,
@@ -488,6 +495,7 @@
 				AAC205A019FA93E40040093F /* MethodCall.m in Sources */,
 				AA727A9018D1AC6100DDC086 /* MessageException.m in Sources */,
 				D3EDD23316E6635B005339C3 /* HttpRemoteConnection.m in Sources */,
+				AAFD3C0B1A23772900354E8F /* MinutesSerializer.m in Sources */,
 				D3EDD23616E751F6005339C3 /* SerializableException.m in Sources */,
 				D3EDD23916E7520A005339C3 /* SerializableExceptionSerializer.m in Sources */,
 				D3EDD27316E75F5C005339C3 /* RemoteConnection.m in Sources */,

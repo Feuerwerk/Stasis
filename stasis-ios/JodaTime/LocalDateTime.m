@@ -9,6 +9,8 @@
 #import "LocalDateTime.h"
 #import "LocalDate.h"
 #import "LocalTime.h"
+#import "Period.h"
+#import "PeriodPrivate.h"
 
 @interface LocalDateTime ()
 
@@ -91,6 +93,13 @@ static NSDateFormatter *descriptionFormatter = nil;
 	return self;
 }
 
+- (LocalDateTime *)plus:(Period *)period
+{
+	NSDateComponents *offsetComponents = [NSDateComponents new];
+	[period fill:offsetComponents];
+	return [[LocalDateTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+}
+
 - (LocalDateTime *)plusDays:(NSInteger)days
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
@@ -137,6 +146,13 @@ static NSDateFormatter *descriptionFormatter = nil;
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.second = seconds;
+	return [[LocalDateTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+}
+
+- (LocalDateTime *)minus:(Period *)period
+{
+	NSDateComponents *offsetComponents = [NSDateComponents new];
+	[period.negate fill:offsetComponents];
 	return [[LocalDateTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
 }
 

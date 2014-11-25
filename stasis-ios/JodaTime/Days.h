@@ -6,14 +6,24 @@
 //  Copyright (c) 2013 Boxx IT Solutions e.K. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "Period.h"
 
 @class LocalDate;
 
-@interface Days : NSObject
-
-+ (instancetype)daysBetween:(LocalDate *)startDate and:(LocalDate *)stopDate;
+@interface Days : Period
 
 @property (nonatomic, readonly) NSInteger days;
+
++ (instancetype)ZERO;
++ (instancetype)ONE;
+
++ (instancetype)days:(NSInteger)days;
++ (instancetype)daysBetween:(LocalDate *)startDate and:(LocalDate *)stopDate;
+
+- (Days *)plus:(Days *)aDays;
+- (Days *)minus:(Days *)aDays;
+
+- (BOOL)isEqualToDays:(Days *)aDays;
+- (NSComparisonResult)compare:(Days *)aDays;
 
 @end
