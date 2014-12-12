@@ -50,7 +50,7 @@ static NSMethodSignature *getMethodSignatureRecursively(Protocol *protocol, SEL 
 	return methodSignature;
 }
 
-+ (id)createProxy:(id)protocol forService:(NSString *)serviceName usingConnection:(RemoteConnection *)connection
++ (id)createProxy:(Protocol *)protocol forService:(NSString *)serviceName usingConnection:(RemoteConnection *)connection
 {
 	return [[StasisAsyncServiceWrapper alloc] initWithProtocol:protocol name:serviceName andConnection:connection];
 }
