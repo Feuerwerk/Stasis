@@ -23,6 +23,7 @@
 @property (nonatomic, weak) id<AsyncServiceDelegate> delegate;
 
 + (id)createProxy:(Protocol *)protocol forService:(NSString *)serviceName usingConnection:(RemoteConnection *)connection;
++ (id)createProxy:(Protocol *)protocol forService:(NSString *)serviceName usingConnection:(RemoteConnection *)connection withDelegate:(id<AsyncServiceDelegate>)delegate;
 
 -(BOOL)conformsToProtocol:(Protocol*)aProtocol;
 -(BOOL)isKindOfClass:(Class)aClass;

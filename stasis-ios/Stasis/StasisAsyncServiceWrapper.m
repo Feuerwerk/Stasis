@@ -55,6 +55,13 @@ static NSMethodSignature *getMethodSignatureRecursively(Protocol *protocol, SEL 
 	return [[StasisAsyncServiceWrapper alloc] initWithProtocol:protocol name:serviceName andConnection:connection];
 }
 
++ (id)createProxy:(Protocol *)protocol forService:(NSString *)serviceName usingConnection:(RemoteConnection *)connection withDelegate:(id<AsyncServiceDelegate>)delegate
+{
+	StasisAsyncServiceWrapper *wrapper = [[StasisAsyncServiceWrapper alloc] initWithProtocol:protocol name:serviceName andConnection:connection];
+	wrapper.delegate = delegate;
+	return wrapper;
+}
+
 - (id)initWithProtocol:(id)protocol name:(NSString *)serviceName andConnection:(RemoteConnection *)connection
 {
 	// Es gibt kein [super init]
