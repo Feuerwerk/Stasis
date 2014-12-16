@@ -23,6 +23,7 @@
 + (instancetype)dateFromYear:(NSInteger)year month:(NSInteger)monthOfYear andDay:(NSInteger)dayOfMonth;
 + (instancetype)dateFromYear:(NSInteger)year weekOfYear:(NSInteger)weekOfYear andDayOfWeek:(NSInteger)dayOfWeek;
 
+- (id)init;
 - (id)initFromDate:(NSDate *)date;
 - (id)initFromComponents:(NSDateComponents *)components;
 
@@ -40,15 +41,15 @@
 - (LocalDate *)withDayOfMonth:(NSInteger)dayOfMonth;
 - (LocalDate *)withDayOfYear:(NSInteger)dayOfYear;
 
-- (UInt64)millis;
-- (NSDate *)date;
-- (NSInteger)year;
-- (NSInteger)monthOfYear;
-- (NSInteger)dayOfMonth;
-- (WeekDays)dayOfWeek;
-- (NSInteger)dayOfYear;
-- (NSInteger)weekyear;
-- (NSInteger)weekOfWeekyear;
+@property (nonatomic, readonly) UInt64 millis;
+@property (nonatomic, readonly) NSDate *date;
+@property (nonatomic, readonly) NSInteger year;
+@property (nonatomic, readonly) NSInteger monthOfYear;
+@property (nonatomic, readonly) NSInteger dayOfMonth;
+@property (nonatomic, readonly) WeekDays dayOfWeek;
+@property (nonatomic, readonly) NSInteger dayOfYear;
+@property (nonatomic, readonly) NSInteger weekyear;
+@property (nonatomic, readonly) NSInteger weekOfWeekyear;
 
 - (NSComparisonResult)compare:(LocalDate *)aDate;
 - (BOOL)isBefore:(LocalDate *)aDate;

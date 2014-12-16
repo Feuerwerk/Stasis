@@ -52,17 +52,18 @@
 - (LocalDateTime *)withMinuteOfHour:(NSInteger)minuteOfHour;
 - (LocalDateTime *)withSecondOfMinute:(NSInteger)secondOfMinute;
 
-- (UInt64)millis;
-- (NSDate *)date;
-- (NSInteger)year;
-- (NSInteger)monthOfYear;
-- (NSInteger)dayOfMonth;
-- (WeekDays)dayOfWeek;
-- (NSInteger)dayOfYear;
-- (NSInteger)weekOfWeekyear;
-- (NSInteger)hourOfDay;
-- (NSInteger)minuteOfHour;
-- (NSInteger)secondOfMinute;
+@property (nonatomic, readonly) UInt64 millis;
+@property (nonatomic, readonly) NSDate *date;
+@property (nonatomic, readonly) NSInteger year;
+@property (nonatomic, readonly) NSInteger monthOfYear;
+@property (nonatomic, readonly) NSInteger dayOfMonth;
+@property (nonatomic, readonly) WeekDays dayOfWeek;
+@property (nonatomic, readonly) NSInteger dayOfYear;
+@property (nonatomic, readonly) NSInteger weekyear;
+@property (nonatomic, readonly) NSInteger weekOfWeekyear;
+@property (nonatomic, readonly) NSInteger hourOfDay;
+@property (nonatomic, readonly) NSInteger minuteOfHour;
+@property (nonatomic, readonly) NSInteger secondOfMinute;
 
 - (NSComparisonResult)compare:(LocalDateTime *)aDate;
 - (BOOL)isBefore:(LocalDateTime *)aDate;

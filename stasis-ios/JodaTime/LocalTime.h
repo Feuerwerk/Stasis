@@ -34,11 +34,11 @@
 - (LocalTime *)withMinuteOfHour:(NSInteger)minuteOfHour;
 - (LocalTime *)withSecondOfMinute:(NSInteger)secondOfMinute;
 
-- (UInt64)millisOfDay;
-- (NSDate *)date;
-- (NSInteger)hourOfDay;
-- (NSInteger)minuteOfHour;
-- (NSInteger)secondOfMinute;
+@property (nonatomic, readonly) UInt64 millisOfDay;
+@property (nonatomic, readonly) NSDate *date;
+@property (nonatomic, readonly) NSInteger hourOfDay;
+@property (nonatomic, readonly) NSInteger minuteOfHour;
+@property (nonatomic, readonly) NSInteger secondOfMinute;
 
 - (NSComparisonResult)compare:(LocalTime *)aTime;
 - (BOOL)isBefore:(LocalTime *)aTime;

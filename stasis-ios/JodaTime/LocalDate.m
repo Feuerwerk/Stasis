@@ -16,7 +16,7 @@ static NSDateFormatter *descriptionFormatter = nil;
 
 + (instancetype)date
 {
-	return [[LocalDate alloc] initFromDate:[NSDate date]];
+	return [[LocalDate alloc] init];
 }
 
 + (instancetype)dateFromDate:(NSDate *)date
@@ -54,6 +54,11 @@ static NSDateFormatter *descriptionFormatter = nil;
 	components.weekday = dayOfWeek;
 	
 	return [[LocalDate alloc] initFromComponents:components];
+}
+
+- (id)init
+{
+	return [self initFromDate:[NSDate date]];
 }
 
 - (id)initFromDate:(NSDate *)date
