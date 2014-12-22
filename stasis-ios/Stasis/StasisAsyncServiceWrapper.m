@@ -176,6 +176,12 @@ static NSMethodSignature *getMethodSignatureRecursively(Protocol *protocol, SEL 
 		[invocation getArgument:&value atIndex:index];
 		[arguments addObject:[JInteger intWithValue:value]];
 	}
+	else if (strcmp(type, @encode(int)) == 0)
+	{
+		int value;
+		[invocation getArgument:&value atIndex:index];
+		[arguments addObject:[JInteger intWithValue:value]];
+	}
 	else if (strcmp(type, @encode(SInt64)) == 0)
 	{
 		SInt64 value;
@@ -307,6 +313,18 @@ static NSMethodSignature *getMethodSignatureRecursively(Protocol *protocol, SEL 
 				[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
 			}
 
+			JNumeric *numeric = result;
+			intDelegate(numeric.intValue);
+		}
+		else if (strcmp(type, @encode(int)) == 0)
+		{
+			void (^intDelegate)(int) = (void (^)(int))delegate;
+			
+			if (![result isKindOfClass:[JNumeric class]])
+			{
+				[NSException raise:NSInvalidArgumentException format:@"Return value is not numeric"];
+			}
+			
 			JNumeric *numeric = result;
 			intDelegate(numeric.intValue);
 		}
