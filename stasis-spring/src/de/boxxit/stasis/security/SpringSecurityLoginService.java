@@ -20,7 +20,7 @@ public class SpringSecurityLoginService implements LoginService
 {
 	@Autowired(required = false)
 	@Qualifier("authenticationManager")
-	private AuthenticationManager authenticationManager;
+	protected AuthenticationManager authenticationManager;
 
 	public SpringSecurityLoginService()
 	{
