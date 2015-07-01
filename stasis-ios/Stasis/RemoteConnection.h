@@ -21,6 +21,8 @@ typedef enum { Unconnected, Connected, Authenticated } ConnectionState;
 @protected
 	ConnectionState _state;
 	NSURL *_url;
+	NSString *_userName;
+	NSString *_password;
 }
 
 + (instancetype)connectionFromUrl:(NSURL *)url;
@@ -41,5 +43,7 @@ typedef enum { Unconnected, Connected, Authenticated } ConnectionState;
 - (void)registerClass:(Class)type usingSerializer:(id<Serializer>)serializer andIdent:(NSInteger)ident;
 
 @property (readonly) NSURL *url;
+@property (readonly) NSString *userName;
+@property (readonly) NSString *password;
 
 @end

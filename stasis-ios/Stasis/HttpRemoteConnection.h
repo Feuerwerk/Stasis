@@ -19,8 +19,6 @@
 	Kryo *_kryo;
 	KryoOutput *_output;
 	KryoInput *_input;
-	NSString *_userName;
-	NSString *_password;
 	NSDictionary *_parameters;
 	NSString *_activeUserName;
 	NSString *_activePassword;

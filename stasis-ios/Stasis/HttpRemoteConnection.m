@@ -173,6 +173,10 @@ BOOL isUsingGzipEncoding(NSString *headerValue)
 
 - (void)loginUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters returning:(void (^)(AuthenticationResult *, NSDictionary *))resultHandler error:(void (^)(NSError *))errorHandler
 {
+	_userName = userName;
+	_password = password;
+	_parameters = parameters;
+
 	[self invokeLoginForUser:userName password:password andParameters:parameters handshakeHandler:_handshakeHandler returning:resultHandler error:errorHandler];
 }
 
