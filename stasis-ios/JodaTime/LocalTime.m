@@ -17,7 +17,7 @@
 
 @implementation LocalTime
 {
-	NSDate *_date;
+	NSDate *_value;
 }
 
 static NSDateFormatter *descriptionFormatter = nil;
@@ -120,7 +120,7 @@ static NSDateFormatter *descriptionFormatter = nil;
 	
 	if (self != nil)
 	{
-		_date = date;
+		_value = date;
 	}
 	
 	return self;
@@ -130,61 +130,61 @@ static NSDateFormatter *descriptionFormatter = nil;
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.hour = hours;
-	return [[LocalTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [[LocalTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalTime *)plusMinutes:(NSInteger)minutes
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.minute = minutes;
-	return [[LocalTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [[LocalTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalTime *)plusSeconds:(NSInteger)seconds
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.second = seconds;
-	return [[LocalTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [[LocalTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalTime *)minusHours:(NSInteger)hours
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.hour = -hours;
-	return [[LocalTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [[LocalTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalTime *)minusMinutes:(NSInteger)minutes
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.minute = -minutes;
-	return [[LocalTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [[LocalTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalTime *)minusSeconds:(NSInteger)seconds
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.second = -seconds;
-	return [[LocalTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [[LocalTime alloc] initFromUnsafeDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalTime *)withHourOfDay:(NSInteger)hourOfDay
 {
-	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:_date];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:_value];
 	components.hour = hourOfDay;
 	return [[LocalTime alloc] initFromComponents:components];
 }
 
 - (LocalTime *)withMinuteOfHour:(NSInteger)minuteOfHour
 {
-	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSSecondCalendarUnit fromDate:_date];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSSecondCalendarUnit fromDate:_value];
 	components.minute = minuteOfHour;
 	return [[LocalTime alloc] initFromComponents:components];
 }
 
 - (LocalTime *)withSecondOfMinute:(NSInteger)secondOfMinute
 {
-	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:_date];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:_value];
 	components.second = secondOfMinute;
 	return [[LocalTime alloc] initFromComponents:components];
 }
@@ -192,33 +192,33 @@ static NSDateFormatter *descriptionFormatter = nil;
 
 - (UInt64)millisOfDay
 {
-	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:_date];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit fromDate:_value];
 	UInt64 millisOfDay = (UInt64)components.hour;
 	millisOfDay = millisOfDay * 60 + components.minute;
 	millisOfDay = millisOfDay * 60 + components.second;
 	return millisOfDay * 1000;
 }
 
-- (NSDate *)date
+- (NSDate *)value
 {
-	return _date;
+	return _value;
 }
 
 - (NSInteger)hourOfDay
 {
-	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit fromDate:_date];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit fromDate:_value];
 	return components.hour;
 }
 
 - (NSInteger)minuteOfHour;
 {
-	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSMinuteCalendarUnit fromDate:_date];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSMinuteCalendarUnit fromDate:_value];
 	return components.minute;
 }
 
 - (NSInteger)secondOfMinute
 {
-	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSSecondCalendarUnit fromDate:_date];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSSecondCalendarUnit fromDate:_value];
 	return components.second;
 }
 
@@ -230,37 +230,37 @@ static NSDateFormatter *descriptionFormatter = nil;
 		descriptionFormatter.dateFormat = @"HH:mm:ss";
 	}
 	
-	return [descriptionFormatter stringFromDate:_date];
+	return [descriptionFormatter stringFromDate:_value];
 }
 
 - (NSString *)debugDescription
 {
-	return _date.description;
+	return _value.description;
 }
 
 - (NSComparisonResult)compare:(LocalTime *)aTime
 {
-	return [_date compare:aTime.date];
+	return [_value compare:aTime.value];
 }
 
 - (BOOL)isBefore:(LocalTime *)aTime
 {
-	return [_date compare:aTime.date] == NSOrderedAscending;
+	return [_value compare:aTime.value] == NSOrderedAscending;
 }
 
 - (BOOL)isBeforeOrEqual:(LocalTime *)aTime
 {
-	return [_date compare:aTime.date] != NSOrderedDescending;
+	return [_value compare:aTime.value] != NSOrderedDescending;
 }
 
 - (BOOL)isAfter:(LocalTime *)aTime
 {
-	return [_date compare:aTime.date] == NSOrderedDescending;
+	return [_value compare:aTime.value] == NSOrderedDescending;
 }
 
 - (BOOL)isAfterOrEqual:(LocalTime *)aTime
 {
-	return [_date compare:aTime.date] != NSOrderedAscending;
+	return [_value compare:aTime.value] != NSOrderedAscending;
 }
 
 @end

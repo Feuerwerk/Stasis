@@ -59,7 +59,7 @@
 + (instancetype)daysBetween:(LocalDate *)startDate and:(LocalDate *)stopDate
 {
 	NSCalendar *calendar = [NSCalendar currentCalendar];
-	NSDateComponents *components = [calendar components:NSDayCalendarUnit fromDate:startDate.date toDate:stopDate.date options:0];
+	NSDateComponents *components = [calendar components:NSDayCalendarUnit fromDate:startDate.value toDate:stopDate.value options:0];
 	return [Days days:components.day];
 }
 

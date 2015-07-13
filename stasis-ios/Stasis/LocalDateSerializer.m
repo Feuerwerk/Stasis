@@ -32,10 +32,10 @@ __attribute__((constructor)) static void initialize()
 - (void)write:(Kryo *)kryo value:(id)value to:(KryoOutput *)output
 {
 	LocalDate *date = value;
-	NSInteger gmtSec = [gmtTimeZone secondsFromGMTForDate:date.date];
-	NSInteger locSec = [[NSTimeZone localTimeZone] secondsFromGMTForDate:date.date];
+	NSInteger gmtSec = [gmtTimeZone secondsFromGMTForDate:date.value];
+	NSInteger locSec = [[NSTimeZone localTimeZone] secondsFromGMTForDate:date.value];
 	NSTimeInterval secDelta = locSec - gmtSec;
-	UInt64 millis = (date.date.timeIntervalSince1970 + secDelta) * 1000;
+	UInt64 millis = (date.value.timeIntervalSince1970 + secDelta) * 1000;
 
 	[output writeULong:millis];
 }

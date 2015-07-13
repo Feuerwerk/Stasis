@@ -14,7 +14,7 @@
 
 @interface LocalDate : NSObject
 {
-	NSDate *_date;
+	NSDate *_value;
 }
 
 + (instancetype)date;
@@ -42,7 +42,7 @@
 - (LocalDate *)withDayOfYear:(NSInteger)dayOfYear;
 
 @property (nonatomic, readonly) UInt64 millis;
-@property (nonatomic, readonly) NSDate *date;
+@property (nonatomic, readonly) NSDate *value;
 @property (nonatomic, readonly) NSInteger year;
 @property (nonatomic, readonly) NSInteger monthOfYear;
 @property (nonatomic, readonly) NSInteger dayOfMonth;

@@ -73,7 +73,7 @@ static NSDateFormatter *descriptionFormatter = nil;
 	
 	if (self != nil)
 	{
-		_date = [[NSCalendar currentCalendar] dateFromComponents:components];
+		_value = [[NSCalendar currentCalendar] dateFromComponents:components];
 	}
 	
 	return self;
@@ -83,71 +83,71 @@ static NSDateFormatter *descriptionFormatter = nil;
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.day = days;
-	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalDate *)plusWeeks:(NSInteger)weeks
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.day = weeks * 7;
-	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalDate *)plusMonths:(NSInteger)months
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.month = months;
-	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalDate *)plusYears:(NSInteger)years
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.year = years;
-	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalDate *)minusDays:(NSInteger)days
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.day = -days;
-	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalDate *)minusWeeks:(NSInteger)weeks
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.day = -weeks * 7;
-	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalDate *)minusMonths:(NSInteger)months
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.month = -months;
-	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalDate *)minusYears:(NSInteger)years
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.year = -years;
-	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [LocalDate dateFromDate:[[NSCalendar currentCalendar] dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalDate *)withDayOfWeek:(NSInteger)dayOfWeek
 {
 	NSCalendar *calendar = [NSCalendar currentCalendar];
 	NSUInteger firstWeekday = calendar.firstWeekday;
-	NSInteger weekDay = [calendar components:NSWeekdayCalendarUnit fromDate:_date].weekday;
+	NSInteger weekDay = [calendar components:NSWeekdayCalendarUnit fromDate:_value].weekday;
 	NSDateComponents *offsetComponents = [NSDateComponents new];
 	offsetComponents.day = (dayOfWeek >= firstWeekday) ? dayOfWeek - weekDay : dayOfWeek + 7 - firstWeekday;
-	return [LocalDate dateFromDate:[calendar dateByAddingComponents:offsetComponents toDate:_date options:0]];
+	return [LocalDate dateFromDate:[calendar dateByAddingComponents:offsetComponents toDate:_value options:0]];
 }
 
 - (LocalDate *)withDayOfMonth:(NSInteger)dayOfMonth
 {
-	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit fromDate:_date];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit fromDate:_value];
 	components.day = dayOfMonth;
 	return [[LocalDate alloc] initFromComponents:components];
 }
@@ -155,7 +155,7 @@ static NSDateFormatter *descriptionFormatter = nil;
 - (LocalDate *)withDayOfYear:(NSInteger)dayOfYear
 {
 	NSCalendar *calendar = [NSCalendar currentCalendar];
-	NSDateComponents *components = [calendar components:NSYearCalendarUnit fromDate:_date];
+	NSDateComponents *components = [calendar components:NSYearCalendarUnit fromDate:_value];
 	
 	components.day = dayOfYear;
 	components.month = 1;
@@ -165,47 +165,47 @@ static NSDateFormatter *descriptionFormatter = nil;
 
 - (UInt64)millis
 {
-	return (UInt64)(_date.timeIntervalSince1970 * 1000);
+	return (UInt64)(_value.timeIntervalSince1970 * 1000);
 }
 
-- (NSDate *)date
+- (NSDate *)value
 {
-	return _date;
+	return _value;
 }
 
 - (NSInteger)year
 {
-	return [[NSCalendar currentCalendar] components:NSYearCalendarUnit fromDate:_date].year;
+	return [[NSCalendar currentCalendar] components:NSYearCalendarUnit fromDate:_value].year;
 }
 
 - (NSInteger)monthOfYear
 {
-	return [[NSCalendar currentCalendar] components:NSMonthCalendarUnit fromDate:_date].month;
+	return [[NSCalendar currentCalendar] components:NSMonthCalendarUnit fromDate:_value].month;
 }
 
 - (NSInteger)dayOfMonth
 {
-	return [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:_date].day;
+	return [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:_value].day;
 }
 
 - (WeekDays)dayOfWeek
 {
-	return (WeekDays)[[NSCalendar currentCalendar] components:NSWeekdayCalendarUnit fromDate:_date].weekday;
+	return (WeekDays)[[NSCalendar currentCalendar] components:NSWeekdayCalendarUnit fromDate:_value].weekday;
 }
 
 - (NSInteger)dayOfYear
 {
-	return [[NSCalendar currentCalendar] ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:_date];
+	return [[NSCalendar currentCalendar] ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:_value];
 }
 
 - (NSInteger)weekyear
 {
-	return [[NSCalendar currentCalendar] components:NSYearForWeekOfYearCalendarUnit fromDate:_date].yearForWeekOfYear;
+	return [[NSCalendar currentCalendar] components:NSYearForWeekOfYearCalendarUnit fromDate:_value].yearForWeekOfYear;
 }
 
 - (NSInteger)weekOfWeekyear
 {
-	return [[NSCalendar currentCalendar] components:NSWeekOfYearCalendarUnit fromDate:_date].weekOfYear;
+	return [[NSCalendar currentCalendar] components:NSWeekOfYearCalendarUnit fromDate:_value].weekOfYear;
 }
 
 - (NSString *)description
@@ -216,37 +216,37 @@ static NSDateFormatter *descriptionFormatter = nil;
 		descriptionFormatter.dateFormat = @"yyyy-MM-dd";
 	}
 	
-	return [descriptionFormatter stringFromDate:_date];
+	return [descriptionFormatter stringFromDate:_value];
 }
 
 - (NSString *)debugDescription
 {
-	return _date.description;
+	return _value.description;
 }
 
 - (NSComparisonResult)compare:(LocalDate *)aDate
 {
-	return [_date compare:aDate.date];
+	return [_value compare:aDate.value];
 }
 
 - (BOOL)isBefore:(LocalDate *)aDate
 {
-	return [_date compare:aDate.date] == NSOrderedAscending;
+	return [_value compare:aDate.value] == NSOrderedAscending;
 }
 
 - (BOOL)isBeforeOrEqual:(LocalDate *)aDate
 {
-	return [_date compare:aDate.date] != NSOrderedDescending;
+	return [_value compare:aDate.value] != NSOrderedDescending;
 }
 
 - (BOOL)isAfter:(LocalDate *)aDate
 {
-	return [_date compare:aDate.date] == NSOrderedDescending;
+	return [_value compare:aDate.value] == NSOrderedDescending;
 }
 
 - (BOOL)isAfterOrEqual:(LocalDate *)aDate
 {
-	return [_date compare:aDate.date] != NSOrderedAscending;
+	return [_value compare:aDate.value] != NSOrderedAscending;
 }
 
 - (BOOL)isEqual:(id)object
@@ -268,12 +268,12 @@ static NSDateFormatter *descriptionFormatter = nil;
 	
 	LocalDate *aDate = (LocalDate *)object;
 	
-	return [_date isEqualToDate:aDate.date];
+	return [_value isEqualToDate:aDate.value];
 }
 
 - (BOOL)isEqualToDate:(LocalDate *)aDate
 {
-	return [_date isEqualToDate:aDate.date];
+	return [_value isEqualToDate:aDate.value];
 }
 
 - (LocalDateTime *)atTime:(LocalTime *)time

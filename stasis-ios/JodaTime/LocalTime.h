@@ -35,7 +35,7 @@
 - (LocalTime *)withSecondOfMinute:(NSInteger)secondOfMinute;
 
 @property (nonatomic, readonly) UInt64 millisOfDay;
-@property (nonatomic, readonly) NSDate *date;
+@property (nonatomic, readonly) NSDate *value;
 @property (nonatomic, readonly) NSInteger hourOfDay;
 @property (nonatomic, readonly) NSInteger minuteOfHour;
 @property (nonatomic, readonly) NSInteger secondOfMinute;

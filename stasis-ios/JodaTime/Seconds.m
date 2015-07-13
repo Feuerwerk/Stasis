@@ -59,7 +59,7 @@
 + (instancetype)secondsBetween:(LocalDateTime *)startDate and:(LocalDateTime *)stopDate
 {
 	NSCalendar *calendar = [NSCalendar currentCalendar];
-	NSDateComponents *components = [calendar components:NSSecondCalendarUnit fromDate:startDate.date toDate:stopDate.date options:0];
+	NSDateComponents *components = [calendar components:NSSecondCalendarUnit fromDate:startDate.value toDate:stopDate.value options:0];
 	return [Seconds seconds:components.second];
 }
 
