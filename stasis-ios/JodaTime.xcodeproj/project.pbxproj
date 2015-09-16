@@ -183,6 +183,7 @@
 		D3898A2216EA082A00CC7AD6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Boxx IT Solutions GmbH";
 			};
