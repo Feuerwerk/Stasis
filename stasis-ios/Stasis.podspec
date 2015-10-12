@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/Feuerwerk/Stasis"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { 'Christian Fruth' => 'christian.fruth@boxx-it.de' }
-  s.source       = { :git => "https://github.com/Feuerwerk/Stasis.git", :tag => s.version.to_s }
+  s.source       = { :git => "https://github.com/Feuerwerk/Stasis.git" }
   #s.platform     = :ios
   s.source_files = 'stasis-ios/Stasis/*.{h,m}'
   s.framework    = "CoreFoundation"
