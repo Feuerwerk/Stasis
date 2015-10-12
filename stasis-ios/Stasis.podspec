@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.author       = { 'Christian Fruth' => 'christian.fruth@boxx-it.de' }
   s.source       = { :git => "https://github.com/Feuerwerk/Stasis.git", :tag => s.version.to_s }
   #s.platform     = :ios
-  s.source_files = '*.{h,m}'
+  s.source_files = 'Stasis/*.{h,m}'
   #s.framework    = "CoreGraphics"
   s.requires_arc = true
 end
