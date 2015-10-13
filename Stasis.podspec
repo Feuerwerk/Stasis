@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'Stasis'
-  spec.version      = '1.0.1'
+  spec.version      = '1.0.0'
   spec.summary      = 'An RPC Framework for Java, .Net and Cocoa.'
   spec.homepage     = 'https://github.com/Feuerwerk/Stasis'
   spec.license     = { :type => 'MIT', :file => 'LICENSE' }
