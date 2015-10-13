@@ -7,7 +7,7 @@
 //
 
 #import "LocalDateTimeSerializer.h"
-#import "LocalDateTime.h"
+#import "../JodaTime/LocalDateTime.h"
 #import "Kryo.h"
 
 @implementation LocalDateTimeSerializer

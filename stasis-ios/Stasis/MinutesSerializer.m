@@ -7,7 +7,7 @@
 //
 
 #import "MinutesSerializer.h"
-#import "Minutes.h"
+#import "../JodaTime/Minutes.h"
 #import "Kryo.h"
 #import "KryoInput.h"
 #import "KryoOutput.h"

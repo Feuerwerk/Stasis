@@ -11,7 +11,7 @@
 #import "SerializableException.h"
 #import "AuthenticationMissmatchException.h"
 #import "ExceptionError.h"
-#import "LocalDate.h"
+#import "../JodaTime/LocalDate.h"
 #import "LocalDateSerializer.h"
 #import "HandshakeHandler.h"
 #import "AuthenticationResult.h"
