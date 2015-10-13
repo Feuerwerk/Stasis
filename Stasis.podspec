@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
   spec.platform    = :ios, '6.0'
   spec.ios.deployment_target = '6.0'
   spec.source_files = 'stasis-ios/Stasis/*.{h,m}'
-  spec.public_header_files = 'stasis-ios/Stasis/Stasis.h', 'stasis-ios/Stasis/RemoteConnection.h', 'stasis-ios/Stasis/HttpRemoteConnection.h', 'stasis-ios/Stasis/*Serializer.h', 'stasis-ios/Stasis/*Exception.h', 'stasis-ios/Stasis/StasisAsyncServiceWrapper.h', 'stasis-ios/Stasis/AuthenticationResult.h'
+  spec.public_header_files = 'stasis-ios/Stasis/Stasis.h', 'stasis-ios/Stasis/RemoteConnection.h', 'stasis-ios/Stasis/HttpRemoteConnection.h', 'stasis-ios/Stasis/*Serializer.h', 'stasis-ios/Stasis/*Exception.h', 'stasis-ios/Stasis/StasisAsyncServiceWrapper.h', 'stasis-ios/Stasis/AuthenticationResult.h', 'stasis-ios/Stasis/AsyncServiceDelegate.h'
   spec.resources    = 'stasis-ios/StasisResources/**/*.strings'
   spec.frameworks   = 'CoreFoundation'
   spec.library      = 'z'
