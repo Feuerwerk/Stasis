@@ -75,6 +75,11 @@
 	return self;
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone
+{
+	return self;
+}
+
 - (Weeks *)plus:(Weeks *)aWeeks
 {
 	return [Weeks weeks:_weeks + aWeeks->_weeks];
@@ -103,6 +108,11 @@
 	}
 	
 	return NO;
+}
+
+- (NSUInteger)hash
+{
+	return _weeks;
 }
 
 - (BOOL)isEqualToWeeks:(Weeks *)aWeeks

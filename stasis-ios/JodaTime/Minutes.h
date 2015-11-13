@@ -11,7 +11,7 @@
 @class LocalDateTime;
 @class LocalTime;
 
-@interface Minutes : Period
+@interface Minutes : Period<NSCopying>
 
 @property (nonatomic, readonly) NSInteger minutes;
 

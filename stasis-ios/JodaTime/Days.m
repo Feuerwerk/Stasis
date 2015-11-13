@@ -75,6 +75,11 @@
 	return self;
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone
+{
+	return self;
+}
+
 - (Days *)plus:(Days *)aDays
 {
 	return [Days days:_days + aDays->_days];
@@ -118,6 +123,11 @@
 	}
 	
 	return _days == aDays->_days;
+}
+
+- (NSUInteger)hash
+{
+	return _days;
 }
 
 - (NSComparisonResult)compare:(Days *)aDays

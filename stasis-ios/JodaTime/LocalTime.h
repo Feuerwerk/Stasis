@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface LocalTime : NSObject
+@interface LocalTime : NSObject<NSCopying>
 
 + (instancetype)midnight;
 
@@ -45,5 +45,7 @@
 - (BOOL)isBeforeOrEqual:(LocalTime *)aTime;
 - (BOOL)isAfter:(LocalTime *)aTime;
 - (BOOL)isAfterOrEqual:(LocalTime *)aTime;
+- (BOOL)isEqual:(id)object;
+- (BOOL)isEqualToTime:(LocalTime *)aTime;
 
 @end

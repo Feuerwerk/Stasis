@@ -75,6 +75,11 @@
 	return self;
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone
+{
+	return self;
+}
+
 - (Seconds *)plus:(Seconds *)aSeconds
 {
 	return [Seconds seconds:_seconds + aSeconds->_seconds];
@@ -118,6 +123,11 @@
 	}
 	
 	return _seconds == aSeconds->_seconds;
+}
+
+- (NSUInteger)hash
+{
+	return _seconds;
 }
 
 - (NSComparisonResult)compare:(Seconds *)aSeconds

@@ -10,7 +10,7 @@
 
 @class LocalDateTime;
 
-@interface Seconds : Period
+@interface Seconds : Period<NSCopying>
 
 @property (nonatomic, readonly) NSInteger seconds;
 

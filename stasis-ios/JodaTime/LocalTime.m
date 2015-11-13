@@ -126,6 +126,11 @@ static NSDateFormatter *descriptionFormatter = nil;
 	return self;
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone
+{
+	return self;
+}
+
 - (LocalTime *)plusHours:(NSInteger)hours
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
@@ -236,6 +241,38 @@ static NSDateFormatter *descriptionFormatter = nil;
 - (NSString *)debugDescription
 {
 	return _value.description;
+}
+
+- (BOOL)isEqual:(id)object
+{
+	if (object == nil)
+	{
+		return NO;
+	}
+	
+	if (object == self)
+	{
+		return YES;
+	}
+	
+	if (![object isKindOfClass:[LocalTime class]])
+	{
+		return NO;
+	}
+	
+	LocalTime *aTime = (LocalTime *)object;
+	
+	return [_value isEqualToDate:aTime.value];
+}
+
+- (BOOL)isEqualToTime:(LocalTime *)aTime
+{
+	return [_value isEqualToDate:aTime.value];
+}
+
+- (NSUInteger)hash
+{
+	return [_value hash];
 }
 
 - (NSComparisonResult)compare:(LocalTime *)aTime

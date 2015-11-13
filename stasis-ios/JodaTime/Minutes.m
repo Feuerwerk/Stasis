@@ -98,6 +98,11 @@
 	return self;
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone
+{
+	return self;
+}
+
 - (Minutes *)plus:(Minutes *)aMinutes
 {
 	return [Minutes minutes:_minutes + aMinutes->_minutes];
@@ -161,6 +166,11 @@
 	}
 	
 	return _minutes == aMinutes->_minutes;
+}
+
+- (NSUInteger)hash
+{
+	return _minutes;
 }
 
 - (NSComparisonResult)compare:(Minutes *)aMinutes

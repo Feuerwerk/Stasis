@@ -13,7 +13,7 @@
 @class LocalTime;
 @class Period;
 
-@interface LocalDateTime : NSObject
+@interface LocalDateTime : NSObject<NSCopying>
 {
 	NSDate *_value;
 }
@@ -68,5 +68,7 @@
 - (NSComparisonResult)compare:(LocalDateTime *)aDate;
 - (BOOL)isBefore:(LocalDateTime *)aDate;
 - (BOOL)isAfter:(LocalDateTime *)aDate;
+- (BOOL)isEqual:(id)object;
+- (BOOL)isEqualToDateTime:(LocalDateTime *)aDateTime;
 
 @end

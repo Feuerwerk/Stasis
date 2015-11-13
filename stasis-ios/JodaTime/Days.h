@@ -10,7 +10,7 @@
 
 @class LocalDate;
 
-@interface Days : Period
+@interface Days : Period<NSCopying>
 
 @property (nonatomic, readonly) NSInteger days;
 

@@ -10,7 +10,7 @@
 
 @class LocalDate;
 
-@interface Years : Period
+@interface Years : Period<NSCopying>
 
 @property (nonatomic, readonly) NSInteger years;
 

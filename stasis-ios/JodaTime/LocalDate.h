@@ -12,7 +12,7 @@
 @class LocalDateTime;
 @class LocalTime;
 
-@interface LocalDate : NSObject
+@interface LocalDate : NSObject<NSCopying>
 {
 	NSDate *_value;
 }

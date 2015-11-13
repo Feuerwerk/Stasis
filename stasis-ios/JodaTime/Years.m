@@ -75,6 +75,11 @@
 	return self;
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone
+{
+	return self;
+}
+
 - (Years *)plus:(Years *)aYears
 {
 	return [Years years:_years + aYears->_years];
@@ -118,6 +123,11 @@
 	}
 	
 	return _years == aYears->_years;
+}
+
+- (NSUInteger)hash
+{
+	return _years;
 }
 
 - (NSComparisonResult)compare:(Years *)aYears

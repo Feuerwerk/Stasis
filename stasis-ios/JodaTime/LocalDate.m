@@ -79,6 +79,11 @@ static NSDateFormatter *descriptionFormatter = nil;
 	return self;
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone
+{
+	return self;
+}
+
 - (LocalDate *)plusDays:(NSInteger)days
 {
 	NSDateComponents *offsetComponents = [NSDateComponents new];
@@ -274,6 +279,11 @@ static NSDateFormatter *descriptionFormatter = nil;
 - (BOOL)isEqualToDate:(LocalDate *)aDate
 {
 	return [_value isEqualToDate:aDate.value];
+}
+
+- (NSUInteger)hash
+{
+	return [_value hash];
 }
 
 - (LocalDateTime *)atTime:(LocalTime *)time

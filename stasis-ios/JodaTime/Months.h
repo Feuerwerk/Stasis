@@ -10,7 +10,7 @@
 
 @class LocalDate;
 
-@interface Months : Period
+@interface Months : Period<NSCopying>
 
 @property (nonatomic, readonly) NSInteger months;
 

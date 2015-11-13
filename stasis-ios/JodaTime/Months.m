@@ -75,6 +75,11 @@
 	return self;
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone
+{
+	return self;
+}
+
 - (Months *)plus:(Months *)aMonths
 {
 	return [Months months:_months + aMonths->_months];
@@ -118,6 +123,11 @@
 	}
 	
 	return _months == aMonths->_months;
+}
+
+- (NSUInteger)hash
+{
+	return _months;
 }
 
 - (NSComparisonResult)compare:(Months *)aMonths
