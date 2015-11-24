@@ -162,7 +162,8 @@ static NSMethodSignature *getMethodSignatureRecursively(Protocol *protocol, SEL 
 	{
 		SInt8 value;
 		[invocation getArgument:&value atIndex:index];
-		[arguments addObject:[JByte byteWithValue:value]];
+		//[arguments addObject:[JByte byteWithValue:value]];
+		[arguments addObject:[JBoolean boolWithValue:value > 0]]; // <== Änderung wegen XCode 7.1
 	}
 	else if (strcmp(type, @encode(SInt16)) == 0)
 	{
