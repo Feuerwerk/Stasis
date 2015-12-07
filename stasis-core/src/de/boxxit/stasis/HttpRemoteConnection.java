@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.ServiceLoader;
+import java.util.TreeMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.zip.GZIPInputStream;
@@ -23,6 +24,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.MapSerializer;
 import de.boxxit.stasis.serializer.ArraysListSerializer;
 import de.boxxit.stasis.serializer.CollectionsSerializers;
 
@@ -165,6 +167,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 		kryo = new Kryo();
 		kryo.setClassLoader(Thread.currentThread().getContextClassLoader());
 		kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
+		kryo.addDefaultSerializer(TreeMap.class, MapSerializer.class);
 		kryo.addDefaultSerializer(Collections.unmodifiableList(new ArrayList<Object>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
 		kryo.addDefaultSerializer(Collections.unmodifiableList(new LinkedList<Object>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
 
