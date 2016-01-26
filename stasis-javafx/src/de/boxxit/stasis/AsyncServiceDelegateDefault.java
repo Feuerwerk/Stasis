@@ -5,17 +5,17 @@ package de.boxxit.stasis;
  */
 public interface AsyncServiceDelegateDefault extends AsyncServiceDelegate
 {
-	public default void serviceCallWillBegin()
+	default void serviceCallWillBegin()
 	{
 
 	}
 
-	public default void serviceCallDidFinish()
+	default void serviceCallDidFinish()
 	{
 
 	}
 
-	public default void serviceCallFailed(Exception ex)
+	default void serviceCallFailed(Exception ex)
 	{
 
 	}

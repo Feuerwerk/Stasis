@@ -16,6 +16,9 @@
         <element id="archive" name="stasis-spring.jar">
           <element id="module-output" name="stasis-spring" />
         </element>
+        <element id="archive" name="stasis-swing.jar">
+          <element id="module-output" name="stasis-swing" />
+        </element>
       </root>
     </artifact>
   </component>
@@ -179,6 +182,7 @@
       <module fileurl="file://$PROJECT_DIR$/stasis-core/stasis-core.iml" filepath="$PROJECT_DIR$/stasis-core/stasis-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/stasis-javafx/stasis-javafx.iml" filepath="$PROJECT_DIR$/stasis-javafx/stasis-javafx.iml" />
       <module fileurl="file://$PROJECT_DIR$/stasis-spring/stasis-spring.iml" filepath="$PROJECT_DIR$/stasis-spring/stasis-spring.iml" />
+      <module fileurl="file://$PROJECT_DIR$/stasis-swing/stasis-swing.iml" filepath="$PROJECT_DIR$/stasis-swing/stasis-swing.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" project-jdk-type="JavaSDK">
