@@ -28,6 +28,8 @@
 	HTTPCookieStorage *_cookieStorage;
 }
 
+@property (nonatomic, readonly) HTTPCookieStorage *cookieStorage;
+
 - (id)initWithUrl:(NSURL *)url;
 
 @end

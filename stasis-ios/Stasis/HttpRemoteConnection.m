@@ -143,6 +143,11 @@ BOOL isUsingGzipEncoding(NSString *headerValue)
 	return self;
 }
 
+- (HTTPCookieStorage *)cookieStorage
+{
+	return _cookieStorage;
+}
+
 - (void)callAsync:(NSString *)name withArguments:(NSArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	if ((_state != Authenticated) && (_userName != nil) && (_password != nil))
