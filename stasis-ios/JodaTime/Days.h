@@ -14,16 +14,16 @@
 
 @property (nonatomic, readonly) NSInteger days;
 
-+ (instancetype)ZERO;
-+ (instancetype)ONE;
++ (nonnull instancetype)ZERO;
++ (nonnull instancetype)ONE;
 
-+ (instancetype)days:(NSInteger)days;
-+ (instancetype)daysBetween:(LocalDate *)startDate and:(LocalDate *)stopDate;
++ (nonnull instancetype)days:(NSInteger)days;
++ (nonnull instancetype)daysBetween:(nonnull LocalDate *)startDate and:(nonnull LocalDate *)stopDate;
 
-- (Days *)plus:(Days *)aDays;
-- (Days *)minus:(Days *)aDays;
+- (nonnull Days *)plus:(nonnull Days *)aDays;
+- (nonnull Days *)minus:(nonnull Days *)aDays;
 
-- (BOOL)isEqualToDays:(Days *)aDays;
-- (NSComparisonResult)compare:(Days *)aDays;
+- (BOOL)isEqualToDays:(nonnull Days *)aDays;
+- (NSComparisonResult)compare:(nonnull Days *)aDays;
 
 @end

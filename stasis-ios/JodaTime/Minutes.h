@@ -15,24 +15,24 @@
 
 @property (nonatomic, readonly) NSInteger minutes;
 
-+ (instancetype)ZERO;
-+ (instancetype)ONE;
-+ (instancetype)TWO;
++ (nonnull instancetype)ZERO;
++ (nonnull instancetype)ONE;
++ (nonnull instancetype)TWO;
 
-+ (instancetype)minutes:(NSInteger)minutes;
-+ (instancetype)minutesBetween:(LocalDateTime *)startDate and:(LocalDateTime *)stopDate;
-+ (instancetype)minutesOfTimeBetween:(LocalTime *)startTime and:(LocalTime *)stopTime;
++ (nonnull instancetype)minutes:(NSInteger)minutes;
++ (nonnull instancetype)minutesBetween:(nonnull LocalDateTime *)startDate and:(nonnull LocalDateTime *)stopDate;
++ (nonnull instancetype)minutesOfTimeBetween:(nonnull LocalTime *)startTime and:(nonnull LocalTime *)stopTime;
 
-- (Minutes *)plus:(Minutes *)aMinutes;
-- (Minutes *)minus:(Minutes *)aMinutes;
+- (nonnull Minutes *)plus:(nonnull Minutes *)aMinutes;
+- (nonnull Minutes *)minus:(nonnull Minutes *)aMinutes;
 
-- (BOOL)isBefore:(Minutes *)aMinutes;
-- (BOOL)isAfter:(Minutes *)aMinutes;
-- (BOOL)isBeforeOrEqual:(Minutes *)aMinutes;
-- (BOOL)isAfterOrEqual:(Minutes *)aMinutes;
-- (BOOL)isEqual:(id)object;
-- (BOOL)isEqualToMinutes:(Minutes *)aMinutes;
+- (BOOL)isBefore:(nonnull Minutes *)aMinutes;
+- (BOOL)isAfter:(nonnull Minutes *)aMinutes;
+- (BOOL)isBeforeOrEqual:(nonnull Minutes *)aMinutes;
+- (BOOL)isAfterOrEqual:(nonnull Minutes *)aMinutes;
+- (BOOL)isEqual:(nullable id)object;
+- (BOOL)isEqualToMinutes:(nonnull Minutes *)aMinutes;
 
-- (NSComparisonResult)compare:(Minutes *)aMinutes;
+- (NSComparisonResult)compare:(nonnull Minutes *)aMinutes;
 
 @end

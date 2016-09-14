@@ -14,16 +14,16 @@
 
 @property (nonatomic, readonly) NSInteger seconds;
 
-+ (instancetype)ZERO;
-+ (instancetype)ONE;
++ (nonnull instancetype)ZERO;
++ (nonnull instancetype)ONE;
 
-+ (instancetype)seconds:(NSInteger)seconds;
-+ (instancetype)secondsBetween:(LocalDateTime *)startDate and:(LocalDateTime *)stopDate;
++ (nonnull instancetype)seconds:(NSInteger)seconds;
++ (nonnull instancetype)secondsBetween:(nonnull LocalDateTime *)startDate and:(nonnull LocalDateTime *)stopDate;
 
-- (Seconds *)plus:(Seconds *)aSeconds;
-- (Seconds *)minus:(Seconds *)aSeconds;
+- (nonnull Seconds *)plus:(nonnull Seconds *)aSeconds;
+- (nonnull Seconds *)minus:(nonnull Seconds *)aSeconds;
 
-- (BOOL)isEqualToSeconds:(Seconds *)aSeconds;
-- (NSComparisonResult)compare:(Seconds *)aSeconds;
+- (BOOL)isEqualToSeconds:(nonnull Seconds *)aSeconds;
+- (NSComparisonResult)compare:(nonnull Seconds *)aSeconds;
 
 @end

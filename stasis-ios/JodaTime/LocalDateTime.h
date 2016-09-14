@@ -18,42 +18,42 @@
 	NSDate *_value;
 }
 
-+ (instancetype)date;
-+ (instancetype)dateFromMillis:(UInt64)millis;
-+ (instancetype)dateFromDate:(NSDate *)date;
-+ (instancetype)dateFromYear:(NSInteger)year month:(NSInteger)monthOfYear andDay:(NSInteger)dayOfMonth;
-+ (instancetype)dateFromDate:(LocalDate *)date andTime:(LocalTime *)time;
++ (nonnull instancetype)date;
++ (nonnull instancetype)dateFromMillis:(UInt64)millis;
++ (nonnull instancetype)dateFromDate:(nonnull NSDate *)date;
++ (nonnull instancetype)dateFromYear:(NSInteger)year month:(NSInteger)monthOfYear andDay:(NSInteger)dayOfMonth;
++ (nonnull instancetype)dateFromDate:(nonnull LocalDate *)date andTime:(nonnull LocalTime *)time;
 
-- (id)initFromDate:(NSDate *)date;
-- (id)initFromComponents:(NSDateComponents *)components;
+- (nonnull id)initFromDate:(nonnull NSDate *)date;
+- (nonnull id)initFromComponents:(nonnull NSDateComponents *)components;
 
-- (LocalDateTime *)plus:(Period *)period;
-- (LocalDateTime *)plusDays:(NSInteger)days;
-- (LocalDateTime *)plusWeeks:(NSInteger)weeks;
-- (LocalDateTime *)plusMonths:(NSInteger)months;
-- (LocalDateTime *)plusYears:(NSInteger)years;
-- (LocalDateTime *)plusHours:(NSInteger)hours;
-- (LocalDateTime *)plusMinutes:(NSInteger)minutes;
-- (LocalDateTime *)plusSeconds:(NSInteger)seconds;
+- (nonnull LocalDateTime *)plus:(nonnull Period *)period;
+- (nonnull LocalDateTime *)plusDays:(NSInteger)days;
+- (nonnull LocalDateTime *)plusWeeks:(NSInteger)weeks;
+- (nonnull LocalDateTime *)plusMonths:(NSInteger)months;
+- (nonnull LocalDateTime *)plusYears:(NSInteger)years;
+- (nonnull LocalDateTime *)plusHours:(NSInteger)hours;
+- (nonnull LocalDateTime *)plusMinutes:(NSInteger)minutes;
+- (nonnull LocalDateTime *)plusSeconds:(NSInteger)seconds;
 
-- (LocalDateTime *)minus:(Period *)period;
-- (LocalDateTime *)minusDays:(NSInteger)days;
-- (LocalDateTime *)minusWeeks:(NSInteger)weeks;
-- (LocalDateTime *)minusMonths:(NSInteger)months;
-- (LocalDateTime *)minusYears:(NSInteger)years;
-- (LocalDateTime *)minusHours:(NSInteger)hours;
-- (LocalDateTime *)minusMinutes:(NSInteger)minutes;
-- (LocalDateTime *)minusSeconds:(NSInteger)seconds;
+- (nonnull LocalDateTime *)minus:(nonnull Period *)period;
+- (nonnull LocalDateTime *)minusDays:(NSInteger)days;
+- (nonnull LocalDateTime *)minusWeeks:(NSInteger)weeks;
+- (nonnull LocalDateTime *)minusMonths:(NSInteger)months;
+- (nonnull LocalDateTime *)minusYears:(NSInteger)years;
+- (nonnull LocalDateTime *)minusHours:(NSInteger)hours;
+- (nonnull LocalDateTime *)minusMinutes:(NSInteger)minutes;
+- (nonnull LocalDateTime *)minusSeconds:(NSInteger)seconds;
 
-- (LocalDateTime *)withDayOfWeek:(NSInteger)dayOfWeek;
-- (LocalDateTime *)withDayOfMonth:(NSInteger)dayOfMonth;
-- (LocalDateTime *)withDayOfYear:(NSInteger)dayOfYear;
-- (LocalDateTime *)withHourOfDay:(NSInteger)hourOfDay;
-- (LocalDateTime *)withMinuteOfHour:(NSInteger)minuteOfHour;
-- (LocalDateTime *)withSecondOfMinute:(NSInteger)secondOfMinute;
+- (nonnull LocalDateTime *)withDayOfWeek:(NSInteger)dayOfWeek;
+- (nonnull LocalDateTime *)withDayOfMonth:(NSInteger)dayOfMonth;
+- (nonnull LocalDateTime *)withDayOfYear:(NSInteger)dayOfYear;
+- (nonnull LocalDateTime *)withHourOfDay:(NSInteger)hourOfDay;
+- (nonnull LocalDateTime *)withMinuteOfHour:(NSInteger)minuteOfHour;
+- (nonnull LocalDateTime *)withSecondOfMinute:(NSInteger)secondOfMinute;
 
 @property (nonatomic, readonly) UInt64 millis;
-@property (nonatomic, readonly) NSDate *value;
+@property (nonatomic, readonly, nonnull) NSDate *value;
 @property (nonatomic, readonly) NSInteger year;
 @property (nonatomic, readonly) NSInteger monthOfYear;
 @property (nonatomic, readonly) NSInteger dayOfMonth;
@@ -65,10 +65,10 @@
 @property (nonatomic, readonly) NSInteger minuteOfHour;
 @property (nonatomic, readonly) NSInteger secondOfMinute;
 
-- (NSComparisonResult)compare:(LocalDateTime *)aDate;
-- (BOOL)isBefore:(LocalDateTime *)aDate;
-- (BOOL)isAfter:(LocalDateTime *)aDate;
-- (BOOL)isEqual:(id)object;
-- (BOOL)isEqualToDateTime:(LocalDateTime *)aDateTime;
+- (NSComparisonResult)compare:(nonnull LocalDateTime *)aDate;
+- (BOOL)isBefore:(nonnull LocalDateTime *)aDate;
+- (BOOL)isAfter:(nonnull LocalDateTime *)aDate;
+- (BOOL)isEqual:(nullable id)object;
+- (BOOL)isEqualToDateTime:(nonnull LocalDateTime *)aDateTime;
 
 @end

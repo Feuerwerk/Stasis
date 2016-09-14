@@ -14,16 +14,16 @@
 
 @property (nonatomic, readonly) NSInteger years;
 
-+ (instancetype)ZERO;
-+ (instancetype)ONE;
++ (nonnull instancetype)ZERO;
++ (nonnull instancetype)ONE;
 
-+ (instancetype)years:(NSInteger)years;
-+ (instancetype)yearsBetween:(LocalDate *)startDate and:(LocalDate *)stopDate;
++ (nonnull instancetype)years:(NSInteger)years;
++ (nonnull instancetype)yearsBetween:(nonnull LocalDate *)startDate and:(nonnull LocalDate *)stopDate;
 
-- (Years *)plus:(Years *)aYears;
-- (Years *)minus:(Years *)aYears;
+- (nonnull Years *)plus:(nonnull Years *)aYears;
+- (nonnull Years *)minus:(nonnull Years *)aYears;
 
-- (BOOL)isEqualToYears:(Years *)aYears;
-- (NSComparisonResult)compare:(Years *)aYears;
+- (BOOL)isEqualToYears:(nonnull Years *)aYears;
+- (NSComparisonResult)compare:(nonnull Years *)aYears;
 
 @end

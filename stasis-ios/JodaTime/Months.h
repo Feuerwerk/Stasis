@@ -14,16 +14,16 @@
 
 @property (nonatomic, readonly) NSInteger months;
 
-+ (instancetype)ZERO;
-+ (instancetype)ONE;
++ (nonnull instancetype)ZERO;
++ (nonnull instancetype)ONE;
 
-+ (instancetype)months:(NSInteger)months;
-+ (instancetype)monthsBetween:(LocalDate *)startDate and:(LocalDate *)stopDate;
++ (nonnull instancetype)months:(NSInteger)months;
++ (nonnull instancetype)monthsBetween:(nonnull LocalDate *)startDate and:(nonnull LocalDate *)stopDate;
 
-- (Months *)plus:(Months *)aMonths;
-- (Months *)minus:(Months *)aMonths;
+- (nonnull Months *)plus:(nonnull Months *)aMonths;
+- (nonnull Months *)minus:(nonnull Months *)aMonths;
 
-- (BOOL)isEqualToMonths:(Months *)aMonths;
-- (NSComparisonResult)compare:(Months *)aMonths;
+- (BOOL)isEqualToMonths:(nonnull Months *)aMonths;
+- (NSComparisonResult)compare:(nonnull Months *)aMonths;
 
 @end
