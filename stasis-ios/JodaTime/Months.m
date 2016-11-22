@@ -59,7 +59,7 @@
 + (instancetype)monthsBetween:(LocalDate *)startDate and:(LocalDate *)stopDate
 {
 	NSCalendar *calendar = [NSCalendar currentCalendar];
-	NSDateComponents *components = [calendar components:NSMonthCalendarUnit fromDate:startDate.value toDate:stopDate.value options:0];
+	NSDateComponents *components = [calendar components:NSCalendarUnitMonth fromDate:startDate.value toDate:stopDate.value options:0];
 	return [Months months:components.month];
 }
 

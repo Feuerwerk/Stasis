@@ -59,8 +59,8 @@
 + (instancetype)weeksBetween:(LocalDate *)startDate and:(LocalDate *)stopDate
 {
 	NSCalendar *calendar = [NSCalendar currentCalendar];
-	NSDateComponents *components = [calendar components:NSWeekCalendarUnit fromDate:startDate.value toDate:stopDate.value options:0];
-	return [Weeks weeks:components.week];
+	NSDateComponents *components = [calendar components:NSCalendarUnitWeekOfYear fromDate:startDate.value toDate:stopDate.value options:0];
+	return [Weeks weeks:components.weekOfYear];
 }
 
 - (instancetype)initWithWeeks:(NSInteger)weeks
@@ -147,7 +147,7 @@
 
 - (void)fill:(NSDateComponents *)components
 {
-	components.week = _weeks;
+	components.weekOfYear = _weeks;
 }
 
 - (NSString *)description

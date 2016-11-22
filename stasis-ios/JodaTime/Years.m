@@ -59,7 +59,7 @@
 + (instancetype)yearsBetween:(LocalDate *)startDate and:(LocalDate *)stopDate
 {
 	NSCalendar *calendar = [NSCalendar currentCalendar];
-	NSDateComponents *components = [calendar components:NSYearCalendarUnit fromDate:startDate.value toDate:stopDate.value options:0];
+	NSDateComponents *components = [calendar components:NSCalendarUnitYear fromDate:startDate.value toDate:stopDate.value options:0];
 	return [Years years:components.year];
 }
 

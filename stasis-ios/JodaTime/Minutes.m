@@ -75,14 +75,14 @@
 + (instancetype)minutesBetween:(LocalDateTime *)startDate and:(LocalDateTime *)stopDate
 {
 	NSCalendar *calendar = [NSCalendar currentCalendar];
-	NSDateComponents *components = [calendar components:NSMinuteCalendarUnit fromDate:startDate.value toDate:stopDate.value options:0];
+	NSDateComponents *components = [calendar components:NSCalendarUnitMinute fromDate:startDate.value toDate:stopDate.value options:0];
 	return [Minutes minutes:components.minute];
 }
 
 + (instancetype)minutesOfTimeBetween:(LocalTime *)startTime and:(LocalTime *)stopTime
 {
 	NSCalendar *calendar = [NSCalendar currentCalendar];
-	NSDateComponents *components = [calendar components:NSMinuteCalendarUnit fromDate:startTime.value toDate:startTime.value options:0];
+	NSDateComponents *components = [calendar components:NSCalendarUnitMinute fromDate:startTime.value toDate:startTime.value options:0];
 	return [Minutes minutes:components.minute];
 }
 
