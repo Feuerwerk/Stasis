@@ -7,7 +7,7 @@ import de.boxxit.stasis.serializer.SerializableExceptionSerializer;
  * User: Christian Fruth
  */
 @DefaultSerializer(SerializableExceptionSerializer.class)
-public class SerializableException extends Exception
+public class SerializableException extends RuntimeException
 {
 	private String type;
 
