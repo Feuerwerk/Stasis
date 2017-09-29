@@ -13,7 +13,7 @@
 #import "AsyncServiceDelegate.h"
 #import <objc/runtime.h>
 
-typedef void(^RawDelegatePtr)();
+typedef void(^RawDelegatePtr)(void);
 
 @interface StasisAsyncServiceWrapper ()
 
@@ -262,7 +262,7 @@ static NSMethodSignature *getMethodSignatureRecursively(Protocol *protocol, SEL 
 
 	if (blockArgumentCount == 1)
 	{
-		void (^voidDelegate)() = delegate;
+		void (^voidDelegate)(void) = delegate;
 		voidDelegate();
 	}
 	else if (blockArgumentCount == 2)
