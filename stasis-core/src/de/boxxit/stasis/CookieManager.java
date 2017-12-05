@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -33,7 +34,7 @@ public class CookieManager
 	public CookieManager()
 	{
 		store = new HashMap<String, Map<String, Map<String, String>>>();
-		dateFormat = new SimpleDateFormat(DATE_FORMAT);
+		dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
 	}
 
 
@@ -69,7 +70,7 @@ public class CookieManager
 		// OK, now we are ready to get the cookies out of the URLConnection
 		String headerName;
 
-		for (int i = 1; (headerName = conn.getHeaderFieldKey(i)) != null; i++)
+		for (int i = 0; (headerName = conn.getHeaderFieldKey(i)) != null; i++)
 		{
 			if (headerName.equalsIgnoreCase(SET_COOKIE))
 			{
