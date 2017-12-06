@@ -68,14 +68,26 @@ public class CookieManager
 		}
 
 		// OK, now we are ready to get the cookies out of the URLConnection
-		String headerName;
-
-		for (int i = 0; (headerName = conn.getHeaderFieldKey(i)) != null; i++)
+		for (int i = 0; ; i++)
 		{
+			final String headerName = conn.getHeaderFieldKey(i);
+
+			if (headerName == null)
+			{
+				if (conn.getHeaderField(i) == null)
+				{
+					break;
+				}
+				else
+				{
+					continue;
+				}
+			}
+
 			if (headerName.equalsIgnoreCase(SET_COOKIE))
 			{
-				Map<String, String> cookie = new HashMap<String, String>();
-				StringTokenizer tokenizer = new StringTokenizer(conn.getHeaderField(i), COOKIE_VALUE_DELIMITER);
+				final Map<String, String> cookie = new HashMap<String, String>();
+				final StringTokenizer tokenizer = new StringTokenizer(conn.getHeaderField(i), COOKIE_VALUE_DELIMITER);
 
 				// the specification dictates that the first name/value pair
 				// in the string is the cookie name and value, so let's handle
@@ -83,16 +95,16 @@ public class CookieManager
 
 				if (tokenizer.hasMoreTokens())
 				{
-					String token = tokenizer.nextToken();
-					int index = token.indexOf(NAME_VALUE_SEPARATOR);
+					final String token = tokenizer.nextToken();
+					final int index = token.indexOf(NAME_VALUE_SEPARATOR);
 
 					if (index == -1)
 					{
 						continue;
 					}
 
-					String name = token.substring(0, index);
-					String value = token.substring(index + 1);
+					final String name = token.substring(0, index);
+					final String value = token.substring(index + 1);
 
 					domainStore.put(name, cookie);
 					cookie.put(name, value);
@@ -100,16 +112,16 @@ public class CookieManager
 
 				while (tokenizer.hasMoreTokens())
 				{
-					String token = tokenizer.nextToken();
-					int index = token.indexOf(NAME_VALUE_SEPARATOR);
+					final String token = tokenizer.nextToken();
+					final int index = token.indexOf(NAME_VALUE_SEPARATOR);
 
 					if (index == -1)
 					{
 						continue;
 					}
 
-					String name = token.substring(0, index);
-					String value = token.substring(index + 1);
+					final String name = token.substring(0, index);
+					final String value = token.substring(index + 1);
 
 					cookie.put(name.toLowerCase(), value);
 				}
