@@ -10,6 +10,7 @@
 #import "RemoteConnection.h"
 #import "SerializableException.h"
 #import "MessageException.h"
+#import "ExceptionError.h"
 #import "StasisAsyncServiceWrapper.h"
 
 #define VERSION_NUMBER_KEY @"version.number"
