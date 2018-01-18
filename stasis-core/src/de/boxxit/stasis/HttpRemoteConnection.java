@@ -162,6 +162,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 	private String activePassword;
 	private Map<String, Object> activeRequest;
 	private boolean gzipAvailable = false;
+	private int timeout = 300000;
 
 	{
 		kryo = new Kryo();
@@ -190,6 +191,11 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 		this.url = url;
 		this.state = ConnectionState.Unconnected;
 
+	}
+
+	public void setTimeout(int timeout)
+	{
+		this.timeout = timeout;
 	}
 
 	public CookieManager getCookieManager()
@@ -495,6 +501,8 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 		connection.setRequestMethod(REQUEST_METHOD);
 		connection.setRequestProperty(CONTENT_TYPE_KEY, StasisConstants.CONTENT_TYPE);
 		connection.setRequestProperty(StasisUtils.ACCEPT_ENCODING_KEY, StasisUtils.GZIP_ENCODING);
+		connection.setConnectTimeout(timeout);
+		connection.setReadTimeout(timeout);
 		connection.setUseCaches(false);
 		connection.setDoInput(true);
 		connection.setDoOutput(true);
