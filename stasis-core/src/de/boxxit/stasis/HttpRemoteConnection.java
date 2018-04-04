@@ -25,6 +25,8 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
+import de.boxxit.stasis.kryo.FixedClassResolver;
+import de.boxxit.stasis.kryo.FixedReferenceResolver;
 import de.boxxit.stasis.serializer.ArraysListSerializer;
 import de.boxxit.stasis.serializer.CollectionsSerializers;
 
@@ -165,7 +167,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 	private int timeout = 300000;
 
 	{
-		kryo = new Kryo();
+		kryo = new Kryo(new FixedClassResolver(), new FixedReferenceResolver());
 		kryo.setClassLoader(Thread.currentThread().getContextClassLoader());
 		kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
 		kryo.addDefaultSerializer(TreeMap.class, MapSerializer.class);

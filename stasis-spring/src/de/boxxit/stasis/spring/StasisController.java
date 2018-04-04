@@ -25,6 +25,8 @@ import de.boxxit.stasis.AuthenticationResult;
 import de.boxxit.stasis.SerializableException;
 import de.boxxit.stasis.StasisConstants;
 import de.boxxit.stasis.StasisUtils;
+import de.boxxit.stasis.kryo.FixedClassResolver;
+import de.boxxit.stasis.kryo.FixedReferenceResolver;
 import de.boxxit.stasis.security.LoginException;
 import de.boxxit.stasis.security.LoginService;
 import de.boxxit.stasis.security.LoginStatus;
@@ -82,7 +84,7 @@ public class StasisController implements Controller, ApplicationContextAware
 
 				io.input = new Input(4096);
 				io.output = new Output(4096);
-				io.kryo = new Kryo();
+				io.kryo = new Kryo(new FixedClassResolver(), new FixedReferenceResolver());
 
 				io.kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
 				io.kryo.addDefaultSerializer(Collections.unmodifiableList(new ArrayList<>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);

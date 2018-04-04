@@ -29,9 +29,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="Kryo 2.20" level="project" />
     <orderEntry type="library" exported="" name="Joda-Time 2.2" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="Objenesis 1.2" level="project" />
+    <orderEntry type="library" exported="" name="Minlog 1.2" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="Reflectasm 1.07" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="Minlog 1.2" level="project" />
+    <orderEntry type="library" exported="" scope="RUNTIME" name="Objenesis 1.2" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="ASM 4.0" level="project" />
   </component>
 </module>

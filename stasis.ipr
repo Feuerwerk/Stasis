@@ -10,9 +10,6 @@
         <element id="archive" name="stasis-javafx.jar">
           <element id="module-output" name="stasis-javafx" />
         </element>
-        <element id="archive" name="stasis-android.jar">
-          <element id="module-output" name="stasis-android" />
-        </element>
         <element id="archive" name="stasis-spring.jar">
           <element id="module-output" name="stasis-spring" />
         </element>
@@ -42,8 +39,11 @@
   <component name="DependencyValidationManager">
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
   </component>
-  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+  <component name="Encoding">
     <file url="PROJECT" charset="UTF-8" />
+  </component>
+  <component name="HotSwapAgentPluginSettingsProvider">
+    <option name="agentPath" value="$APPLICATION_PLUGINS_DIR$/hotswap-agent-intellij-plugin/lib/agent/hotswap-agent-1.2.0.jar" />
   </component>
   <component name="InspectionProjectProfileManager">
     <profile version="1.0">
