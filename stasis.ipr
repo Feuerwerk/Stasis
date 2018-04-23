@@ -221,15 +221,15 @@
         <root url="jar://$PROJECT_DIR$/lib/joda-time-2.2/joda-time-2.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Kryo 2.20">
+    <library name="Kryo 2.24">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/kryo-2.20/kryo-2.20.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/kryo-2.24/kryo-2.24.0.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$PROJECT_DIR$/lib/kryo-2.20/kryo-doc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/kryo-2.24/kryo-2.24.0-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/lib/kryo-2.20/kryo-src.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/kryo-2.24/kryo-2.24.0-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Minlog 1.2">

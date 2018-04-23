@@ -52,7 +52,7 @@ public class FixedReferenceResolver implements ReferenceResolver
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void addReadObject(int id, Object object)
+	public void setReadObject(int id, Object object)
 	{
 		readObjects.set(id, object);
 	}
