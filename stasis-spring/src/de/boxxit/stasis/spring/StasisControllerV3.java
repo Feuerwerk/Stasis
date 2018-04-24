@@ -22,6 +22,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.pool.KryoPool;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
 import de.boxxit.stasis.AuthenticationMissmatchException;
 import de.boxxit.stasis.AuthenticationResult;
@@ -32,8 +33,6 @@ import de.boxxit.stasis.MethodResult;
 import de.boxxit.stasis.SerializableException;
 import de.boxxit.stasis.StasisConstants;
 import de.boxxit.stasis.StasisUtils;
-import de.boxxit.stasis.kryo.FixedClassResolver;
-import de.boxxit.stasis.kryo.FixedReferenceResolver;
 import de.boxxit.stasis.security.LoginException;
 import de.boxxit.stasis.security.LoginService;
 import de.boxxit.stasis.security.LoginStatus;
@@ -72,6 +71,7 @@ public class StasisControllerV3 implements Controller, ApplicationContextAware, 
 		}
 	}
 
+	private KryoPool.KryoFactory kryoFactory = Kryo::new;
 	private Map<String, Object> services;
 	private List<String> serviceNames;
 	private List<Registration> registeredSerializers;
@@ -93,7 +93,7 @@ public class StasisControllerV3 implements Controller, ApplicationContextAware, 
 
 				io.input = new Input(4096);
 				io.output = new Output(4096);
-				io.kryo = new Kryo(new FixedClassResolver(), new FixedReferenceResolver());
+				io.kryo = kryoFactory.create();
 
 				io.kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
 				io.kryo.addDefaultSerializer(TreeMap.class, MapSerializer.class);
@@ -147,6 +147,11 @@ public class StasisControllerV3 implements Controller, ApplicationContextAware, 
 		};
 
 		ioPool = new StackObjectPool<>(poolableObjectFactory);
+	}
+
+	public void setKryoFactory(KryoPool.KryoFactory kryoFactory)
+	{
+		this.kryoFactory = kryoFactory;
 	}
 
 	public void setLoginValidator(LoginValidator loginValidator)

@@ -2,7 +2,9 @@ package de.boxxit.stasis.spring;
 
 import java.net.URL;
 import java.util.List;
+import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
+import com.esotericsoftware.kryo.pool.KryoPool;
 import de.boxxit.stasis.RemoteConnection;
 import de.boxxit.stasis.RemoteConnectionFactory;
 import org.springframework.beans.factory.FactoryBean;
@@ -16,6 +18,7 @@ public class RemoteConnectionFactoryBean implements FactoryBean<RemoteConnection
 	private RemoteConnection connection;
 	private List<Registration> registeredSerializers;
 	private URL endpointUrl;
+	private KryoPool.KryoFactory kryoFactory = Kryo::new;
 	private Class<? extends Serializer<?>> defaultSerializer;
 
 	public RemoteConnectionFactoryBean()
@@ -37,6 +40,11 @@ public class RemoteConnectionFactoryBean implements FactoryBean<RemoteConnection
 		this.registeredSerializers = registeredSerializers;
 	}
 
+	public void setKryoFactory(KryoPool.KryoFactory kryoFactory)
+	{
+		this.kryoFactory = kryoFactory;
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public void afterPropertiesSet() throws Exception
@@ -46,7 +54,7 @@ public class RemoteConnectionFactoryBean implements FactoryBean<RemoteConnection
 			throw new IllegalArgumentException("property endpointUrl must not be null");
 		}
 
-		connection = RemoteConnectionFactory.createConnection(endpointUrl);
+		connection = RemoteConnectionFactory.createConnection(endpointUrl, kryoFactory);
 
 		if (connection == null)
 		{

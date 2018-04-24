@@ -24,9 +24,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.pool.KryoPool;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
-import de.boxxit.stasis.kryo.FixedClassResolver;
-import de.boxxit.stasis.kryo.FixedReferenceResolver;
 import de.boxxit.stasis.serializer.ArraysListSerializer;
 import de.boxxit.stasis.serializer.CollectionsSerializers;
 
@@ -166,8 +165,12 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 	private boolean gzipAvailable = false;
 	private int timeout = 300000;
 
+	public HttpRemoteConnection(URL url, KryoPool.KryoFactory kryoFactory)
 	{
-		kryo = new Kryo(new FixedClassResolver(), new FixedReferenceResolver());
+		this.url = url;
+		this.state = ConnectionState.Unconnected;
+
+		kryo = kryoFactory.create();
 		kryo.setClassLoader(Thread.currentThread().getContextClassLoader());
 		kryo.addDefaultSerializer(Arrays.asList().getClass(), ArraysListSerializer.class);
 		kryo.addDefaultSerializer(TreeMap.class, MapSerializer.class);
@@ -175,7 +178,7 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 		kryo.addDefaultSerializer(Collections.unmodifiableList(new LinkedList<Object>()).getClass(), CollectionsSerializers.UnmodifiableListSerializer.class);
 
 		// passenden Synchronizer finden
-		Iterator<Synchronizer> serviceIter = ServiceLoader.load(Synchronizer.class).iterator();
+		final Iterator<Synchronizer> serviceIter = ServiceLoader.load(Synchronizer.class).iterator();
 
 		if (serviceIter.hasNext())
 		{
@@ -186,13 +189,6 @@ public class HttpRemoteConnection extends AbstractRemoteConnection
 		Thread workerThread = new Thread(new ConnectionWorker(), "Statis:HttpRemoteConnection");
 		workerThread.setDaemon(true);
 		workerThread.start();
-	}
-
-	public HttpRemoteConnection(URL url)
-	{
-		this.url = url;
-		this.state = ConnectionState.Unconnected;
-
 	}
 
 	public void setTimeout(int timeout)
