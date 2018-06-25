@@ -158,15 +158,24 @@ BOOL isUsingGzipEncoding(NSString *headerValue)
 	else
 	{
 		// Die Service-Funktion ausführen
+		__typeof(self) __weak weakSelf = self;
+		
 		[self invokeServiceFunction:name withArguments:args handshakeHandler:_handshakeHandler andTryCount:1 returning:resultHandler error:^(NSError *error)
 		{
+			__typeof(self) __strong strongSelf = weakSelf;
+			
+			if (strongSelf == nil)
+			{
+				return;
+			}
+			
 			// Ausführung der Service-Funktion ist fehlgeschlagen
 			if ([error.domain isEqualToString:CONNECTION_ERROR_DOMAIN] && (error.code == ERROR_AUTHENTICATION_MISSMATCH))
 			{
-				assert(_activeUserName != nil);
-				assert(_activePassword != nil);
+				assert(strongSelf->_activeUserName != nil);
+				assert(strongSelf->_activePassword != nil);
 				
-				[self invokeLoginForUser:_activeUserName password:_activePassword andParameters:_activeParameters followingFunction:name withArguments:args returning:resultHandler error:errorHandler];
+				[strongSelf invokeLoginForUser:strongSelf->_activeUserName password:strongSelf->_activePassword andParameters:strongSelf->_activeParameters followingFunction:name withArguments:args returning:resultHandler error:errorHandler];
 			}
 			else
 			{
@@ -236,8 +245,17 @@ BOOL isUsingGzipEncoding(NSString *headerValue)
 - (void)invokeLoginForUser:(NSString *)userName password:(NSString *)password andParameters:(NSDictionary *)parameters followingFunction:(NSString *)name withArguments:(NSArray *)args returning:(void (^)(id))resultHandler error:(void (^)(NSError *))errorHandler
 {
 	// Die Verbindung noch nicht authentifiziert ist, aber Credentials vorliegen zuerst einloggen
+	__typeof(self) __weak weakSelf = self;
+	
 	[self invokeLoginForUser:userName password:password andParameters:parameters handshakeHandler:_handshakeHandler returning:^(AuthenticationResult *authenticationResult, NSDictionary *loginResult)
 	{
+		__typeof(self) __strong strongSelf = weakSelf;
+		
+		if (strongSelf == nil)
+		{
+			return;
+		}
+		
 		if (authenticationResult != AuthenticationResult.AUTHENTICATED)
 		{
 			// Die Authentifizierung ist fehlgeschlagen
@@ -246,7 +264,7 @@ BOOL isUsingGzipEncoding(NSString *headerValue)
 		}
 		 
 		// Die Service-Funktion ausführen
-		[self invokeServiceFunction:name withArguments:args handshakeHandler:_handshakeHandler andTryCount:1 returning:resultHandler error:errorHandler];
+		[strongSelf invokeServiceFunction:name withArguments:args handshakeHandler:strongSelf->_handshakeHandler andTryCount:1 returning:resultHandler error:errorHandler];
 	} error:errorHandler];
 }
 
@@ -255,7 +273,7 @@ BOOL isUsingGzipEncoding(NSString *headerValue)
 	[_output clear];
 	[_kryo writeObject:[MethodCall methodCall:name withArguments:args assumingAuthenticated:self.state == Authenticated] to:_output];
 	
-	__weak HttpRemoteConnection *weakSelf = self;
+	__typeof(self) __weak weakSelf = self;
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:_url];
 	
 	[request addValue:CONTENT_TYPE_VALUE forHTTPHeaderField:CONTENT_TYPE_KEY];
@@ -279,12 +297,19 @@ BOOL isUsingGzipEncoding(NSString *headerValue)
 	
 	[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
 	 {
+		 __typeof(self) __strong strongSelf = weakSelf;
+		 
+		 if (strongSelf == nil)
+		 {
+			 return;
+		 }
+		 
 		if (error == nil)
 		{
 			NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-			_gzipAvailable |= isUsingGzipEncoding(httpResponse.allHeaderFields[CONTENT_ENCODING_KEY]);
+			strongSelf->_gzipAvailable |= isUsingGzipEncoding(httpResponse.allHeaderFields[CONTENT_ENCODING_KEY]);
 			
-			[_cookieStorage handleCookiesInResponse:httpResponse];
+			[strongSelf->_cookieStorage handleCookiesInResponse:httpResponse];
 			
 			if (data.length == 0)
 			{
@@ -297,10 +322,10 @@ BOOL isUsingGzipEncoding(NSString *headerValue)
 				
 				if (handshakeHandler != nil)
 				{
-					handled = [handshakeHandler handleResponse:response withData:data forConnection:weakSelf tryCount:tryCount returning:^(NSError *error) {
+					handled = [handshakeHandler handleResponse:response withData:data forConnection:strongSelf tryCount:tryCount returning:^(NSError *error) {
 						if (error == nil)
 						{
-							[weakSelf invokeServiceFunction:name withArguments:args handshakeHandler:handshakeHandler andTryCount:tryCount + 1 returning:resultHandler error:errorHandler];
+							[strongSelf invokeServiceFunction:name withArguments:args handshakeHandler:handshakeHandler andTryCount:tryCount + 1 returning:resultHandler error:errorHandler];
 						}
 						else
 						{
@@ -320,12 +345,12 @@ BOOL isUsingGzipEncoding(NSString *headerValue)
 			 
 			@try
 			{
-				_input.buffer = data;
-				MethodResult *methodResult = [_kryo readObject:_input ofClass:[MethodResult class]];
+				strongSelf->_input.buffer = data;
+				MethodResult *methodResult = [strongSelf->_kryo readObject:strongSelf->_input ofClass:[MethodResult class]];
 				
-				if (_state == Unconnected)
+				if (strongSelf->_state == Unconnected)
 				{
-					_state = Connected;
+					strongSelf->_state = Connected;
 				}
 				
 				switch (methodResult.type)
@@ -369,7 +394,7 @@ BOOL isUsingGzipEncoding(NSString *headerValue)
 			}
 			@finally
 			{
-				_input.buffer = nil;
+				strongSelf->_input.buffer = nil;
 			}
 		 }
 		 else
@@ -388,21 +413,29 @@ BOOL isUsingGzipEncoding(NSString *headerValue)
 	}
 	
 	NSArray *args = [NSArray arrayWithObjects:userName, password, parameters, nil];
+	__typeof(self) __weak weakSelf = self;
 	
 	[self invokeServiceFunction:LOGIN_FUNCTION withArguments:args handshakeHandler:handshakeHandler andTryCount:1 returning:^(id result)
 	{
+		__typeof(self) __strong strongSelf = weakSelf;
+		
+		if (strongSelf == nil)
+		{
+			return;
+		}
+		
 		LoginResult *loginResult = (LoginResult *)result;
 
 		if (loginResult.authenticationResult == AuthenticationResult.AUTHENTICATED)
 		{
 			NSMutableDictionary *newParameters = [NSMutableDictionary new];
-			[newParameters addEntriesFromDictionary:parameters];
-			[newParameters addEntriesFromDictionary:loginResult.loginResponse];
+			[newParameters addEntriesFromDictionary: parameters];
+			[newParameters addEntriesFromDictionary: loginResult.loginResponse];
 			 
-			_activeUserName = userName;
-			_activePassword = password;
-			_activeParameters = newParameters;
-			_state = Authenticated;
+			strongSelf->_activeUserName = userName;
+			strongSelf->_activePassword = password;
+			strongSelf->_activeParameters = newParameters;
+			strongSelf->_state = Authenticated;
 		}
 		 
 		resultHandler(loginResult.authenticationResult, loginResult.loginResponse);
