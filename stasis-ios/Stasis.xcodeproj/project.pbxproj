@@ -38,7 +38,6 @@
 		AA922E0E17BF884C009B71F2 /* AuthenticationResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AA922E0D17BF884C009B71F2 /* AuthenticationResult.m */; };
 		AAA7C5B11763456800E9DA70 /* CTBlockDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */; };
 		AAA7C5B21763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */; };
-		AAA7C5B41763460B00E9DA70 /* libKryo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7C5B31763460B00E9DA70 /* libKryo.a */; };
 		AAB897C0191BD64F001ADD6E /* UUIDSerializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D22F4D513C706CD597BF64D7 /* UUIDSerializer.h */; };
 		AAC205A019FA93E40040093F /* MethodCall.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC2059F19FA93E40040093F /* MethodCall.m */; };
 		AAC205A319FA93F10040093F /* MethodResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC205A219FA93F10040093F /* MethodResult.m */; };
@@ -47,6 +46,7 @@
 		AAC205B119FA9F6C0040093F /* LoginResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC205B019FA9F6C0040093F /* LoginResult.m */; };
 		AAC431C0181AC820005FC2B6 /* StasisError.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC431BF181AC820005FC2B6 /* StasisError.m */; };
 		AAC7B99D171584810045EF72 /* LocalDateTimeSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC7B99C171584810045EF72 /* LocalDateTimeSerializer.m */; };
+		AAD8B7B12170CE4100A58966 /* libKryo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA364443176349C800C5D31C /* libKryo.a */; };
 		AAFD3C0B1A23772900354E8F /* MinutesSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFD3C0A1A23772900354E8F /* MinutesSerializer.m */; };
 		AAFD3C0C1A23793F00354E8F /* MinutesSerializer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AAFD3C091A23772900354E8F /* MinutesSerializer.h */; };
 		D22F4775C7DD411423551C7E /* UUIDSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = D22F437765DAF584201C6EAF /* UUIDSerializer.m */; };
@@ -159,7 +159,6 @@
 		AAA7C5AE1763456800E9DA70 /* CTBlockDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTBlockDescription.m; sourceTree = "<group>"; };
 		AAA7C5AF1763456800E9DA70 /* CTObjectiveCRuntimeAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTObjectiveCRuntimeAdditions.h; sourceTree = "<group>"; };
 		AAA7C5B01763456800E9DA70 /* CTObjectiveCRuntimeAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTObjectiveCRuntimeAdditions.m; sourceTree = "<group>"; };
-		AAA7C5B31763460B00E9DA70 /* libKryo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libKryo.a; path = "../../../../../Users/christian/Library/Developer/Xcode/DerivedData/EmployeePortal-exfqlzkyjsbrdegugzzebazsuclh/Build/Products/Debug-iphoneos/libKryo.a"; sourceTree = "<group>"; };
 		AAC2059E19FA93E40040093F /* MethodCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MethodCall.h; sourceTree = "<group>"; };
 		AAC2059F19FA93E40040093F /* MethodCall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MethodCall.m; sourceTree = "<group>"; };
 		AAC205A119FA93F10040093F /* MethodResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MethodResult.h; sourceTree = "<group>"; };
@@ -219,7 +218,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AAA7C5B41763460B00E9DA70 /* libKryo.a in Frameworks */,
+				AAD8B7B12170CE4100A58966 /* libKryo.a in Frameworks */,
 				D30BC9FC16EA0C6D003FD3F6 /* libJodaTime.a in Frameworks */,
 				D3EDD22216E661E6005339C3 /* Foundation.framework in Frameworks */,
 			);
@@ -296,7 +295,6 @@
 				D3EDD22016E661E6005339C3 /* Frameworks */,
 				D30BC9F416EA0C57003FD3F6 /* JodaTime.xcodeproj */,
 				AAA7C5A91763432000E9DA70 /* Kryo.xcodeproj */,
-				AAA7C5B31763460B00E9DA70 /* libKryo.a */,
 				D3EDD21F16E661E6005339C3 /* Products */,
 				D3EDD22316E661E6005339C3 /* Stasis */,
 				AA5F9343181AD631000BC4DD /* StasisResources */,
